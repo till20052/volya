@@ -1,0 +1,42 @@
+body>section div.member-avatar
+{
+	width: 350px;
+	height: 350px;
+	border-radius: 175px;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+body>section div.member-content
+{padding:15px; width: 580px; color: #3e3e3e}
+
+body>section div.member-info
+{border-top: 6px solid #0081c6;}
+
+body>section div.member-name
+{text-transform: uppercase;}
+
+body>section div.member-info>p.job
+{padding: 0;}
+
+body>section div.member-info>p.slogan
+{background: #ffe512; padding: 2px 0;}
+
+body>section div.member-info>section.bio
+{color: #666666; min-height: 170px; overflow: hidden; text-overflow: ellipsis; border-bottom: 2px dashed #666666;}
+
+body>section div.member-info>section.links>ul>li
+{list-style: none;}
+
+body>section div.member-info>section.links>ul>li>a
+{color: #0081c6; text-decoration: underline;}
+
+body>section div.member-info>button.member-detail
+{background: none; color: #a7a7a7; border: 1px solid #a7a7a7;}
+
+body>section div.member-info>button.member-detail>img
+{transform: rotate(-90deg)}
+
+body>section div.member-info>button.member-detail:hover
+{cursor: pointer; border: 1px solid #0081c6;}
