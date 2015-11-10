@@ -1,0 +1,96 @@
+body>section>div.section {
+
+	div[data-ui='materials'] {
+
+		width: 690px;
+
+		>div {
+			margin-top: 30px;
+
+			&:first-child {
+				margin-top: 0;
+			}
+
+			&.empty {
+				padding: 50px 5px;
+				text-align: center;
+				text-transform: uppercase;
+				background: white;
+			}
+
+			>header {
+				padding: 5px;
+				background-color: #ffffff;
+
+				>h3 {
+					font-weight: bold;
+				}
+			}
+
+			>section {
+				margin-top: 15px;
+
+				>ul {
+					display: block;
+					list-style: none;
+					margin: 0;
+					padding: 0;
+
+					>li {
+						position: relative;
+						display: block;
+						box-sizing: border-box;
+						float: left;
+						margin-left: 18px;
+						margin-top: 15px;
+						width: 100px;
+
+						&:last-child {
+							float: none;
+							margin: 0;
+							padding: 0;
+							width: auto;
+							height: auto;
+							clear: both;
+						}
+
+						&:nth-child(-n+6) {
+							margin-top: 0;
+						}
+
+						&:nth-child(6n+1) {
+							clear: both;
+							margin-left: 0;
+						}
+
+						>div {
+							i {
+								padding: 0;
+							}
+
+							&.pic {
+								text-align: center;
+
+								>div {
+									color: #0181C5;
+									font-size: 42px;
+								}
+							}
+
+							&.name {
+								margin-top: 5px;
+								text-align: center;
+
+								>a {
+									word-wrap: break-word;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+
+}

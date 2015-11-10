@@ -1,0 +1,108 @@
+body>header>div:last-child {
+	box-shadow: none;
+	border-bottom: 1px solid #F3F3F3;
+}
+
+body>section {
+	background-color: #F7F7F7;
+	
+	h1, h3 {
+		color: #333;
+		font-weight: normal;
+	}
+	
+	h1 {
+		color: #858383;
+		font-size: 30px;
+	}
+	
+	ul[data-uiSwitcher] {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+
+		>li {
+			display: inline-block;
+			padding: 5px 15px;
+			font-size: 16px;
+
+			&.selected {
+				background-color: #FFF9DC;
+				color: #666666;
+
+				>a {
+					color: #666666;
+				}
+			}
+
+			>a {
+				font-size: 16px;
+			}
+		}
+	}
+	
+	span.mark {
+		background-color: rgb(253, 219, 0);
+		padding: 2px 5px;
+		border-radius: 5px;
+	}
+	
+	div.avatar {
+		width: 75px;
+		height: 75px;
+		border: 2px solid #FFE511;
+		background-image: url('/img/frontend/election/index/Volya_Avatar4.jpg');
+		
+		&.x130 {
+			width: 130px;
+			height: 130px;
+		}
+		
+		&.x150 {
+			width: 150px;
+			height: 150px;
+		}
+	}
+	
+	>div.header {
+		background: none;
+		border-top: 1px solid darken(#F7F7F7, 15%);
+		text-transform: none;
+		margin-bottom: 0;
+	}
+	
+	>div.section {
+		ul[data-uiSwitch] {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			
+			>li {
+				display: inline-block;
+				padding: 5px 15px;
+				
+/*				&:first-child {
+					padding-left: 0;
+				}*/
+				
+				&.selected {
+					background-color: #FFF9DC;
+					color: #666666;
+					
+					>a {
+						color: #666666;
+						
+						&:hover {
+							text-decoration: none;
+						}
+					}
+				}
+				
+				>a {
+					display: inline-block;
+					/*padding: 9px 0;*/
+				}
+			}
+		}
+	}
+}

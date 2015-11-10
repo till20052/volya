@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta charset="UTF-8">
+		<script src="/jquery/js/jquery.min.js"></script>
+		<link rel="stylesheet/less" type="text/css" href="/less/document.less" />
+		<script src="/js/less.min.js"></script>
+	</head>
+	<body onload="onload()" style="height: 40px">
+		<script>
+			var onload = (function(){
+				var d = (function(string){
+					var t = string.substr(1).split("&"),
+						d = new Object();
+					t.forEach(function(i){
+						var t = i.split("=");
+						d[t[0]] = t[1];
+					});
+					return d;
+				}(document.location.search));
+				
+				if(d.page != 1){
+					$("body").height("")
+							.html("<div style='text-align: center; font-weight: bold'>"+decodeURIComponent(d.title)+"</div>");
+				}
+			});
+		</script>
+		
+		<table width="100%">
+			<tbody>
+				<tr>
+					
+					<td width="142px">
+						<img src="/img/frontend/logo.png" alt="" style="width: 100%; height: 167px" />
+					</td>
+					
+					<td valign="bottom" style="padding-left: 30px; color: #3496D3">
+						<div>Україна, 01021, Київ</div>
+						<div>вул. Інститутська, 14, офіс 11</div>
+						<div>0 800 30 78 77 (безкоштовно по Україні)</div>
+						<div>тел.: +38 044 337 38 37</div>
+						<div>моб.: +38 067 990 90 07</div>
+						<div>e-mail: info@volya.ua, www.volya.ua</div>
+					</td>
+					
+				</tr>
+			</tbody>
+		</table>
+		
+	</body>
+</html>

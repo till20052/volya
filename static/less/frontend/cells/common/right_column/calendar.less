@@ -1,0 +1,166 @@
+body>section div[data-uibox='right_column']>div[data-uiBox='calendar']>section {
+	box-sizing: border-box;
+	background-color: white;
+	padding: 15px;
+
+	div.k-calendar {
+		display: block;
+		width: 270px;
+		border-width: 0;
+
+		>div.k-header {
+			display: table;
+			table-layout: fixed;
+			width: 100%;
+			box-sizing: border-box;
+			padding: 15px 0;
+
+			>div {
+				display: table-cell;
+				text-align: center;
+				vertical-align: middle;
+
+				&:nth-child(odd)>a {
+					color: #A7A7A7;
+					font-weight: normal;
+				}
+
+				&:first-child {
+					text-align: left;
+				}
+				
+				&:nth-child(2) {
+					width: 50%;
+				}
+
+				&:last-child {
+					text-align: right;
+				}
+
+				>a {
+					display: block;
+					box-sizing: border-box;
+					margin: 0;
+					width: auto;
+					height: auto;
+					min-height: 0;
+					line-height: 1;
+					color: black;
+					text-transform: uppercase;
+
+					&:hover {
+						background: none;
+						color: #2781C5;
+						text-decoration: none;
+					}
+
+					>i {
+						padding: 0;
+					}
+				}
+			}
+		}
+
+		table {
+			>thead>tr>th {
+				border: none;
+				text-align: center;
+				text-transform: uppercase;
+				padding: 15px 0;
+			}
+
+			>tbody>tr {
+				&:last-child>td {
+					border-bottom-width: 1px;
+				}
+
+				>td {
+					padding: 0;
+					text-align: center;
+					border: 1px solid #A7A7A7;
+					border-right-width: 0;
+					border-bottom-width: 0;
+
+					&:last-child {
+						border-right-width: 1px;
+					}
+
+					&.k-other-month>a {
+						color: #A7A7A7;
+					}
+
+					&.k-state-hover {
+						background: lighten(#FFE534, 15%);
+
+						>a {
+							background: none;
+						}
+					}
+
+					&.k-state-selected {
+						background: #FFE534;
+					}
+
+					>a {
+						padding: 3px;
+						min-height: 0;
+						line-height: 1;
+						font-weight: bold;
+						color: black;
+
+						&:hover {
+							text-decoration: none;
+						}
+
+						>span {
+							display: block;
+							width: 30px;
+							height: 30px;
+							margin: 0 auto;
+							padding: 9px 0;
+							border-radius: 50px;
+							box-sizing: border-box;
+
+							&.event {
+								background-color: #FFE534;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	div[data-uiBox='list'] {
+		>div {
+			display: table;
+			width: 100%;
+			border-top: 1px solid #DADADA;
+			padding: 15px 0;
+
+			>div {
+				display: table-cell;
+				text-align: left;
+
+				&:first-child {
+					width: 50px;
+				}
+
+				&:nth-child(2) {
+					width: 25px;
+				}
+			}
+
+			&.empty {
+				>div {
+					width: auto;
+					text-align: center;
+					color: #A7A7A7;
+					text-transform: uppercase;
+				}
+			}
+		}
+	}
+
+	
+}

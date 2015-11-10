@@ -1,0 +1,14 @@
+body>section table.list>tbody>tr
+{background-color:white;-webkit-transition:background-color .2s;-moz-transition:background-color .2s;
+-o-transition:background-color .2s;-ms-transition:background-color .2s;transition:background-color .2s}
+body>section table.list>tbody>tr:hover
+{background-color:#F2F6FC}
+body>section table.list>tbody>tr>td
+{padding:15px;border-top:1px solid #DCDAD4}
+body>section table.list>tbody>tr:first-child>td
+{border:0}
+body>section table.list>tbody>tr>td:first-child,
+body>section table.list>tbody>tr>td:nth-child(2)
+{width:1%}
+body>section table.list>tbody>tr>td:first-child
+{padding-left:30px}

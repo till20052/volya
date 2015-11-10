@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /admin
+Disallow: /team
+Disallow: /program
+Disallow: /page
+Disallow: /agitations
+Disallow: /profile

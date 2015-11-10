@@ -1,0 +1,35 @@
+body>section>div.section {
+	table.list {
+		width: 100%;
+		table-layout: fixed;
+		border-spacing: 0;
+		
+		>tbody>tr {
+			&:first-child>td {
+				padding: 0;
+			}
+			
+			>td {
+				padding-top: 50px;
+				vertical-align: top;
+				
+				&:nth-child(even) {
+					width: 30px;
+				}
+				
+				>div {
+					background-color: white;
+					padding: 2px;
+				}
+			}
+		}
+	}
+	
+	div[data-uiBox='empty_list'] {
+		background-color: white;
+		padding: 30px 0;
+		text-align: center;
+		text-transform: uppercase;
+		color: #A7A7A7;
+	}
+}

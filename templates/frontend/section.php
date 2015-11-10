@@ -1,0 +1,5 @@
+<section>
+	
+	<? include $view ?>	
+	
+</section>
