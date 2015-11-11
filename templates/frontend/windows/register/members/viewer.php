@@ -226,7 +226,7 @@
 
 		<div class="mt15" data-type="verified">
 			<table width="100%" cellspacing="0" cellpadding="0" data-type="approveForm">
-				<tbody>
+				<tbody class="<?=( ! $cred->approver) ? "dnone" : "" ?>">
 					<tr>
 						<td class="pl15">
 							<div><?=t("Номер рішення")?></div>

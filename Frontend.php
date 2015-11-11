@@ -142,7 +142,7 @@ class Frontend extends Controller
 	public function execute()
 	{
 		parent::execute();
-		
+
 		$this->loadKendo = false;
 		$this->loadCKEditor = false;
 		$this->loadFileupload = false;

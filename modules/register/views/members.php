@@ -49,47 +49,50 @@
 						</div>
 					</td>
 				</tr>
-				<tr>
-					<? if( ! (count($registerUser["geo_koatuu_code"]) > 0)){ ?>
-						<td>
-							<div class="mt15"><?=t("Область")?></div>
-							<div class="mt5" style="width: 250px">
-								<select data-ui="region" data-value="<?=isset($filter["region"]) ? $filter["region"] : 0 ?>" style="width: 250px">
-									<option value="0">&mdash;</option>
-									<? foreach(GeoClass::i()->regions() as $region){ ?>
-										<option value="<?=$region["id"]?>"><?=$region["title"]?></option>
-									<? } ?>
-								</select>
-							</div>
-						</td>
-					<? } ?>
 
-					<?
-						if(isset($filter["region"]))
-							$citiesWithDistricts = GeoClass::i()->citiesWithDistricts($filter["region"]);
-					?>
+				<? if($cred->showRegionsFilter) {?>
+					<tr>
+						<? if( ! (count($registerUser["geo_koatuu_code"]) > 0)){ ?>
+							<td>
+								<div class="mt15"><?=t("Область")?></div>
+								<div class="mt5" style="width: 250px">
+									<select data-ui="region" data-value="<?=isset($filter["region"]) ? $filter["region"] : 0 ?>" style="width: 250px">
+										<option value="0">&mdash;</option>
+										<? foreach(GeoClass::i()->regions() as $region){ ?>
+											<option value="<?=$region["id"]?>"><?=$region["title"]?></option>
+										<? } ?>
+									</select>
+								</div>
+							</td>
+						<? } ?>
 
-					<? if( isset($filter["region"]) && ! isset($filter["city"]) ){ ?>
-						<td class="pl15">
-							<div class="mt15"><?=t("Місто")?> / <?=t("Район")?></div>
-							<div class="mt5">
-								<select data-ui="area" data-value="<?=isset($filter["area"]) ? $filter["area"] : 0 ?>">
-									<option value="0">&mdash;</option>
-									<? foreach($citiesWithDistricts as $cities){ ?>
-										<? if( $cities["type"] == "city"){ ?>
-											<option value="<?=$cities["id"]?>"><?=$cities["title"]?></option>
+						<?
+							if(isset($filter["region"]))
+								$citiesWithDistricts = GeoClass::i()->citiesWithDistricts($filter["region"]);
+						?>
+
+						<? if( isset($filter["region"]) && ! isset($filter["city"]) ){ ?>
+							<td class="pl15">
+								<div class="mt15"><?=t("Місто")?> / <?=t("Район")?></div>
+								<div class="mt5">
+									<select data-ui="area" data-value="<?=isset($filter["area"]) ? $filter["area"] : 0 ?>">
+										<option value="0">&mdash;</option>
+										<? foreach($citiesWithDistricts as $cities){ ?>
+											<? if( $cities["type"] == "city"){ ?>
+												<option value="<?=$cities["id"]?>"><?=$cities["title"]?></option>
+											<? } ?>
 										<? } ?>
-									<? } ?>
-									<? foreach($citiesWithDistricts as $district){ ?>
-										<? if( $district["type"] == "district"){ ?>
-											<option value="<?=$district["id"]?>"><?=$district["title"]?></option>
+										<? foreach($citiesWithDistricts as $district){ ?>
+											<? if( $district["type"] == "district"){ ?>
+												<option value="<?=$district["id"]?>"><?=$district["title"]?></option>
+											<? } ?>
 										<? } ?>
-									<? } ?>
-								</select>
-							</div>
-						</td>
-					<? } ?>
-				</tr>
+									</select>
+								</div>
+							</td>
+						<? } ?>
+					</tr>
+				<? } ?>
 				</tbody>
 			</table>
 		</div>
@@ -160,8 +163,8 @@
 									<span style="color: \#f18303"><?=t("Перевірити")?></span>
 								</a>
 							# } else if(verification != null && verification.type > 0) { #
-								<a data-action="approve" data-id="#=id#" href="javascript:void(0);" class="icon">
-									<span style="color: green"><?=t("Прийняти")?></span>
+								<a data-action="<?=$cred->approver ? "approve" : "view" ?>" data-id="#=id#" href="javascript:void(0);" class="icon">
+									<span style="<?=$cred->approver ? "color: green" : "" ?>"><?=$cred->approver ? t("Прийняти") : t("Переглянути") ?></span>
 								</a>
 							# } #
 						</div>

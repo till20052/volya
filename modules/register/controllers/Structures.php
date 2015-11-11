@@ -10,14 +10,13 @@ Loader::loadModel("UsersModel");
 
 Loader::loadService("StructuresService");
 Loader::loadService("structures.InitService");
+Loader::loadService("register.admin.GroupsService");
 
 use \libs\services\StructuresService;
-use \libs\services\structures\InitService;
+use \libs\services\register\admin\GroupsService;
 
 class StructuresRegisterController extends RegisterController
 {
-	private $object;
-
 	private function __init()
 	{
 		parent::execute();
@@ -141,7 +140,14 @@ class StructuresRegisterController extends RegisterController
 
 		$this->addAccessHandler(function($uid, $credentials){
 
-			$__group = StructuresService::i()->getGroupeType();
+			if( ! ($__group = GroupsService::i()->getGroupByUid($uid)))
+				return false;
+
+			if($__group["type"] == 0)
+			{
+				$credentials->filter["geo"] = $__group["geo"];
+				$credentials->showRegionsFilter = false;
+			}
 
 			$credentials->showAddButton = true;
 			return true;
@@ -154,9 +160,8 @@ class StructuresRegisterController extends RegisterController
 
 		$credentials = new stdClass();
 
-		if( ! $this->hasAccess(UserClass::i()->getId(), $credentials)){
+		if( ! $this->hasAccess(UserClass::i()->getId(), $credentials))
 			$this->redirect('/');
-		}
 
 		$this->cred = $credentials;
 
@@ -179,8 +184,14 @@ class StructuresRegisterController extends RegisterController
 
 		$this->filter = array();
 
+		if(isset($credentials->filter["geo"])){
+			$__code = rtrim($credentials->filter["geo"], '0');
+			$__cond[] = "geo REGEXP :regexp";
+			$__bind["regexp"] = $__code . "[0-9]{" . (10 - strlen($__code)) . "}";
+		}
+
 		$__list = array();
-		$__pager = new PagerClass(StructuresService::i()->getStructures(), Request::getInt("page"), 14);
+		$__pager = new PagerClass(StructuresService::i()->getStructures($__cond, $__bind), Request::getInt("page"), 14);
 
 		foreach($__pager->getList() as $__id)
 			$__list[] = StructuresService::i()->getStructure($__id);

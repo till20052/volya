@@ -26,11 +26,6 @@ class StructuresService extends \Keeper
 	const LELEL_DISTRICT = 3;
 	const DOCUMENT_CATEGORY = 3;
 
-	protected static $users_statuses = [
-		99 => "кандидатів",
-		100 => "членів партії"
-	];
-
 	protected static $levels = [
 		1 => [
 			"long" => "Обласна партійна огранізація",
@@ -365,9 +360,9 @@ class StructuresService extends \Keeper
 		StructuresModel::i()->insert(["geo" => $geo, "level" => $type]);
 	}
 
-	public function getStructures()
+	public function getStructures($__cond, $__bind)
 	{
-		return StructuresModel::i()->getList(["status <> 0"]);
+		return StructuresModel::i()->getList(array_merge($__cond, ["status <> 0"]), $__bind);
 	}
 
 	public function getStructure($id, $fullInfo = false)

@@ -10,13 +10,21 @@ use libs\models\register\admin\GroupsUsersModel;
 \Loader::loadModel("UsersModel");
 \Loader::loadClass("GeoClass");
 
-class GroupsService
+class GroupsService extends \Keeper
 {
 	protected $types = [
 		0 => "Контрольна Ревізійна комісія",
 		1 => "Центральна Контрольна Ревізійна комісія",
 		2 => "Рада Партій"
 	];
+
+	/**
+	 * @return GroupsService
+	 */
+	public static function i()
+	{
+		return parent::getInstance(get_class());
+	}
 
 	public function getList()
 	{
@@ -63,6 +71,11 @@ class GroupsService
 	{
 		foreach(GroupsUsersModel::i()->getList(['gid = :gid'], ['gid' => $groupId]) as $id)
 			GroupsUsersModel::i()->deleteItem($id);
+	}
+
+	public function getGroupByUid($uid)
+	{
+		return GroupsModel::i()->getItem(GroupsUsersModel::i()->getItemByField("uid", $uid)["gid"]);
 	}
 
 	public function save($data)

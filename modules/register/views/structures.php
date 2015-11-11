@@ -3,8 +3,6 @@
 <div class="section">
 
 	<div>
-		<div><? var_dump($cred) ?></div>
-
 		<div data-uiBox="toolbar">
 			<table width="100%" cellspacing="0" cellpadding="0">
 				<tbody>

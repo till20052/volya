@@ -9,8 +9,10 @@ Loader::loadClass("UserClass");
 
 Loader::loadModel("UsersModel");
 Loader::loadService("register.MembersService", Loader::APPLICATION);
+Loader::loadService("register.admin.GroupsService");
 
 use \libs\services\register\MembersService;
+use \libs\services\register\admin\GroupsService;
 
 class MembersRegisterController extends RegisterController
 {
@@ -23,6 +25,36 @@ class MembersRegisterController extends RegisterController
 		parent::addBreadcrumb("/register/admin", t("Реєстр членів"));
 
 		self::$__membersService = new MembersService();
+	}
+
+	public function __construct()
+	{
+		parent::__construct();
+
+		$this->addAccessHandler(function($uid, $credentials = false){
+
+			if( ! ($__group = GroupsService::i()->getGroupByUid($uid)))
+				return false;
+
+			if( ! $credentials)
+				return true;
+
+			if($__group["type"] == 0)
+			{
+				$credentials->filter["geo"] = $__group["geo"];
+				$credentials->showRegionsFilter = false;
+				$credentials->approver = false;
+				$credentials->verifier = true;
+			}
+
+			if($__group["type"] == 2)
+			{
+				$credentials->approver = true;
+			}
+
+			$credentials->showAddButton = true;
+			return true;
+		});
 	}
 
 	public function __findMembers(&$filter = array())
@@ -44,44 +76,53 @@ class MembersRegisterController extends RegisterController
 			$filter["q"] = $__q;
 		}
 
-		if(count($this->registerUser["geo_koatuu_code"]) > 0)
-		{
-			$__GKC = [];
-			$filter["region"] = $this->registerUser["geo_koatuu_code"];
+		if($this->cred->showRegionsFilter){
+			if(count($this->registerUser["geo_koatuu_code"]) > 0)
+			{
+				$__GKC = [];
+				$filter["region"] = $this->registerUser["geo_koatuu_code"];
 
-			foreach($filter["region"] as $__region)
-				$__GKC[] = "geo_koatuu_code REGEXP '".substr($__region, 0, 2)."[0-9]{8}'";
+				foreach($filter["region"] as $__region)
+					$__GKC[] = "geo_koatuu_code REGEXP '".substr($__region, 0, 2)."[0-9]{8}'";
 
-			$__cond[] = "(".implode(" OR ", $__GKC).")";
+				$__cond[] = "(".implode(" OR ", $__GKC).")";
+			}
+			elseif(($__cityArea = stripslashes(Request::getString("cityArea"))) && strlen($__cityArea) == 10)
+			{
+				$__koatuuLength = Request::getInt('kl') > 0 ? Request::getInt('kl') : 10;
+				$__cond[] = "geo_koatuu_code REGEXP '".substr($__cityArea, 0, $__koatuuLength)."[0-9]{".(10 - $__koatuuLength)."}'";
+				$filter["cityArea"] = $__cityArea;
+				$filter["city"] = stripslashes(Request::getString("city"));
+				$filter["area"] = stripslashes(Request::getString("area"));
+				$filter["region"] = stripslashes(Request::getString("region"));
+			}
+			elseif(($__city = stripslashes(Request::getString("city"))) && strlen($__city) == 10)
+			{
+				$__koatuuLength = Request::getInt('kl') > 0 ? Request::getInt('kl') : 10;
+				$__cond[] = "geo_koatuu_code REGEXP '".substr($__city, 0, $__koatuuLength)."[0-9]{".(10 - $__koatuuLength)."}'";
+				$filter["city"] = $__city;
+				$filter["region"] = stripslashes(Request::getString("region"));
+			}
+			elseif(($__area = stripslashes(Request::getString("area"))) && strlen($__area) == 10)
+			{
+				$__koatuuLength = Request::getInt('kl') > 0 ? Request::getInt('kl') : 5;
+				$__cond[] = "geo_koatuu_code REGEXP '".substr($__area, 0, $__koatuuLength)."[0-9]{".(10 - $__koatuuLength)."}'";
+				$filter["area"] = $__area;
+				$filter["region"] = stripslashes(Request::getString("region"));
+			}
+			elseif(($__region = stripslashes(Request::getString("region"))) && strlen($__region) == 10)
+			{
+				$__koatuuLength = Request::getInt('kl') > 0 ? Request::getInt('kl') : 2;
+				$__cond[] = "geo_koatuu_code REGEXP '".substr($__region, 0, $__koatuuLength)."[0-9]{".(10 - $__koatuuLength)."}'";
+				$filter["region"] = $__region;
+			}
 		}
-		elseif(($__cityArea = stripslashes(Request::getString("cityArea"))) && strlen($__cityArea) == 10)
+
+		if(isset($this->cred->filter["geo"]))
 		{
-			$__koatuuLength = Request::getInt('kl') > 0 ? Request::getInt('kl') : 10;
-			$__cond[] = "geo_koatuu_code REGEXP '".substr($__cityArea, 0, $__koatuuLength)."[0-9]{".(10 - $__koatuuLength)."}'";
-			$filter["cityArea"] = $__cityArea;
-			$filter["city"] = stripslashes(Request::getString("city"));
-			$filter["area"] = stripslashes(Request::getString("area"));
-			$filter["region"] = stripslashes(Request::getString("region"));
-		}
-		elseif(($__city = stripslashes(Request::getString("city"))) && strlen($__city) == 10)
-		{
-			$__koatuuLength = Request::getInt('kl') > 0 ? Request::getInt('kl') : 10;
-			$__cond[] = "geo_koatuu_code REGEXP '".substr($__city, 0, $__koatuuLength)."[0-9]{".(10 - $__koatuuLength)."}'";
-			$filter["city"] = $__city;
-			$filter["region"] = stripslashes(Request::getString("region"));
-		}
-		elseif(($__area = stripslashes(Request::getString("area"))) && strlen($__area) == 10)
-		{
-			$__koatuuLength = Request::getInt('kl') > 0 ? Request::getInt('kl') : 5;
-			$__cond[] = "geo_koatuu_code REGEXP '".substr($__area, 0, $__koatuuLength)."[0-9]{".(10 - $__koatuuLength)."}'";
-			$filter["area"] = $__area;
-			$filter["region"] = stripslashes(Request::getString("region"));
-		}
-		elseif(($__region = stripslashes(Request::getString("region"))) && strlen($__region) == 10)
-		{
-			$__koatuuLength = Request::getInt('kl') > 0 ? Request::getInt('kl') : 2;
-			$__cond[] = "geo_koatuu_code REGEXP '".substr($__region, 0, $__koatuuLength)."[0-9]{".(10 - $__koatuuLength)."}'";
-			$filter["region"] = $__region;
+			$__code = rtrim($this->cred->filter["geo"], '0');
+			$__cond[] = "geo_koatuu_code REGEXP :regexp";
+			$__bind["regexp"] = $__code . "[0-9]{" . (10 - strlen($__code)) . "}";
 		}
 
 		if(
@@ -138,6 +179,13 @@ class MembersRegisterController extends RegisterController
 	{
 		$this->__init();
 
+		$credentials = new stdClass();
+
+		if( ! $this->hasAccess(UserClass::i()->getId(), $credentials))
+			$this->redirect('/');
+
+		$this->cred = $credentials;
+
 		parent::loadWindow([
 			"register/members/viewer",
 			"register/members/approve",
@@ -150,6 +198,12 @@ class MembersRegisterController extends RegisterController
 
 		$this->filter = array();
 
+		if(isset($credentials->filter["geo"])){
+			$__code = rtrim($credentials->filter["geo"], '0');
+			$__cond[] = "geo REGEXP :regexp";
+			$__bind["regexp"] = $__code . "[0-9]{" . (10 - strlen($__code)) . "}";
+		}
+
 		$__list = array();
 		$__pager = new PagerClass($this->__findMembers($this->filter), Request::getInt("page"), 14);
 		foreach($__pager->getList() as $__id)
@@ -161,6 +215,9 @@ class MembersRegisterController extends RegisterController
 
 	public function getMember()
 	{
+		if( ! $this->hasAccess(UserClass::i()->getId()))
+			return false;
+
 		parent::execute();
 		parent::setViewer("json");
 		$this->__init();
@@ -172,6 +229,9 @@ class MembersRegisterController extends RegisterController
 
 	public function exportMembers($args = array())
 	{
+		if( ! $this->hasAccess(UserClass::i()->getId()))
+			$this->redirect('/');
+
 		parent::setLayout("document");
 		parent::execute($args);
 		parent::setView("register/export_members");
@@ -208,6 +268,9 @@ class MembersRegisterController extends RegisterController
 
 	public function setVarification()
 	{
+		if( ! $this->hasAccess(UserClass::i()->getId()))
+			return false;
+
 		parent::execute();
 		parent::setViewer("json");
 		$this->__init();
@@ -221,6 +284,14 @@ class MembersRegisterController extends RegisterController
 
 	public function setApprove()
 	{
+		$credentials = new stdClass();
+
+		if( ! $this->hasAccess(UserClass::i()->getId(), $credentials))
+			$this->redirect('/');
+
+		if( ! $credentials->approver)
+			return false;
+
 		parent::execute();
 		parent::setViewer("json");
 		$this->__init();

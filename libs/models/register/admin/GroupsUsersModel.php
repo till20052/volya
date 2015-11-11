@@ -10,6 +10,7 @@ class GroupsUsersModel extends \ExtendedModel
 	protected $_specificFields = array(
 		"date" => array("created_at", "modified_at:force")
 	);
+
 	/**
 	 * @param string $instance
 	 * @return GroupsUsersModel
