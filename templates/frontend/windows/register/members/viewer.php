@@ -260,7 +260,7 @@
 						<div id="approverAvatar" class="avatar avatar-2x fleft"></div>
 						<div class="fleft ml10">
 							<div>
-								<span id="approverName" class="fwbold fs14"></span>
+								<span id="approverName" class="fwbo
 							</div>
 							<div>
 								<span id="approveDate"></span>
