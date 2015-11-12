@@ -37,16 +37,18 @@
 			</div>
 		</a>
 
-		<a href="/register/admin">
-			<div class="menu-box ml30">
-				<div class="menu-box-icon pt5">
-					<i class="icon icon-collabtive"></i>
+		<? if($cred->showSettings){ ?>
+			<a href="/register/admin">
+				<div class="menu-box ml30">
+					<div class="menu-box-icon pt5">
+						<i class="icon icon-collabtive"></i>
+					</div>
+					<div class="menu-box-title pt10">
+						<?=t("Налаштування")?>
+					</div>
 				</div>
-				<div class="menu-box-title pt10">
-					<?=t("Налаштування")?>
-				</div>
-			</div>
-		</a>
+			</a>
+		<? } ?>
 
 		<div class="cboth"></div>
 
