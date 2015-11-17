@@ -360,7 +360,7 @@ class StructuresService extends \Keeper
 		StructuresModel::i()->insert(["geo" => $geo, "level" => $type]);
 	}
 
-	public function getStructures($__cond, $__bind)
+	public function getStructures($__cond = [], $__bind = [])
 	{
 		return StructuresModel::i()->getList(array_merge($__cond, ["status <> 0"]), $__bind);
 	}

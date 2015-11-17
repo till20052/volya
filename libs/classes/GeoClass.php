@@ -463,6 +463,9 @@ class GeoClass extends ExtendedClass
 				$__tokens[] = $__token;
 		}
 
+		$__count = count($__tokens);
+		$__i = 1;
+
 		foreach($__tokens as $__token)
 		{
 			$__item[$__token["type"]] = $__token;
@@ -471,12 +474,24 @@ class GeoClass extends ExtendedClass
 			foreach(array_keys($__patterns) as $__key)
 				$__replacementValues[] = $__token[$__key];
 
-			if(isset($option['locationUrlPattern']))
+			if(
+				isset($option['locationUrlPattern'])
+				&&
+				(
+					! isset($option['lastNotLink'])
+					|| (
+						isset($option['lastNotLink'])
+						&& $__i < $__count
+					)
+				)
+			)
 				$__item["location"][] = "<a href=\""
 					.preg_replace(array_values($__patterns), $__replacementValues, $option['locationUrlPattern'])
 					."\">".$__token["title"]."</a>";
 			else
 				$__item["location"][] = $__token["title"];
+
+			$__i++;
 		}
 
 		$__item["location"] = implode((isset($option['locationSplitter'])

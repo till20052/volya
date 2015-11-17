@@ -47,9 +47,15 @@ class MembersRegisterController extends RegisterController
 				$credentials->verifier = true;
 			}
 
+			if($__group["type"] == 1)
+			{
+				$credentials->showRegionsFilter = true;
+			}
+
 			if($__group["type"] == 2)
 			{
 				$credentials->approver = true;
+				$credentials->showRegionsFilter = true;
 			}
 
 			$credentials->showAddButton = true;

@@ -1,10 +1,21 @@
 <? include "common/header.php"; ?>
 
-<div data-box="structures ">
+<div data-box="structures" class="section">
 
 	<div>
 
-		<? include "common/filter.php"; ?>
+		<div data-ui="content">
+
+			<? include "common/structures.php"; ?>
+
+		</div>
+
+		<div data-ui="sideBox">
+
+			<? include "common/filter.php"; ?>
+
+		</div>
+		<div class="cboth"></div>
 
 	</div>
 

@@ -183,6 +183,8 @@ class StructuresRegisterController extends RegisterController
 		));
 
 		$this->filter = array();
+		$__cond = [];
+		$__bind = [];
 
 		if(isset($credentials->filter["geo"])){
 			$__code = rtrim($credentials->filter["geo"], '0');
