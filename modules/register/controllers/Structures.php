@@ -143,10 +143,17 @@ class StructuresRegisterController extends RegisterController
 			if( ! ($__group = GroupsService::i()->getGroupByUid($uid)))
 				return false;
 
+			$credentials->initStructures = false;
+
 			if($__group["type"] == 0)
 			{
 				$credentials->filter["geo"] = $__group["geo"];
 				$credentials->showRegionsFilter = false;
+			}
+
+			if($__group["type"] == 2)
+			{
+				$credentials->initStructures = true;
 			}
 
 			$credentials->showAddButton = true;
@@ -168,7 +175,6 @@ class StructuresRegisterController extends RegisterController
 		parent::loadWindow([
 			"register/structures/form",
 			"register/structures/viewer",
-			"register/structures/verification",
 			"register/export"
 		]);
 
@@ -281,6 +287,8 @@ class StructuresRegisterController extends RegisterController
 			"address" => Request::getString("address"),
 			"level" => Request::getInt("level"),
 			"members" => Request::getArray("members"),
+			"head" => Request::getInt("head"),
+			"coordinator" => Request::getInt("coordinator"),
 			"images" => Request::getArray("images")
 		];
 
@@ -299,5 +307,10 @@ class StructuresRegisterController extends RegisterController
 			"members" => Request::getArray("members"),
 			"level" => Request::getInt("level")
 		]);
+	}
+
+	public function initStructure()
+	{
+
 	}
 }

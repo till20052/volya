@@ -9,6 +9,13 @@ $(document).ready(function(){
 			__geo.initialize();
 			__uiWindow.checkPosition();
 			__membersUiSelect.value([]);
+			__headUiSelect.value([]);
+			__coordinatorUiSelect.value([]);
+
+			$("[data-id='members']").hide();
+			$("[data-id='coordinator']").hide();
+			$("[data-id='head']").hide();
+
 			$("[data-id='is_primary']").val(0).hide();
 
 			$("#structure_level")
@@ -25,56 +32,13 @@ $(document).ready(function(){
 				members: __membersUiSelect.value(),
 				address: $("input[data-ui-tb='address']", __uiWindow.element).val(),
 				images: __imagesUiView.getImages(),
-				level : $("#structure_level").attr("type")
+				level : $("#structure_level").attr("type"),
+				head: __headUiSelect.value(),
+				coordinator: __coordinatorUiSelect.value()
 			};
 
-			$("[data-error]").hide();
-
-			var err = false;
-			if( __membersUiSelect.value().length < 3)
-			{
-				err = true;
-				$("[data-error='members']").show();
-			}
-
-			if( $("select[data-ui-ddl='region']", __uiWindow.element).val() < 1)
-			{
-				err = true;
-				$("[data-error='region']").show();
-			}
-
-			if( $("input[data-ui-tb='address']", __uiWindow.element).val().length < 1 )
-			{
-				err = true;
-				$("[data-error='address']").show();
-			}
-
-			if( __imagesUiView.getImages().length < 2 )
-			{
-				err = true;
-				$("[data-error='images']").show();
-			}
-
-			if(err)
-				return false;
-
-			$.post("/register/structures/check_structure", {
-				geo: __geo.fn.geo(),
-				members: __membersUiSelect.value(),
-				level : $("#structure_level").attr("type")
-			}, function(res){
-
-				$.each(res.message, function(n, msg){
-					$("[data-ui='errors']").append("<div data-error='structure' class='mt10'>"+msg+"</div>");
-				});
-
-				__uiWindow.checkPosition();
-
-				if(res.type == "error");
-					return false;
-			}, "json");
-
 			__uiForm.data(__data);
+
 		}).afterSend(function(response){
 			if( ! response.success)
 				return;
@@ -96,6 +60,135 @@ $(document).ready(function(){
 			__uiWindow.close();
 		});
 
+		var __membersUiSelect = (function(element){
+			var __inputTemplate = kendo.template($(">script[data-ui='input_template']", $($(element).parents("td").eq(0))).html());
+
+			return $(element).kendoMultiSelect({
+				placeholder: "Почніть вводити email",
+				dataValueField: "id",
+				dataTextField: "name",
+				filter: "contains",
+				minLength: 3,
+				autoBind: false,
+				change: function(){
+					var __membersData = __membersUiSelect.value();
+					var __user = {};
+					var __emptyOption = {
+						id:0,
+						name: '\u2014',
+						first_name: '\u2014',
+						last_name: ""
+					};
+
+					__uiWindow.checkPosition();
+
+					__membersData.forEach(function(uid){
+						if(__user = __membersUiSelect.dataSource.get(uid))
+							if( ! __headUiSelect.dataSource.get(uid))
+								__headUiSelect.dataSource.insert(__user);
+					});
+
+					if(__membersData.length > 2)
+						$("[data-id='head']").show();
+					else
+					{
+						$("[data-id='coordinator']").hide();
+						$("[data-id='head']").hide();
+					}
+
+					if(__headUiSelect.dataSource.get(0))
+						__headUiSelect.dataSource.remove(__headUiSelect.dataSource.get(0));
+
+					__headUiSelect.dataSource.insert(__emptyOption);
+					var __headData = __headUiSelect.dataSource.data();
+					if(__membersData.length < __headData.length - 1)
+						__headData.forEach(function(user){
+							if(typeof user == "object" && user.id > 0)
+								if(__membersUiSelect.value().indexOf(user.id) < 0)
+									__headUiSelect.dataSource.remove( user );
+						});
+					__headUiSelect.value(0);
+				},
+				template: $(">script#input_template", $($(element).parents("td").eq(0))).html(),
+				dataSource: {
+					serverFiltering: true,
+					transport: {
+						read: (function(options){
+							$.ajax({
+								url: "/api/users/find?email="+options.data.filter.filters[0].value+"&geo="+__geo.fn.geo()+"&uniq_structure=true&status[]=99&status[]=100",
+								dataType: "jsonp",
+								complete: (function(response){
+									options.success($.map(eval("("+response.responseText+")").list, function(item){
+										item.template = __inputTemplate(item);
+										return item;
+									}));
+								})
+							});
+						})
+					}
+				}
+			}).data("kendoMultiSelect");
+		})($("select[data-uiAutoComplete='q']", __uiWindow.element));
+
+		var __headUiSelect = (function(element){
+			return $(element).kendoDropDownList({
+				dataValueField: "id",
+				dataTextField: "name",
+				filter: "contains",
+				minLength: 3,
+				autoBind: false,
+				dataBound: function(e) {
+					//__headUiSelect.dataSource.remove(0);
+					//__headUiSelect.dataSource.insert({
+					//		id:0,
+					//		name: '\u2014',
+					//		first_name: '\u2014',
+					//		last_name: ""
+					//	});
+				},
+				change: function(){
+					var __headData = __headUiSelect.dataSource.data();
+
+					if(__headUiSelect.value() > 0){
+						$("[data-id='coordinator']").show();
+						$("[data-id='scans']").show();
+					}
+					else{
+						$("[data-id='coordinator']").hide();
+						$("[data-id='scans']").hide();
+					}
+
+					__coordinatorUiSelect.dataSource.data([]);
+
+					__headData.forEach(function(__user){
+						if(
+							__user.id > 0
+							&& ! __coordinatorUiSelect.dataSource.get(__user.id)
+							&& __headUiSelect.value() != __user.id
+						)
+							__coordinatorUiSelect.dataSource.insert(__user);
+					});
+
+					if( ! __coordinatorUiSelect.dataSource.get(0))
+						__coordinatorUiSelect.dataSource.insert({id:0, name: '\u2014', first_name: '\u2014', last_name: ""});
+
+					__coordinatorUiSelect.value(0);
+				},
+				template: $(">script[data-ui='input_template']", $($(element).parents("td").eq(0))).html(),
+			}).data("kendoDropDownList");
+		})($("select[data-ui='head']", __uiWindow.element));
+
+		var __coordinatorUiSelect = (function(element){
+			return $(element).kendoDropDownList({
+				dataValueField: "id",
+				dataTextField: "name",
+				filter: "contains",
+				minLength: 3,
+				autoBind: false,
+				template: $(">script[data-ui='input_template']", $($(element).parents("td").eq(0))).html()
+			}).data("kendoDropDownList");
+		})($("select[data-ui='coordinator']", __uiWindow.element));
+
 		var __geo = (function(ui){
 			var __article;
 
@@ -105,14 +198,23 @@ $(document).ready(function(){
 						$(e.sender.list).width($(e.sender.wrapper).width() - 2);
 					},
 					change: function(e){
+						__membersUiSelect.value([]);
+						__headUiSelect.value([]);
+						__coordinatorUiSelect.value([]);
+						$("[data-id='coordinator']").hide();
+						$("[data-id='head']").hide();
+
 						if(e.sender.value() == 0){
 							__article.fn.geo(null);
 							__areaUiDDL.fn.hide();
 							__locationUiCB.fn.hide();
 							__cityDistrictUiDDL.fn.hide();
 							__addressUiTB.fn.hide();
+							$("[data-ui='members']").hide();
 							return;
 						}
+
+						$("[data-id='members']").show();
 
 						__article.fn.geo( e.sender.value() );
 
@@ -151,6 +253,12 @@ $(document).ready(function(){
 						$(e.sender.list).width($(e.sender.wrapper).width() - 2);
 					},
 					change: function(e){
+						__membersUiSelect.value([]);
+						__headUiSelect.value([]);
+						__coordinatorUiSelect.value([]);
+						$("[data-id='coordinator']").hide();
+						$("[data-id='head']").hide();
+
 						__article.fn.geo(e.sender.value() != 0 ? e.sender.value() : undefined);
 
 						if(e.sender.value() != null && e.sender.value() > 0) {
@@ -270,6 +378,12 @@ $(document).ready(function(){
 						$(e.sender.list).width($(e.sender.wrapper).width() - 2);
 					},
 					change: function(e){
+						__membersUiSelect.value([]);
+						__headUiSelect.value([]);
+						__coordinatorUiSelect.value([]);
+						$("[data-id='coordinator']").hide();
+						$("[data-id='head']").hide();
+
 						if( ! __re.test(e.sender.value())){
 							__article.fn.geo(undefined);
 							__cityDistrictUiDDL.fn.hide();
@@ -337,6 +451,12 @@ $(document).ready(function(){
 						$(e.sender.list).width($(e.sender.wrapper).width() - 2);
 					},
 					change: function(e){
+						__membersUiSelect.value([]);
+						__headUiSelect.value([]);
+						__coordinatorUiSelect.value([]);
+						$("[data-id='coordinator']").hide();
+						$("[data-id='head']").hide();
+
 						__article.fn.geo(e.sender.value() != 0 ? e.sender.value() : undefined);
 
 						if(e.sender.value() != null && e.sender.value() > 0) {
@@ -476,126 +596,6 @@ $(document).ready(function(){
 			})).initialize();
 		})($("div[ui-box='location']", __uiWindow.element));
 
-		var __membersUiSelect = (function(element){
-			var __inputTemplate = kendo.template($(">script[data-ui='input_template']", $($(element).parents("td").eq(0))).html());
-
-			return $(element).kendoMultiSelect({
-				placeholder: "Почніть вводити email",
-				dataValueField: "id",
-				dataTextField: "name",
-				filter: "contains",
-				minLength: 3,
-				autoBind: false,
-				change: function(){
-					__uiWindow.checkPosition();
-
-					var members = __membersUiSelect.value();
-					members.forEach(function(uid){
-						if(user = __membersUiSelect.dataSource.get(uid)){
-							if( ! __headUiSelect.dataSource.get(uid))
-								__headUiSelect.dataSource.insert( user );
-
-							if( ! __coordinatorUiSelect.dataSource.get(uid))
-								__coordinatorUiSelect.dataSource.insert( user );
-						}
-					});
-
-					var headData = __headUiSelect.dataSource.data();
-					if(headData.length > 0)
-						headData.forEach(function(user){
-							if(
-								typeof user == "object"
-								&&
-								(
-									(__membersUiSelect.value().indexOf(user.id) < 0)
-									|| (__coordinatorUiSelect.value().indexOf(user.id) >= 0)
-								)
-							)
-								__headUiSelect.dataSource.remove( user );
-						});
-
-					var coordinatorData = __coordinatorUiSelect.dataSource.data();
-					if(coordinatorData.length > 0)
-						coordinatorData.forEach(function(user){
-							if(
-								typeof user == "object"
-								&&
-								(
-									(__membersUiSelect.value().indexOf(user.id) < 0)
-									|| (__headUiSelect.value().indexOf(user.id) >= 0)
-								)
-							)
-								__coordinatorUiSelect.dataSource.remove( user );
-						});
-				},
-				template: $(">script#input_template", $($(element).parents("td").eq(0))).html(),
-				dataSource: {
-					serverFiltering: true,
-					transport: {
-						read: (function(options){
-							$.ajax({
-								url: "/api/users/find?email="+options.data.filter.filters[0].value+"&geo="+__geo.fn.geo()+"&uniq_structure=true",
-								dataType: "jsonp",
-								complete: (function(response){
-									options.success($.map(eval("("+response.responseText+")").list, function(item){
-										item.template = __inputTemplate(item);
-										return item;
-									}));
-								})
-							});
-						})
-					}
-				}
-			}).data("kendoMultiSelect");
-		})($("select[data-uiAutoComplete='q']", __uiWindow.element));
-
-		var __headUiSelect = (function(element){
-			return $(element).kendoDropDownList({
-				//placeholder: "Почніть вводити email",
-				dataValueField: "id",
-				dataTextField: "name",
-				filter: "contains",
-				minLength: 3,
-				autoBind: false,
-				change: function(){
-					var members = __membersUiSelect.value();
-					members.forEach(function(uid){
-						if(user = __membersUiSelect.dataSource.get(uid)){
-							if( ! __coordinatorUiSelect.dataSource.get(uid))
-								__coordinatorUiSelect.dataSource.insert( user );
-						}
-					});
-
-					var coordinatorData = __coordinatorUiSelect.dataSource.data();
-					if(coordinatorData.length > 0)
-						coordinatorData.forEach(function(user){
-							if(
-								typeof user == "object"
-								&&
-								(
-									(__membersUiSelect.value().indexOf(user.id) < 0)
-									|| (__headUiSelect.value().indexOf(user.id) >= 0)
-								)
-							)
-								__coordinatorUiSelect.dataSource.remove( user );
-						});
-				},
-				template: $(">script[data-ui='input_template']", $($(element).parents("td").eq(0))).html(),
-			}).data("kendoDropDownList");
-		})($("select[data-ui='head']", __uiWindow.element));
-
-		var __coordinatorUiSelect = (function(element){
-			return $(element).kendoDropDownList({
-				//placeholder: "Почніть вводити email",
-				dataValueField: "id",
-				dataTextField: "name",
-				filter: "contains",
-				minLength: 3,
-				autoBind: false,
-				template: $(">script[data-ui='input_template']", $($(element).parents("td").eq(0))).html(),
-			}).data("kendoDropDownList");
-		})($("select[data-ui='coordinator']", __uiWindow.element));
-
 		var __imagesUiView = (function(element){
 			var __listUiBox = $(">div[data-uiBox='list']", element),
 				__imageTemplate = kendo.template($(">script", __listUiBox).html()),
@@ -660,7 +660,64 @@ $(document).ready(function(){
 		})($("div[data-uiView='images']", __uiWindow.element));
 
 		$("a[data-action='send']", __uiWindow.element).click(function(){
-			__uiForm.send();
+			$("[data-error]")
+				.attr("data-show", false)
+				.hide();
+
+			var err = false;
+			if( __membersUiSelect.value().length < 1)
+			{
+				err = true;
+				$("[data-error='members']")
+					.attr("data-show", true)
+					.show();
+			}
+
+			if( $("select[data-ui-ddl='region']", __uiWindow.element).val() < 1)
+			{
+				err = true;
+				$("[data-error='region']").show();
+			}
+
+			if( $("input[data-ui-tb='address']", __uiWindow.element).val().length < 1 )
+			{
+				err = true;
+				$("[data-error='address']").show();
+			}
+
+			if( __imagesUiView.getImages().length < 2 )
+			{
+				err = true;
+				$("[data-error='images']").show();
+			}
+
+			if( __headUiSelect.value() < 1)
+			{
+				err = true;
+				$("[data-error='head']").show();
+			}
+
+			if(err)
+				return false;
+
+			$.post("/register/structures/check_structure", {
+				geo: __geo.fn.geo(),
+				members: __membersUiSelect.value(),
+				head: __headUiSelect.value(),
+				coordinator: __coordinatorUiSelect.value(),
+				level : $("#structure_level").attr("type")
+			}, function(res){
+
+				$.each(res.message, function(n, msg){
+					$("[data-ui='errors']").append("<div data-error='structure' class='mt10'>"+msg+"</div>");
+				});
+
+				__uiWindow.checkPosition();
+
+				if(res.type == "success")
+					__uiForm.send();
+
+			}, "json");
 		});
 
 		$("a[data-action='cancel']", __uiWindow.element).click(function(){

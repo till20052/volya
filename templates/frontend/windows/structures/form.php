@@ -1,4 +1,4 @@
-<div ui-window="register.structures.form" style="width: 550px">
+<div ui-window="register.structures.form" style="width: 500px">
 	
 	<div class="fright">
 		<a class="closeButton"></a>
@@ -15,7 +15,7 @@
 				<tbody>
 
 				<tr>
-					<td class="taright pr15"><?=t("Рівень")?></td>
+					<td class="taright pr15" width="20%"><?=t("Рівень")?></td>
 					<td>
 						<span id="structure_level"><?=t("Не обрано")?></span>
 					</td>
@@ -25,7 +25,7 @@
 				<tr><td colspan="3" style="height: 15px"></td></tr>
 
 				<tr>
-					<td style="width: 115px" class="taright pr15"><?=t("Область")?><span style="padding-left: 5px; color: red">*</span></td>
+					<td width="25%" class="taright pr15"><?=t("Область")?><span style="padding-left: 5px; color: red">*</span></td>
 					<td>
 						<select data-ui-ddl="region" style="width: 100%">
 							<option value="0">&mdash;</option>
@@ -116,11 +116,11 @@
 					</td>
 				</tr>
 
-				<tr data-id="members" class="dnone">
+				<tr>
 					<td colspan="3" style="height: 15px"></td>
 				</tr>
 
-				<tr data-id="members" class="dnone">
+				<tr>
 					<td class="taright pr15"><?=t("Члени")?><span style="padding-left: 5px; color: red">*</span></td>
 					<td colspan="2">
 						<select data-uiAutoComplete="q" style="width: 100%"></select>
@@ -128,18 +128,11 @@
 					</td>
 				</tr>
 
-				<tr data-id="members" class="dnone">
-					<td></td>
-					<td colspan="2">
-						<span class="fsitalic cred o5">(<?=t("Увага! При зміні георгафічної прив'язки організації, всі члени видаляються")?>)</span>
-					</td>
-				</tr>
-
-				<tr data-id="head" class="dnone">
+				<tr>
 					<td colspan="3" style="height: 15px"></td>
 				</tr>
 
-				<tr data-id="head" class="dnone">
+				<tr>
 					<td class="taright pr15"><?=t("Голова")?><span style="padding-left: 5px; color: red">*</span></td>
 					<td colspan="2">
 						<select data-ui="head" style="width: 100%"></select>
@@ -147,23 +140,23 @@
 					</td>
 				</tr>
 
-				<tr data-id="coordinator" class="dnone">
+				<tr>
 					<td colspan="3" style="height: 15px"></td>
 				</tr>
 
-				<tr data-id="coordinator" class="dnone">
-					<td class="taright pr15"><?=t("Координатор")?></td>
+				<tr>
+					<td class="taright pr15"><?=t("Координатор")?><span style="padding-left: 5px; color: red">*</span></td>
 					<td colspan="2">
 						<select data-ui="coordinator" style="width: 100%"></select>
 						<script type="text/x-kendo-template" data-ui="input_template">#=first_name# #=last_name#</script>
 					</td>
 				</tr>
 
-				<tr data-id="scans" class="dnone">
+				<tr>
 					<td colspan="3" style="height: 15px"></td>
 				</tr>
 
-				<tr data-id="scans" class="dnone">
+				<tr>
 					<td colspan="3" class="tacenter">
 						<div data-uiView="images">
 							<div data-uiBox="list">
@@ -195,7 +188,7 @@
 				<?=t("Оберіть регіон")?>
 			</div>
 			<div data-error="members" class="dnone mt10">
-				<?=t("На обрано членів осередку")?>
+				<?=t("Не достатня кількість членів")?>
 			</div>
 			<div data-error="address" class="dnone mt10">
 				<?=t("Введіть адресу")?>
@@ -205,9 +198,6 @@
 			</div>
 			<div data-error="duplicate" class="dnone mt10">
 				<?=t("Такий осередок вже існує")?>
-			</div>
-			<div data-error="head" class="dnone mt10">
-				<?=t("Оберіть голову осередку")?>
 			</div>
 		</div>
 		

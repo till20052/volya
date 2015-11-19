@@ -139,6 +139,13 @@
 /* COLOR */
 .cwhite{color:white}
 .cgray{color:gray}
+.cred{color:red}
 .cblack{color:black}
 /* CURSOR */
 .cpointer{cursor:pointer}
+/*OPACITY*/
+.o1{opacity:.1;}
+.o3{opacity:.3;}
+.o5{opacity:.5;}
+.o7{opacity:.7;}
+.o10{opacity:1;}

@@ -78,9 +78,9 @@
 				<td></td>
 			</tr>
 
-			<tr><td colspan="3" style="height: 15px"></td></tr>
+			<tr><td style="height: 15px"></td></tr>
 			<tr>
-				<td colspan="3" class="tacenter">
+				<td class="tacenter">
 					<a data-action="filter" href="javascript:void(0);" class="v-button v-button-blue"><?=t("Пошук")?></a>
 				</td>
 			</tr>

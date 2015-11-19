@@ -3,10 +3,9 @@
 namespace libs\services\structures;
 
 \Loader::loadService("StructuresService");
-
 use libs\services\StructuresService;
 
-class InitService extends StructuresService
+class InitService
 {
 
 	public function constructRerionsStructures()
@@ -14,7 +13,7 @@ class InitService extends StructuresService
 		$__regions = \GeoClass::i()->regions();
 
 		foreach ($__regions as $__region) {
-			parent::addStructure($__region["id"], 1);
+			parent::addStructure($__region["id"], StructuresService::LEVEL_PRIMARY);
 
 			$this->constructCitiesWithDistrictsStructures($__region["id"]);
 		}
@@ -25,12 +24,27 @@ class InitService extends StructuresService
 		$__citiesWithDistricts = \GeoClass::i()->citiesWithDistricts($region);
 
 		foreach ($__citiesWithDistricts as $__item) {
-			parent::addStructure($__item["id"], $__item["type"] == "city" ? 2 : 3);
 
-			if($__item["type"] == "district")
-				$this->constructCitiesStructures($__item["id"]);
-			else
+			if(
+				count(\GeoClass::i()->cityDistricts($__item["id"])) > 0
+				&& $__item["type"] == "city"
+			)
+				parent::addStructure($__item["id"], StructuresService::LEVEL_CITY_WITH_DISTRICTS);
+			elseif(
+				count(\GeoClass::i()->cityDistricts($__item["id"])) == 0
+				&& $__item["type"] == "city"
+			)
+				parent::addStructure($__item["id"], StructuresService::LEVEL_CITY_WITHOUTH_DISTRICTS);
+			elseif($__item["type"] == "district")
+				parent::addStructure($__item["id"], StructuresService::LEVEL_DISTRICT);
+
+			if(
+				count(\GeoClass::i()->cityDistricts($__item["id"])) > 0
+				&& $__item["type"] == "city"
+			)
 				$this->constructCitiesDistrictsStructures($__item["id"]);
+			elseif($__item["type"] == "district")
+				$this->constructCitiesStructures($__item["id"]);
 		}
 	}
 
@@ -40,7 +54,7 @@ class InitService extends StructuresService
 
 		if(count($__cities) > 0)
 			foreach ($__cities as $__city)
-				parent::addStructure($__city["id"], 5);
+				parent::addStructure($__city["id"], StructuresService::LEVEL_CITY_WITHOUTH_DISTRICTS);
 	}
 
 	public function constructCitiesDistrictsStructures($city)
@@ -48,7 +62,7 @@ class InitService extends StructuresService
 		$__districts = \GeoClass::i()->cityDistricts($city);
 
 		foreach ($__districts as $__district) {
-			parent::addStructure($__district["id"], 4);
+			parent::addStructure($__district["id"], StructuresService::LEVEL_CITY_DISTRICT);
 		}
 	}
 }

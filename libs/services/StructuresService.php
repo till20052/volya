@@ -23,43 +23,46 @@ use libs\models\register\documents\ImagesModel;
 class StructuresService extends \Keeper
 {
 	const LEVEL_REGION = 1;
-	const LELEL_DISTRICT = 3;
-	const DOCUMENT_CATEGORY = 3;
+	const LEVEL_CITY_WITH_DISTRICTS = 2;
+	const LEVEL_DISTRICT = 3;
+	const LEVEL_CITY_DISTRICT = 4;
+	const LEVEL_CITY_WITHOUTH_DISTRICTS = 5;
+	const LEVEL_PRIMARY = 6;
 
 	protected static $levels = [
-		1 => [
+		self::LEVEL_REGION => [
 			"long" => "Обласна партійна огранізація",
 			"short" => "Обласна",
 			"type" => "region"
 		],
-		2 => [
-			"long" => "Міська партійна огранізація обласного значення",
+		self::LEVEL_CITY_WITH_DISTRICTS => [
+			"long" => "Міська партійна огранізація з поділом на райони",
 			"short" => "Міська обласного значення",
 			"type" => "city"
 		],
-		3 => [
+		self::LEVEL_DISTRICT => [
 			"long" => "Районна партійна огранізація",
 			"short" => "Районна",
 			"type" => "district"
 		],
-		4 => [
+		self::LEVEL_CITY_DISTRICT => [
 			"long" => "Районна в місті партійна огранізація",
 			"short" => "Районна в місті",
 			"type" => "city_district"
 		],
-		5 => [
-			"long" => "Міська партійна огранізація",
+		self::LEVEL_CITY_WITHOUTH_DISTRICTS => [
+			"long" => "Міська партійна огранізація без поділу на райони",
 			"short" => "Міська",
 			"type" => "city"
 		],
-		6 => [
+		self::LEVEL_PRIMARY => [
 			"long" => "Первинна партійна огранізація",
 			"short" => "Первинна"
 		]
 	];
 
 	protected static $rules = [
-		6 => [
+		self::LEVEL_PRIMARY => [
 			[
 				"type" => "members",
 				"level" => "creators",
@@ -67,7 +70,7 @@ class StructuresService extends \Keeper
 				"count" => 3
 			]
 		],
-		5 => [
+		self::LEVEL_CITY_WITHOUTH_DISTRICTS => [
 			[
 				"type" => "members",
 				"level" => "creators",
@@ -76,11 +79,11 @@ class StructuresService extends \Keeper
 			],
 			[
 				"type" => "structures",
-				"level" => 6,
+				"level" => self::LEVEL_PRIMARY,
 				"count" => 3
 			]
 		],
-		4 => [
+		self::LEVEL_CITY_DISTRICT => [
 			[
 				"type" => "members",
 				"level" => "creators",
@@ -89,11 +92,11 @@ class StructuresService extends \Keeper
 			],
 			[
 				"type" => "structures",
-				"level" => 6,
+				"level" => self::LEVEL_PRIMARY,
 				"count" => 3
 			]
 		],
-		3 => [
+		self::LEVEL_DISTRICT => [
 			[
 				"type" => "members",
 				"level" => "creators",
@@ -102,32 +105,27 @@ class StructuresService extends \Keeper
 			],
 			[
 				"type" => "structures",
-				"level" => 6,
+				"level" => self::LEVEL_CITY_WITHOUTH_DISTRICTS,
 				"count" => 3
 			]
 		],
-		2 => [
+		self::LEVEL_CITY_WITH_DISTRICTS => [
 			[
 				"type" => "members",
 				"level" => "creators",
 				"status" => ["100"],
-				"count" => 2
-			],
-			[
-				"type" => "structures",
-				"level" => 4,
-				"count" => 3
+				"count" => 6
 			],
 			"OR" => [
 				[
 					"type" => "structures",
-					"level" => 4,
+					"level" => self::LEVEL_CITY_DISTRICT,
 					"count" => 3
 				],
 				"AND" => [
 					[
 						"type" => "structures",
-						"level" => 4,
+						"level" => self::LEVEL_CITY_DISTRICT,
 						"count" => 2
 					],
 					[
@@ -139,7 +137,7 @@ class StructuresService extends \Keeper
 				]
 			]
 		],
-		1 => [
+		self::LEVEL_REGION => [
 			[
 				"type" => "members",
 				"level" => "creators",
@@ -148,7 +146,10 @@ class StructuresService extends \Keeper
 			],
 			[
 				"type" => "structures",
-				"level" => [2, 3, 5],
+				"level" => [self::LEVEL_DISTRICT, self::LEVEL_CITY_WITH_DISTRICTS, [
+					"level" => self::LEVEL_CITY_WITHOUTH_DISTRICTS,
+					"option" => "not_in_district"
+				]],
 				"count" => 3
 			]
 		]
@@ -159,12 +160,14 @@ class StructuresService extends \Keeper
 		return StructuresModel::i()->getItemByField("geo", $geo);
 	}
 
-	private function __addMembers($sid, $members)
+	private function __addMembers($sid, $members, $head, $coordinator)
 	{
 		foreach($members as $__member)
 			MembersModel::i()->insert([
 				"sid" => $sid,
-				"uid" => $__member
+				"uid" => $__member,
+				"is_head" => $__member == $head ? 1 : 0,
+				"is_coordinator" => $__member == $coordinator ? 1 : 0
 			]);
 	}
 
@@ -232,8 +235,19 @@ class StructuresService extends \Keeper
 						if( ! is_array($__rule["level"]))
 							$__rule["level"] = [$__rule["level"]];
 
+						$__levelCond = [];
+
+						if(count($__rule["level"]) > 1)
+							foreach ($__rule["level"] as $__level) {
+								if( ! is_array($__level))
+									$__levelCond[] = "level = " . $__level;
+								else
+									$__levelCond[] = ["OR" => ["level = " . $__level["level"], $__level["level"] . " = 1"]];
+						}
+
+
 						$__code = rtrim($structure["geo"], '0');
-						$__cond = ["geo REGEXP :regexp", "level IN (".implode(", ", $__rule["level"]).")", "status = 1"];
+						$__cond = ["geo REGEXP :regexp", "OR" => $__levelCond, "status = 1"];
 						$__bind["regexp"] = $__code . "[0-9]{" . (10 - strlen($__code)) . "}";
 
 						if(count(StructuresModel::i()->getList($__cond, $__bind)) < $__rule["count"])
@@ -268,10 +282,16 @@ class StructuresService extends \Keeper
 								if(in_array($__member["type"], $__rule["status"]))
 									$__col++;
 
+							if(count($__rule["status"]) == 2)
+								$__message = t("Недостатньо членів партії або кандидатів в члени партії");
+							else
+								$__message = t("Недостатньо членів партії");
+
 							if($__col < $__rule["count"])
 								$__results[] = [
 									"type" => "error",
-									"message" => t("Недостатньо членів осередку")
+									"message" => $__message,
+									"count" => $__col
 								];
 							else
 								$__results[] = ["type" => "success"];
@@ -294,6 +314,9 @@ class StructuresService extends \Keeper
 						$__response["message"] = array_merge($__response["message"], $__result["message"]);
 					else
 						$__response["message"][] = $__result["message"];
+
+					if(isset($__result["count"]))
+						$__response["count"] = $__result["count"];
 				}
 		}
 		elseif($logic == "OR")
@@ -301,10 +324,10 @@ class StructuresService extends \Keeper
 			$__response["type"] = "error";
 			$__response["message"] = [];
 			foreach ($__results as $__result)
-				if($__result["type"] == "success")
+				if ($__result["type"] == "success")
 					$__response["type"] = "success";
 				else
-					if(is_array($__result["message"]))
+					if (is_array($__result["message"]))
 						$__response["message"] = array_merge($__response["message"], $__result["message"]);
 					else
 						$__response["message"][] = $__result["message"];
@@ -419,7 +442,7 @@ class StructuresService extends \Keeper
 	{
 		$__structure = $this->__getStructureByGeo($geo);
 
-		return $__structure["level"] ? array_merge(self::$levels[$__structure["level"]], ["level" => $__structure["level"]]) : array_merge(self::$levels[6], ["level" => 6]);
+		return $__structure["level"] ? array_merge(self::$levels[$__structure["level"]], ["level" => $__structure["level"]]) : array_merge(self::$levels[self::LEVEL_PRIMARY], ["level" => self::LEVEL_PRIMARY]);
 	}
 
 	public function getLastVerification($id)
@@ -451,9 +474,18 @@ class StructuresService extends \Keeper
 
 		if(
 			(is_array($__structure))
-			&& ($__structure["level"] < 6)
+			&& ($__structure["level"] < self::LEVEL_PRIMARY)
 			&& ($__structure["level"] != $data["level"])
 			&& ($__structure["status"] == 1)
+		)
+			return false;
+
+		if(
+			! $data["geo"]
+			|| ! $data["address"]
+			|| ! $data["level"]
+			|| ! $data["members"]
+			|| ! $data["head"]
 		)
 			return false;
 
@@ -465,7 +497,7 @@ class StructuresService extends \Keeper
 		]);
 
 		if(is_array($data["members"]))
-			$this->__addMembers($__sid, $data["members"]);
+			$this->__addMembers($__sid, $data["members"], $data["head"], $data["coordinator"]);
 
 		if(is_array($data["images"]))
 			$this->__addDocuments($__sid, $data["images"]);
@@ -479,7 +511,7 @@ class StructuresService extends \Keeper
 		$__structure["level"] = $data["level"];
 
 		if(
-			$__structure["level"] < 6
+			$__structure["level"] < self::LEVEL_PRIMARY
 			&& $__structure["status"] == 1
 		)
 			return [

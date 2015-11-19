@@ -104,9 +104,10 @@ class UsersApiController extends ApiController
 		}
 
 		if(Request::getBool("uniq_structure"))
-		{
 			$__cond[] = "`id` NOT IN (SELECT `uid` FROM `structures_members`)";
-		}
+
+		if(Request::getArray("status"))
+			$__cond[] = "`type` IN (". implode(",", Request::getArray("status")) .")";
 
 		$__list = array();
 		foreach(UsersModel::i()->getList($__cond, $__bind) as $__id)
