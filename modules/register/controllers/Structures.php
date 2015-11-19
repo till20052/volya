@@ -12,8 +12,12 @@ Loader::loadService("StructuresService");
 Loader::loadService("structures.InitService");
 Loader::loadService("register.admin.GroupsService");
 
+\Loader::loadModel("structures.StructuresModel");
+
 use \libs\services\StructuresService;
+use \libs\services\structures\InitService;
 use \libs\services\register\admin\GroupsService;
+use libs\models\structures\StructuresModel;
 
 class StructuresRegisterController extends RegisterController
 {
@@ -309,8 +313,15 @@ class StructuresRegisterController extends RegisterController
 		]);
 	}
 
-	public function initStructure()
+	public function initStructures()
 	{
+		$credentials = new stdClass();
 
+		$this->hasAccess(UserClass::i()->getId(), $credentials);
+
+		if( ! $credentials->initStructures)
+			$this->redirect('/');
+
+		InitService::i()->init();
 	}
 }

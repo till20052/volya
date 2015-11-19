@@ -21,6 +21,7 @@ class IndexStructuresController extends StructuresController
 	{
 		parent::execute();
 		parent::loadKendo(true);
+		parent::loadFileupload(true);
 
 //		$credentials = new stdClass();
 //
@@ -29,13 +30,24 @@ class IndexStructuresController extends StructuresController
 //
 //		$this->cred = $credentials;
 
+		parent::loadWindow([
+			"register/structures/form",
+		]);
+
+		HeadClass::addLess([
+			"/less/frontend/register/structures/form.less"
+		]);
+
+		HeadClass::addJs(array(
+			"/js/form.js",
+			"/js/frontend/structures/index.js"
+		));
+
 		HeadClass::addLess([
 			"/less/frontend/structures/index.less",
 			"/less/frontend/structures/common/filter.less",
 			"/less/frontend/structures/common/structures.less"
 		]);
-
-		HeadClass::addJs("/js/frontend/structures/index.js");
 
 		$this->filter = [];
 		$__cond = [];

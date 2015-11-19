@@ -1,6 +1,6 @@
 <div data-ui="filter">
 
-	<div class="fs14" ui-box="location">
+	<div class="fs14" ui-box="filter">
 		<table width="100%" cellspacing="0" cellpadding="0">
 
 			<tr>

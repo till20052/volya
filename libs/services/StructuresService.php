@@ -22,6 +22,8 @@ use libs\models\register\documents\ImagesModel;
 
 class StructuresService extends \Keeper
 {
+	const DOCUMENT_CATEGORY = 3;
+
 	const LEVEL_REGION = 1;
 	const LEVEL_CITY_WITH_DISTRICTS = 2;
 	const LEVEL_DISTRICT = 3;
@@ -148,9 +150,9 @@ class StructuresService extends \Keeper
 				"type" => "structures",
 				"level" => [self::LEVEL_DISTRICT, self::LEVEL_CITY_WITH_DISTRICTS, [
 					"level" => self::LEVEL_CITY_WITHOUTH_DISTRICTS,
-					"option" => "not_in_district"
+					"option" => "not_in_area"
 				]],
-				"count" => 3
+				"count" => 2
 			]
 		]
 	];
@@ -232,22 +234,26 @@ class StructuresService extends \Keeper
 			else
 				switch ($__rule["type"]) {
 					case "structures":
-						if( ! is_array($__rule["level"]))
-							$__rule["level"] = [$__rule["level"]];
+						if(is_array($__rule["level"]))
+						{
+							$__levelCond = [];
 
-						$__levelCond = [];
-
-						if(count($__rule["level"]) > 1)
-							foreach ($__rule["level"] as $__level) {
-								if( ! is_array($__level))
+							foreach ($__rule["level"] as $__level)
+								if ( ! is_array($__level))
 									$__levelCond[] = "level = " . $__level;
 								else
-									$__levelCond[] = ["OR" => ["level = " . $__level["level"], $__level["level"] . " = 1"]];
+									$__levelCond[] = ["level = " . $__level["level"], $__level["option"] . " = 1"];
 						}
+						else
+							$__levelCond = "level = " . $__rule["level"];
 
+						if(is_array($__levelCond))
+							$__levelCond = [
+								"OR" => $__levelCond
+							];
 
 						$__code = rtrim($structure["geo"], '0');
-						$__cond = ["geo REGEXP :regexp", "OR" => $__levelCond, "status = 1"];
+						$__cond = ["geo REGEXP :regexp", $__levelCond, "status = 1"];
 						$__bind["regexp"] = $__code . "[0-9]{" . (10 - strlen($__code)) . "}";
 
 						if(count(StructuresModel::i()->getList($__cond, $__bind)) < $__rule["count"])
@@ -378,9 +384,9 @@ class StructuresService extends \Keeper
 		return self::$levels[$level];
 	}
 
-	public function addStructure($geo, $type)
+	public function addStructure($geo, $type, $options = [])
 	{
-		StructuresModel::i()->insert(["geo" => $geo, "level" => $type]);
+		StructuresModel::i()->insert(array_merge(["geo" => $geo, "level" => $type], $options));
 	}
 
 	public function getStructures($__cond = [], $__bind = [])
@@ -440,7 +446,7 @@ class StructuresService extends \Keeper
 
 	public function getStructureLevel($geo)
 	{
-		$__structure = $this->__getStructureByGeo($geo);
+		$__structure = StructuresModel::getRow("SELECT * FROM `structures` WHERE `geo` LIKE '".$geo."' AND level < 6");
 
 		return $__structure["level"] ? array_merge(self::$levels[$__structure["level"]], ["level" => $__structure["level"]]) : array_merge(self::$levels[self::LEVEL_PRIMARY], ["level" => self::LEVEL_PRIMARY]);
 	}
@@ -470,31 +476,24 @@ class StructuresService extends \Keeper
 
 	public function save($data)
 	{
-		$__structure = $this->getStructureByGeo($data["geo"]);
+		$__structure = StructuresModel::getRow("SELECT * FROM `structures` WHERE `geo` LIKE '".$data["geo"]."' AND level < 6");
 
-		if(
-			(is_array($__structure))
-			&& ($__structure["level"] < self::LEVEL_PRIMARY)
-			&& ($__structure["level"] != $data["level"])
-			&& ($__structure["status"] == 1)
-		)
-			return false;
-
-		if(
-			! $data["geo"]
-			|| ! $data["address"]
-			|| ! $data["level"]
-			|| ! $data["members"]
-			|| ! $data["head"]
-		)
-			return false;
-
-		$__sid = StructuresModel::i()->insert([
-			"geo" => $data["geo"],
-			"address" => $data["address"],
-			"level" => $data["level"],
-			"status" => 1
-		]);
+		if( ! is_array($__structure))
+			$__sid = StructuresModel::i()->insert([
+				"geo" => $data["geo"],
+				"address" => $data["address"],
+				"level" => $data["level"],
+				"status" => 1
+			]);
+		else
+		{
+			$__sid = $__structure["id"];
+			StructuresModel::i()->update([
+				"id" => $__sid,
+				"address" => $data["address"],
+				"status" => 1
+			]);
+		}
 
 		if(is_array($data["members"]))
 			$this->__addMembers($__sid, $data["members"], $data["head"], $data["coordinator"]);

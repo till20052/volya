@@ -1,13 +1,10 @@
-<div class="header">
+<div data-id="structure_header" class="header">
 	<div class="breadcrumbs">
 
 		<div>
 
-			<? if(isset($filter["geo"])){ ?>
-				<h3><a href="/structures"><?=t("Осередки")?></a> / <?=$filter["geo"]["location"]?></h3>
-			<? } ?>
+			<h3><? if(isset($filter["geo"])) {?><a href="/structures"><? } ?><?=t("Осередки")?><? if(isset($filter["geo"])) {?></a><? } ?> <? if(isset($filter["geo"])){ ?> / <?=$filter["geo"]["location"]?></h3><? } ?>
 
 		</div>
-
 	</div>
 </div>

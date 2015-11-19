@@ -16,7 +16,8 @@ $(document).ready(function(){
 			$("[data-id='coordinator']").hide();
 			$("[data-id='head']").hide();
 
-			$("[data-id='is_primary']").val(0).hide();
+			$("[data-id='is_primary']").hide();
+			$("#is_primary").prop('checked', false);
 
 			$("#structure_level")
 				.html( "Не обрано" )
