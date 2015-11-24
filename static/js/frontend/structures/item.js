@@ -14,13 +14,16 @@ $(document).ready(function(){
 	$("a[data-action='join']", __section).click(function(){
 
 		$.post("/structures/join_structure", {
-			sid: $(this).attr("data-id")
+			sid: $(this).attr("data-id"),
+			geo: $(this).attr("data-geo")
 		}, function(res){
-			if( ! res.success)
-				alert("Ви вже долучені до однієї з структур");
+			if( ! res.success){
+				alert(res.msg);
+				$(this).remove();
+				return false;
+			}
 
-			window.location.href = window.location.href;
-			$(this).remove();
+			//window.location.href = window.location.href;
 		}, "json");
 
 	});

@@ -1,4 +1,4 @@
-<div data-id="structure_header" class="header">
+<div data-id="structure_header" class="header" style="margin-bottom: 0">
 	<div class="breadcrumbs">
 
 		<div>

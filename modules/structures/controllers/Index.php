@@ -10,17 +10,30 @@ class IndexStructuresController extends StructuresController
 
 	private function __getStructure($sid)
 	{
-		$structure = StructuresService::i()->getStructure($sid, true);
-		$structure["head"] = StructuresService::i()->getStructureHead($sid);
-		$structure["coordinator"] = StructuresService::i()->getStructureCoordinator($sid);
-		$structure["in_structure"] = StructuresService::i()->isInStructure(UserClass::i()->getId());
+		$__structure = StructuresService::i()->getStructure($sid, true);
+		$__structure["head"] = StructuresService::i()->getStructureHead($sid);
+		$__structure["coordinator"] = StructuresService::i()->getStructureCoordinator($sid);
 
-		return $structure;
+		$__code = rtrim($__structure["geo"], '0');
+		$__user = UsersModel::i()->getItem(UserClass::i()->getId());
+
+		$__structure["can_join"] = true;
+
+		if(StructuresService::i()->isInStructure(UserClass::i()->getId()))
+			$__structure["can_join"] = false;
+
+		if(preg_match("/" . $__code . "[0-9]{" . (10 - strlen($__code)) . "}/", $__user["geo_koatuu_code"]) < 1)
+			$__structure["can_join"] = false;
+
+		return $__structure;
 	}
 
 	public function __construct()
 	{
 		parent::__construct();
+
+		if( ! UserClass::i()->isAuthorized())
+			parent::redirect("/");
 
 		$this->addAccessHandler(function($uid, $credentials = false){
 
@@ -98,7 +111,26 @@ class IndexStructuresController extends StructuresController
 		parent::execute();
 		parent::setViewer("json");
 
-		if(StructuresService::i()->isInStructure(UserClass::i()->getId()))
+		$__code = rtrim(Request::getInt("geo"), '0');
+		$__user = UsersModel::i()->getItem(UserClass::i()->getId());
+
+		$this->json = [
+			"status" => true
+		];
+
+		if(StructuresService::i()->isInStructure(UserClass::i()->getId()) )
+			$this->json = [
+				"status" => false,
+				"msg" => t("Ви вже долучень до іншого осередку")
+			];
+
+		if(preg_match("/" . $__code . "[0-9]{" . (10 - strlen($__code)) . "}/", $__user["geo_koatuu_code"]) == 0)
+			$this->json = [
+				"status" => false,
+				"msg" => t("Ви не попадаєте під зону дії цього осередку")
+			];
+
+		if( ! $this->json["status"])
 			return false;
 
 		StructuresService::i()->addMember(Request::getInt("sid"), UserClass::i()->getId());
