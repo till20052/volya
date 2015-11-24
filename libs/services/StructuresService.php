@@ -164,6 +164,9 @@ class StructuresService extends \Keeper
 
 	private function __addMembers($sid, $members, $head, $coordinator)
 	{
+		if( ! is_array($members))
+			$members = [$members];
+
 		foreach($members as $__member)
 			MembersModel::i()->insert([
 				"sid" => $sid,
@@ -200,11 +203,23 @@ class StructuresService extends \Keeper
 	{
 		$__members = [];
 		foreach (MembersModel::i()->getCompiledListByField("sid", $sid) as $__member)
-		{
 			$__members[] = array_merge(\UsersModel::i()->getItem($__member["uid"]), $__member);
-		}
 
 		return $__members;
+	}
+
+	private function __getStructeruHead($sid)
+	{
+		$__bind["sid"] = $sid;
+
+		return \UsersModel::i()->getItem(MembersModel::i()->getRow("SELECT `uid` FROM `structures_members` WHERE sid = :sid AND is_head = 1", $__bind)["uid"]);
+	}
+
+	private function __getStructeruCoordinator($sid)
+	{
+		$__bind["sid"] = $sid;
+
+		return \UsersModel::i()->getItem(MembersModel::i()->getRow("SELECT `uid` FROM `structures_members` WHERE sid = :sid AND is_coordinator = 1", $__bind)["uid"]);
 	}
 
 	private function __getRules($type)
@@ -364,16 +379,6 @@ class StructuresService extends \Keeper
 		return (bool) MembersModel::i()->getItemByField("uid", $uid);
 	}
 
-	public function membersOnLocation($geo, $level)
-	{
-		$__type = $this->getLevel($level)["type"];
-
-		switch ($__type) {
-			case "city":
-				break;
-		}
-	}
-
 	public function getLevels()
 	{
 		return self::$levels;
@@ -432,6 +437,16 @@ class StructuresService extends \Keeper
 		return $this->__getStructureByGeo($geo);
 	}
 
+	public function getStructureHead($sid)
+	{
+		return $this->__getStructeruHead($sid);
+	}
+
+	public function getStructureCoordinator($sid)
+	{
+		return $this->__getStructeruCoordinator($sid);
+	}
+
 	public function setVerification($sid, $uvid, $type, $comment)
 	{
 		$__data = [
@@ -466,6 +481,7 @@ class StructuresService extends \Keeper
 		if( ! is_null($__verification))
 			$__verification["user_verifier"] = \UsersModel::i()->getItem($__verification["uvid"], array(
 				"id",
+				"avatar",
 				"first_name",
 				"last_name",
 				"middle_name"
@@ -528,5 +544,10 @@ class StructuresService extends \Keeper
 		$__structure["members"] = $__members;
 
 		return $this->__checkStructure($__structure);
+	}
+
+	public function addMember($sid, $uid, $isHead = false, $isCoordinator = false)
+	{
+		$this->__addMembers($sid, $uid, $isHead, $isCoordinator);
 	}
 }

@@ -1126,15 +1126,6 @@ $(document).ready(function(){
 		});
 	}($("div[ui-window='register.structures.viewer']")));
 
-	$("input[name='varification']", __viewerUiWindow.element).change(function(){
-		$("textarea#comment", __viewerUiWindow.element).val("");
-
-		if($(this).val() == "-1")
-			$("textarea#comment", __viewerUiWindow.element).show();
-		else
-			$("textarea#comment", __viewerUiWindow.element).hide();
-	});
-
 	$("a#save", __viewerUiWindow.element).click(function(){
 		var sid = $(this).attr("data-id");
 

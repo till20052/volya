@@ -3,7 +3,14 @@
 
 		<div>
 
-			<h3><? if(isset($filter["geo"])) {?><a href="/structures"><? } ?><?=t("Осередки")?><? if(isset($filter["geo"])) {?></a><? } ?> <? if(isset($filter["geo"])){ ?> / <?=$filter["geo"]["location"]?></h3><? } ?>
+			<h3>
+				<a href="/structures"><?=t("Осередки")?></a>
+				<? if(isset($filter["geo"])){ ?>
+					/ <?=$filter["geo"]["location"]?>
+				<? }elseif(isset($structure)){?>
+					/ <?=$structure["title"]?>
+				<?}?>
+			</h3>
 
 		</div>
 	</div>

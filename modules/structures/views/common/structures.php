@@ -2,7 +2,7 @@
 
 	<? $__structure = \libs\services\StructuresService::i()->getStructure($__structure); ?>
 
-	<div data-ui="structure">
+	<div data-ui="structure" onclick="window.location.href = '/structures/<?=$__structure["id"]?>'">
 		<div class="header">
 			<div class="title">Осередок № <?=substr("0000", 0 , 4 - strlen($__structure["id"])).$__structure["id"]?></div>
 			<div class="count icon"><i class="icon-user"></i><?=$__structure["mcount"]?></div>
