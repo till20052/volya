@@ -101,7 +101,7 @@
 				<script type="text/x-kendo-template">
 					<div class="p5">
 						<div>
-							<a href="/structure/#=id#" target="_blank">#=title#</a>
+							<a href="/structures/#=id#" target="_blank">#=title#</a>
 						</div>
 						# if(typeof locality == "string"){ #
 						<div>#=locality#</div>

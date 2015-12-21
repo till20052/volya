@@ -107,7 +107,7 @@ class StructuresService extends \Keeper
 			],
 			[
 				"type" => "structures",
-				"level" => self::LEVEL_CITY_WITHOUTH_DISTRICTS,
+				"level" => [self::LEVEL_CITY_WITHOUTH_DISTRICTS, self::LEVEL_PRIMARY],
 				"count" => 3
 			]
 		],
@@ -494,7 +494,7 @@ class StructuresService extends \Keeper
 	{
 		$__structure = StructuresModel::getRow("SELECT * FROM `structures` WHERE `geo` LIKE '".$data["geo"]."' AND level < 6");
 
-		if( ! is_array($__structure))
+		if( ! is_array($__structure) or $data["level"] == self::LEVEL_PRIMARY)
 			$__sid = StructuresModel::i()->insert([
 				"geo" => $data["geo"],
 				"address" => $data["address"],

@@ -165,10 +165,11 @@ class Frontend extends Controller
 		$this->registerUser = RegisterUsersModel::i()->getItemByUserId(UserClass::i()->getId());
 
 		if( ! ($this->registerUser["credential_level_id"] > 0))
-			if(Router::getModule() == "admin")
-				parent::redirect("/admin");
-			elseif(Router::getModule() == "register")
+			if(Router::getModule() == "register")
 				parent::redirect("/");
+//			if(Router::getModule() == "admin")
+//				parent::redirect("/admin");
+//			else
 
 		parent::setLayout("frontend");
 		

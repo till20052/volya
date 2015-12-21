@@ -21,7 +21,7 @@ $(document).ready(function()
 		
 		if( ! __loadedContent)
 		{
-			$.get("http://volya.dev/profile/sign/get_html/login", function(html)
+			$.get("http://" + window.location.host + "/profile/sign/get_html/login", function(html)
 			{
 				$(">div", __loginUiPopup).html(html);
 				
@@ -36,7 +36,7 @@ $(document).ready(function()
 				
 				$("a#sign_in", __loginUiPopup).click(function()
 				{
-					$.post("http://volya.dev/profile/sign/j_in", {
+					$.post("http://" + window.location.host + "/profile/sign/j_in", {
 						login: $("input#login", __loginUiPopup).val(),
 						password: $("input#password", __loginUiPopup).val(),
 					}, function(response)

@@ -55,7 +55,7 @@ class MembersRegisterController extends RegisterController
 			if($__group["type"] == 2)
 			{
 				$credentials->approver = true;
-				$credentials->showRegionsFilter = true;
+				$credentials->showRegionsFilter = false;
 			}
 
 			$credentials->showAddButton = true;

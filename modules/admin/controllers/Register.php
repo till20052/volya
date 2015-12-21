@@ -34,8 +34,8 @@ class RegisterAdminController extends AdminController
 
 		$this->registerUser = RegisterUsersModel::i()->getItemByUserId(UserClass::i()->getId());
 
-		if( ! ($this->registerUser["credential_level_id"] > 0))
-			parent::redirect("/admin");
+//		if( ! ($this->registerUser["credential_level_id"] > 0))
+//			parent::redirect("/");
 	}
 	
 	public function __findMembers(&$filter = array())

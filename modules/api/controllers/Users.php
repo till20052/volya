@@ -92,7 +92,13 @@ class UsersApiController extends ApiController
 		
 		$__cond = ["is_active = 1"];
 		$__bind = [];
-		
+
+		if(($__q = Request::getString("q", "")) != "")
+			$__cond[] = ["OR" => [
+				"`login` LIKE '".$__q."%'",
+				"`last_name` LIKE '".$__q."%'"
+			]];
+
 		if(($__email = Request::getString("email", "&null;")) != "&null;")
 			$__cond[] = "`login` LIKE '".$__email."%'";
 
@@ -103,11 +109,11 @@ class UsersApiController extends ApiController
 			$__bind["regexp"] = $__code . "[0-9]{" . (10 - strlen($__code)) . "}";
 		}
 
-		if(Request::getBool("uniq_structure"))
-			$__cond[] = "`id` NOT IN (SELECT `uid` FROM `structures_members`)";
+//		if(Request::getBool("uniq_structure"))
+//			$__cond[] = "`id` NOT IN (SELECT `uid` FROM `structures_members`)";
 
-		if(Request::getArray("status"))
-			$__cond[] = "`type` IN (". implode(",", Request::getArray("status")) .")";
+//		if(Request::getArray("status"))
+//			$__cond[] = "`type` IN (". implode(",", Request::getArray("status")) .")";
 
 		$__list = array();
 		foreach(UsersModel::i()->getList($__cond, $__bind) as $__id)

@@ -126,11 +126,11 @@
 											</div>
 										<? } ?>
 
-										<? if($registerUser["credential_level_id"] > 0){ ?>
+										<? //if($registerUser["credential_level_id"] > 0){ ?>
 											<div>
 												<a href="http://volya.ua/register" class="icon"><span>*<?=t("Реєстр")?></span><i class="icon-branch"></i></a>
 											</div>
-										<? } ?>
+										<? //} ?>
 <!--										<div>
 											<a href="/profile/friends" class="icon"><span><?=t("Моє коло")?></span><i class="icon-groups-friends"></i></a>
 										</div>

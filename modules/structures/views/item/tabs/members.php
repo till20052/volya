@@ -17,5 +17,5 @@
 			<div class="cboth"></div>
 		</div>
 	<? } ?>
-
+	<div class="cboth"></div>
 </div>
