@@ -45,6 +45,7 @@ class IndexStructuresController extends StructuresController
 		parent::execute();
 		parent::loadKendo(true);
 		parent::loadFileupload(true);
+		parent::loadGallery(true);
 
 //		$credentials = new stdClass();
 //
@@ -57,17 +58,35 @@ class IndexStructuresController extends StructuresController
 
 		if(isset($args[0]))
 		{
-			parent::setView("structure");
+			switch($args[0]) {
+				case "regional":
+					parent::setView("regional");
 
-			HeadClass::addLess([
-				"/less/frontend/structures/common/structure.less",
-			]);
+					HeadClass::addLess([
+						"/less/frontend/structures/regional.less"
+					]);
 
-			HeadClass::addJs([
-				"/js/frontend/structures/item.js"
-			]);
+					HeadClass::addJs([
+						"/js/frontend/structures/regional.js"
+					]);
 
-			$this->structure = $this->__getStructure($args[0]);
+					break;
+
+				default:
+					parent::setView("structure");
+
+					HeadClass::addLess([
+						"/less/frontend/structures/common/structure.less"
+					]);
+
+					HeadClass::addJs([
+						"/js/frontend/structures/item.js"
+					]);
+
+					$this->structure = $this->__getStructure($args[0]);
+
+					break;
+			}
 
 			return;
 		}
@@ -77,14 +96,15 @@ class IndexStructuresController extends StructuresController
 		]);
 
 		HeadClass::addJs([
-			"/js/frontend/structures/index.js"
+			//"/js/frontend/structures/index.js"
 		]);
 
 		HeadClass::addLess([
 			"/less/frontend/structures/index.less",
 			"/less/frontend/structures/common/filter.less",
 			"/less/frontend/structures/common/structures.less",
-			"/less/frontend/register/structures/form.less"
+			"/less/frontend/register/structures/form.less",
+			"/less/frontend/structures/common/scheme.less"
 		]);
 
 		$this->filter = [];

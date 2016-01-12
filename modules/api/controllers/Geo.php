@@ -152,9 +152,14 @@ class GeoApiController extends ApiController
 		)
 			return false;
 
+		$__regionId = Request::getString("region_id", null);
+
+		if(isset($args[0]) && strlen($args[0]) == 10)
+			$__regionId = $args[0];
+
 		$this->json["list"] = GeoClass::i()->find(
 			$__q,
-			isset($args[0]) && strlen($args[0]) == 10 ? $args[0] : null
+			$__regionId
 		);
 
 		return true;

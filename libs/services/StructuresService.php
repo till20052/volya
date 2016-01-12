@@ -8,12 +8,14 @@ namespace libs\services;
 \Loader::loadModel("structures.VerificationsModel");
 
 \Loader::loadModel("register.documents.DocumentsModel");
+\Loader::loadModel("register.documents.CategoriesModel");
 \Loader::loadModel("register.documents.ImagesModel");
 
 \Loader::loadModel("UsersModel");
 \Loader::loadClass("GeoClass");
 \Loader::loadClass("UserClass");
 
+use libs\models\register\documents\CategoriesModel;
 use libs\models\structures\MembersModel;
 use libs\models\structures\StructuresModel;
 use libs\models\structures\DocumentsModel;
@@ -192,9 +194,13 @@ class StructuresService extends \Keeper
 	private function __getDocuments($sid)
 	{
 		$__documents = [];
-		foreach (\Model::getRows("SELECT `did` FROM `structures_documents` WHERE `sid` = :sid", ["sid" => $sid]) as $__did)
-			foreach(ImagesModel::i()->getCompiledList(["did = :did"], ["did" => $__did["did"]]) as $__document)
-				$__documents[] = $__document;
+
+		foreach(\Model::getRows("SELECT `register_documents`.`cid` FROM `structures_documents` LEFT JOIN  `register_documents` ON  `structures_documents`.`did` =  `register_documents`.`id` GROUP BY `register_documents`.`cid`") as $__cid)
+			$__documents["categories"][] = CategoriesModel::i()->getItem($__cid["cid"]);
+
+		foreach (\Model::getRows("SELECT `structures_documents`.`did`, `register_documents`.`title`, `register_documents`.`cid` FROM `structures_documents` LEFT JOIN  `register_documents` ON  `structures_documents`.`did` =  `register_documents`.`id` WHERE `sid` = :sid", ["sid" => $sid]) as $__document)
+			foreach(ImagesModel::i()->getCompiledList(["did = :did"], ["did" => $__document["did"]], ["id DESC"]) as $__documentImg)
+				$__documents[] = array_merge($__documentImg, $__document);
 
 		return $__documents;
 	}

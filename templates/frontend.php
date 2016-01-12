@@ -34,6 +34,10 @@
 			<script src="/jquery/js/vendor/jquery.ui.widget.js"></script>
 			<script src="/jquery/js/jquery-fileupload.js"></script>
 		<? } ?>
+
+		<? if($loadGallery){ ?>
+			<script src="/js/gallery.js"></script>
+		<? } ?>
 		
 		<? if($loadKendo){ ?>
 			<script src="/kendo/js/kendo.all.min.js"></script>
@@ -73,7 +77,11 @@
 		<? foreach(HeadClass::getCss() as $href){ ?>
 			<link rel="stylesheet" type="text/css" href="<?=$href?>" />
 		<? } ?>
-		
+
+		<? if($loadGallery){ ?>
+			<link rel="stylesheet/less" type="text/css" href="/less/gallery.less" />
+		<? } ?>
+
 		<? if(($lesses = HeadClass::getLess()) && count($lesses) > 0){ ?>
 			<? foreach($lesses as $href){ ?>
 				<link rel="stylesheet/less" type="text/css" href="<?=$href?>" />

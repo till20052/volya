@@ -1359,3 +1359,29 @@ div.k-tabstrip > .k-content {
 	border-color: #fff;
 	border-top-color: #1482C4;
 }
+
+[data-style="structure"] .k-link {
+	color: #fff !important;
+	font-size: 18px !important;
+	padding: 7px 15px !important;
+}
+
+[data-style="structure"] .k-state-default.k-item {
+	background-color: #CCCCCC !important;
+	border: 2px solid #CCCCCC !important;
+}
+
+[data-style="structure"] .k-state-active.k-item {
+	background-color: #1482C4 !important;
+	border: 2px solid #1482C4 !important;
+}
+
+[data-style="structure"] .k-state-hover.k-item {
+	background-color: #1482C4 !important;
+	border: 2px solid #1482C4 !important;
+}
+
+[data-style="structure"] .k-state-active.k-content {
+	border: 2px solid #1482C4 !important;
+	padding: 5px 15px !important;
+}

@@ -60,6 +60,11 @@ class Frontend extends Controller
 	{
 		$this->loadFileupload = (bool) $state;
 	}
+
+	protected function loadGallery($state)
+	{
+		$this->loadGallery = (bool) $state;
+	}
 	
 	protected function loadWindow($window)
 	{
@@ -146,6 +151,7 @@ class Frontend extends Controller
 		$this->loadKendo = false;
 		$this->loadCKEditor = false;
 		$this->loadFileupload = false;
+		$this->loadGallery = false;
 		$this->windows = array();
 		
 		$this->application = new stdClass();

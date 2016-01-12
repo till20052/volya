@@ -5,18 +5,26 @@ body>section>div[data-box="structure"]>div {
 		float: left;
 		padding: 10px;
 
-		.document {
-			width: 150px;
-			height: 210px;
+		.categoty_title {
+			>h3 {
+				color: #000;
+				padding: 5px;
+			}
+
+			border-bottom: 3px solid rgb(254, 227, 55);
+		}
+
+		[data-ui="document"] {
+			width: 85px;
 			float: left;
 
-			margin: 10px 12px 5px 0;
-			
-			background-position: center;
-			background-size: cover;
+			margin: 5px;
 
-			&:nth-child(4n) {
-				margin-right: 0;
+			text-align: center;
+
+			>i {
+				color: #1482C4;
+				font-size: 35px;
 			}
 		}
 

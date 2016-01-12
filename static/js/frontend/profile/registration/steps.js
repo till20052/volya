@@ -304,7 +304,7 @@ $(document).ready(function(){
 					transport: ({
 						read: (function(options){
 							$.ajax({
-								url: "/api/geo/j_find_cities?q="+options.data.filter.filters[0].value,
+								url: "/api/geo/find?q="+options.data.filter.filters[0].value,
 								dataType: "jsonp",
 								complete: (function(response){
 									options.success(eval("("+response.responseText+")").list);
@@ -633,7 +633,7 @@ $(document).ready(function(){
 					transport: ({
 						read: (function(options){
 							$.ajax({
-								url: "/api/geo/j_find_cities?q="+options.data.filter.filters[0].value,
+								url: "/api/geo/find?q="+options.data.filter.filters[0].value,
 								dataType: "jsonp",
 								complete: (function(response){
 									options.success(eval("("+response.responseText+")").list);

@@ -328,10 +328,8 @@ $(document).ready(function(){
 			__uiWindow.checkPosition();
 			__membersUiSelect.value([]);
 			__headUiSelect.value([]);
-			__coordinatorUiSelect.value([]);
 
 			$("[data-id='members']").hide();
-			$("[data-id='coordinator']").hide();
 			$("[data-id='head']").hide();
 
 			$("[data-id='is_primary']").hide();
@@ -352,8 +350,7 @@ $(document).ready(function(){
 				address: $("input[data-ui-tb='address']", __uiWindow.element).val(),
 				images: __imagesUiView.getImages(),
 				level : $("#structure_level").attr("type"),
-				head: __headUiSelect.value(),
-				coordinator: __coordinatorUiSelect.value()
+				head: __headUiSelect.value()
 			};
 
 			__uiForm.data(__data);
@@ -398,10 +395,7 @@ $(document).ready(function(){
 					if(__membersData.length > 2)
 						$("[data-id='head']").show();
 					else
-					{
-						$("[data-id='coordinator']").hide();
 						$("[data-id='head']").hide();
-					}
 
 					if(__headUiSelect.dataSource.get(0))
 						__headUiSelect.dataSource.remove(__headUiSelect.dataSource.get(0));
@@ -422,7 +416,7 @@ $(document).ready(function(){
 					transport: {
 						read: (function(options){
 							$.ajax({
-								url: "/api/users/find?email="+options.data.filter.filters[0].value+"&geo="+__geo.fn.geo()+"&uniq_structure=true&status[]=99&status[]=100",
+								url: "/api/users/find?q="+options.data.filter.filters[0].value+"&geo="+__geo.fn.geo()+"&uniq_structure=true&status[]=99&status[]=100",
 								dataType: "jsonp",
 								complete: (function(response){
 									options.success($.map(eval("("+response.responseText+")").list, function(item){
@@ -444,57 +438,17 @@ $(document).ready(function(){
 				filter: "contains",
 				minLength: 3,
 				autoBind: false,
-				dataBound: function(e) {
-					//__headUiSelect.dataSource.remove(0);
-					//__headUiSelect.dataSource.insert({
-					//		id:0,
-					//		name: '\u2014',
-					//		first_name: '\u2014',
-					//		last_name: ""
-					//	});
-				},
 				change: function(){
 					var __headData = __headUiSelect.dataSource.data();
 
-					if(__headUiSelect.value() > 0){
-						$("[data-id='coordinator']").show();
+					if(__headUiSelect.value() > 0)
 						$("[data-id='scans']").show();
-					}
-					else{
-						$("[data-id='coordinator']").hide();
+					else
 						$("[data-id='scans']").hide();
-					}
-
-					__coordinatorUiSelect.dataSource.data([]);
-
-					__headData.forEach(function(__user){
-						if(
-							__user.id > 0
-							&& ! __coordinatorUiSelect.dataSource.get(__user.id)
-							&& __headUiSelect.value() != __user.id
-						)
-							__coordinatorUiSelect.dataSource.insert(__user);
-					});
-
-					if( ! __coordinatorUiSelect.dataSource.get(0))
-						__coordinatorUiSelect.dataSource.insert({id:0, name: '\u2014', first_name: '\u2014', last_name: ""});
-
-					__coordinatorUiSelect.value(0);
 				},
 				template: $(">script[data-ui='input_template']", $($(element).parents("td").eq(0))).html(),
 			}).data("kendoDropDownList");
 		})($("select[data-ui='head']", __uiWindow.element));
-
-		var __coordinatorUiSelect = (function(element){
-			return $(element).kendoDropDownList({
-				dataValueField: "id",
-				dataTextField: "name",
-				filter: "contains",
-				minLength: 3,
-				autoBind: false,
-				template: $(">script[data-ui='input_template']", $($(element).parents("td").eq(0))).html()
-			}).data("kendoDropDownList");
-		})($("select[data-ui='coordinator']", __uiWindow.element));
 
 		var __geo = (function(ui){
 			var __article;
@@ -507,8 +461,6 @@ $(document).ready(function(){
 					change: function(e){
 						__membersUiSelect.value([]);
 						__headUiSelect.value([]);
-						__coordinatorUiSelect.value([]);
-						$("[data-id='coordinator']").hide();
 						$("[data-id='head']").hide();
 
 						if(e.sender.value() == 0){
@@ -562,8 +514,6 @@ $(document).ready(function(){
 					change: function(e){
 						__membersUiSelect.value([]);
 						__headUiSelect.value([]);
-						__coordinatorUiSelect.value([]);
-						$("[data-id='coordinator']").hide();
 						$("[data-id='head']").hide();
 
 						__article.fn.geo(e.sender.value() != 0 ? e.sender.value() : undefined);
@@ -687,8 +637,6 @@ $(document).ready(function(){
 					change: function(e){
 						__membersUiSelect.value([]);
 						__headUiSelect.value([]);
-						__coordinatorUiSelect.value([]);
-						$("[data-id='coordinator']").hide();
 						$("[data-id='head']").hide();
 
 						if( ! __re.test(e.sender.value())){
@@ -760,8 +708,6 @@ $(document).ready(function(){
 					change: function(e){
 						__membersUiSelect.value([]);
 						__headUiSelect.value([]);
-						__coordinatorUiSelect.value([]);
-						$("[data-id='coordinator']").hide();
 						$("[data-id='head']").hide();
 
 						__article.fn.geo(e.sender.value() != 0 ? e.sender.value() : undefined);
@@ -1011,7 +957,6 @@ $(document).ready(function(){
 				geo: __geo.fn.geo(),
 				members: __membersUiSelect.value(),
 				head: __headUiSelect.value(),
-				coordinator: __coordinatorUiSelect.value(),
 				level : $("#structure_level").attr("type")
 			}, function(res){
 

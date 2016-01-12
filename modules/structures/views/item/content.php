@@ -1,30 +1,16 @@
-<div data-id="tabstrip">
+<div data-id="tabstrip" data-style="structure">
 	<ul>
 		<li class="k-state-active">
-			<?=t("Документи")?>
+			<?=t("Реєстр рішень")?>
 		</li>
-<!--		<li>-->
-<!--			--><?//=t("Новини")?>
-<!--		</li>-->
 		<li>
-			<?=t("Члени")?>
+			<?=t("Члени партії")?>
 		</li>
-<!--		<li>-->
-<!--			--><?//=t("Заявки на членство")?>
-<!--		</li>-->
 	</ul>
 	<div>
 		<? include "tabs/documents.php"; ?>
 	</div>
-<!--	<div>-->
-<!--		--><?// include "tabs/news.php"; ?>
-<!--	</div>-->
 	<div>
 		<? include "tabs/members.php"; ?>
 	</div>
-<!--	<div>-->
-<!--		-->
-<!--	</div>-->
 </div>
-
-<? //Console::log( $structure ); ?>

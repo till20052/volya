@@ -1,0 +1,13 @@
+div.quickbox { font-family: Arial; display: none; text-align: center; }
+div.quickbox .qb-close { top: 0; z-index: 1503; position: absolute; color: #737373; font-size: 39px; cursor: pointer; }
+div.quickbox .qb-close:hover { color: #f2f2f2; }
+div.quickbox .qb-navigate { position: absolute; color: white; font-size: 26px; width: 39px; height: 39px; z-index: 1502; cursor: pointer; color: #737373; }
+div.quickbox .qb-navigate.qb-left { left: 0; text-align: right; }
+div.quickbox .qb-navigate.qb-right { right: 0; text-align: left; }
+div.quickbox .qb-navigate:hover { color: #f2f2f2; }
+div.quickbox .qb-inside { -webkit-border-radius: 7px; -moz-border-radius: 7px; -ms-border-radius: 7px; border-radius: 7px; position: absolute; background: white; top: 0; left: 0; z-index: 1502; width: 650px; height: 300px; }
+div.quickbox .qb-inside .qb-txt { height: 39px; overflow: hidden; font-size: 14.3px; color: #333333; padding: 9.1px 0 0 0; width: 100%; z-index: 1505; position: absolute; bottom: 0; }
+div.quickbox .qb-inside .qb-img { overflow: hidden; z-index: 1505; position: absolute; }
+div.quickbox .qb-inside .qb-img img { cursor: pointer; }
+div.quickbox .qb-inside .qb-loading { margin: 0 auto; color: black; z-index: 1504; position: absolute; width: 100%; height: 100%; background: url("loader.gif") center center no-repeat; }
+div.quickbox .qb-bg { opacity: 0.8; -webkit-opacity: 0.8; -khtml-opacity: 0.8; -moz-opacity: 0.8; filter: alpha(opacity=80); -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=$p)"; background: #000; z-index: 1501; position: absolute; width: 100%; height: 100%; top: 0; left: 0; }

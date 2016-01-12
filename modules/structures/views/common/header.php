@@ -4,7 +4,7 @@
 		<div>
 
 			<h3>
-				<a href="/structures"><?=t("Осередки")?></a>
+				<a href="/structures"><?=t("Структура партії")?></a>
 				<? if(isset($filter["geo"])){ ?>
 					/ <?=$filter["geo"]["location"]?>
 				<? }elseif(isset($structure)){?>
