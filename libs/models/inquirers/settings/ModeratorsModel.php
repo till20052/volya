@@ -1,12 +1,12 @@
 <?php
 
-namespace libs\models\inquirers;
+namespace libs\models\inquirers\settings;
 
 \Loader::loadModel("ExtendedModel", \Loader::SYSTEM);
 
-class InquirersModel extends \ExtendedModel
+class ModeratorsModel extends \ExtendedModel
 {
-	protected $table = "inquirers";
+	protected $table = "inquirers_moderators";
 	protected $_specificFields = array(
 		"date" => array("modified_at:force")
 	);

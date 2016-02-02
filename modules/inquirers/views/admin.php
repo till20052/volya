@@ -40,7 +40,7 @@
 		</div>
 
 		<div class="mt15">
-			<table data-ui="list" width="100%">
+			<table data-ui="forms" width="100%">
 				<script id="data">(<?=json_encode([
 						"columns" => array(
 							["title" => "ID", "width" => "5%"],
@@ -61,9 +61,6 @@
 				<script type="text/x-kendo-template">
 					<div class="p5" style="line-height:normal">
 						<div class="fwbold">#=title#</div>
-						<div class="mt5 fs12">
-							<a href="http://<?=Uri::getUrl()?>/news/#=id#" target="_blank">http://<?=Uri::getUrl()?>/news/#=id#</a>
-						</div>
 						<div class="mt5 fs12"><?=t("Дата публікаціЇ")?>: #=kendo.toString(kendo.parseDate(created_at), "HH:mm dd MMMM yyyy")#</div>
 					</div>
 				</script>

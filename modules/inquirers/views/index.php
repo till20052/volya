@@ -26,7 +26,7 @@
 			</div>
 		</a>
 
-		<a href="/register/analytics">
+		<a href="/inquirers/analytics">
 			<div class="menu-box ml30">
 				<div class="menu-box-icon pt5">
 					<i class="icon icon-barchartasc"></i>
@@ -38,7 +38,7 @@
 		</a>
 
 		<?// if($cred->showSettings){ ?>
-			<a href="/register/admin">
+			<a href="/inquirers/settings">
 				<div class="menu-box ml30">
 					<div class="menu-box-icon pt5">
 						<i class="icon icon-collabtive"></i>

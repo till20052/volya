@@ -36,7 +36,6 @@ class InquirersController extends Frontend
 		));
 
 		HeadClass::addJs(array(
-			"/js/frontend/inquirers/admin.js",
 			"/js/form.js",
 		));
 

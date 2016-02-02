@@ -10,12 +10,12 @@
 
 		<div class="mt10" ui-box="location">
 
-			<form action="/inquirers/admin/save" method="post">
+			<form action="/inquirers/admin/save_form" method="post">
 
 				<table width="100%" cellspacing="0" cellpadding="0">
 					<tbody>
 
-					<tr>
+					<tr data-block="geo">
 						<td style="width: 115px" class="taright pr15"><?=t("Область")?><span style="padding-left: 5px; color: red">*</span></td>
 						<td>
 							<select data-ui-ddl="region" style="width: 100%">
@@ -27,8 +27,8 @@
 						</td>
 					</tr>
 
-					<tr data-id="area"><td colspan="3" style="height: 15px"></td></tr>
-					<tr data-id="area">
+					<tr data-block="geo" data-id="area"><td colspan="3" style="height: 15px"></td></tr>
+					<tr data-block="geo"  data-id="area">
 						<td class="taright pr15"><?=t("Район або місто")?></td>
 						<td>
 							<select data-ui-ddl="area" style="width: 100%">
@@ -38,8 +38,8 @@
 						<td></td>
 					</tr>
 
-					<tr data-id="location"><td colspan="3" style="height: 15px"></td></tr>
-					<tr data-id="location">
+					<tr data-block="geo" data-id="location"><td colspan="3" style="height: 15px"></td></tr>
+					<tr data-block="geo" data-id="location">
 						<td class="taright pr15"><?=t("Місто")?></td>
 						<td>
 							<select data-ui-cb="location" style="width: 100%">
@@ -63,15 +63,15 @@
 						</td>
 						<td></td>
 					</tr>
-					<tr data-id="location">
+					<tr data-block="geo" data-id="location">
 						<td></td>
 						<td colspan="2">
 							<span class="fsitalic cgray">(<?=t("Введіть назву міста, населеного пункта чи села")?>)</span>
 						</td>
 					</tr>
 
-					<tr data-id="city_district"><td colspan="3" style="height: 15px"></td></tr>
-					<tr data-id="city_district">
+					<tr data-block="geo" data-id="city_district"><td colspan="3" style="height: 15px"></td></tr>
+					<tr data-block="geo" data-id="city_district">
 						<td class="taright pr15"><?=t("Район у місті")?></td>
 						<td>
 							<select data-ui-ddl="city_district" style="width: 100%">
@@ -81,15 +81,30 @@
 						<td></td>
 					</tr>
 
+					<tr data-block="location_name" class="fs16">
+						<td class="taright pr15 fwbold" style="width: 150px"><?=t("Регіон")?></td>
+						<td>
+							<span style="color: #868686"></span>
+						</td>
+						<td></td>
+					</tr>
+
+					<tr><td colspan="2" style="height:10px"></td></tr>
+
+					<tr>
+						<td colspan="3">
+							<? include "blocks/blocks.php"; ?>
+						</td>
+					</tr>
+
 					<tr><td colspan="2" style="height:10px"></td></tr>
 
 					<tr>
 						<td colspan="2" align="right">
 							<a data-action="save" href="javascript:void(0);" class="v-button button-yellow mr10">
-								<i class="icon icon-save-floppy"></i>
-								<?=t("Зберегти")?>
-							</a><!--
-							--><a id="cancel" href="javascript:void(0);" class="v-button"><?=t("Відміна")?></a>
+								<i class="icon icon-ok"></i>
+								<?=t("Готово")?>
+							</a>
 						</td>
 					</tr>
 
