@@ -70,7 +70,7 @@ class SettingsInquirersController extends InquirersController
 			$__id = InquirersService::i()->saveModerator([
 				'id' => Request::getInt("id"),
 				'geo' => Request::getString("geo"),
-				'uid' => Request::getInt('uid')
+				'user' => Request::getString('user')
 			]);
 
 			$this->json["item"] = InquirersService::i()->getModerator($__id);

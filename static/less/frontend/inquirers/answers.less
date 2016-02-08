@@ -1,0 +1,105 @@
+body > section > div {
+
+	>div {
+
+		color: #0181C5;
+
+		.grid-item {
+			width: 465px;
+			margin: 5px;
+			padding-bottom: 15px;
+			border: 1px solid #0181C5
+		}
+
+		.block_title {
+			margin: 15px 0 0 15px;
+			font-size: 22px;
+		}
+
+		span.question {
+			font-size: 21px;
+		}
+
+		.marker {
+			float: left;
+			width: 12px;
+			height: 12px;
+			background: #F4E200;
+			margin: 7px 15px 0 15px;
+		}
+
+		[data-block=question] {
+			> textarea {
+				width: 385px;
+				margin-left: 40px;
+			}
+
+			> [data-block=answer] {
+				cursor: pointer;
+
+				> textarea {
+					width: 350px;
+				}
+
+				.answer_title {
+					vertical-align: -webkit-baseline-middle;
+					font-size: 16px;
+					font-weight: bold;
+				}
+
+				.checkbox {
+					width: 25px;
+					height: 25px;
+					border: 1px solid #0181C5;
+					float: left;
+					margin: 0 10px 0 35px;
+
+					cursor: pointer;
+
+					&:hover, &.active {
+						width: 23px;
+						height: 23px;
+						border: 2px solid #F4E200;
+					}
+
+					> i {
+						display: none;
+						font-size: 28px;
+						color: #F4E200;
+						position: relative;
+						top: -7px;
+					}
+
+					&.active {
+						border: 2px solid #0181C5;
+
+						> i {
+							display: block;
+						}
+					}
+
+					&.disable {
+						opacity: .3;
+						cursor: no-drop;
+					}
+				}
+			}
+		}
+	}
+
+	[data-id="personal_info"] {
+		padding: 10px;
+		width: 930px;
+		border: 1px solid #0181C5;
+
+		>h2 {
+			text-align: center;
+			margin-bottom: 10px;
+		}
+
+		>textarea {
+			resize: none;
+			height: 200px
+		}
+	}
+}

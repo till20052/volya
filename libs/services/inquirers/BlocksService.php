@@ -56,4 +56,9 @@ class BlocksService extends \Keeper
 	{
 		BlocksModel::i()->deleteItem($id);
 	}
+
+	public function getListByFormId($fid)
+	{
+		return BlocksModel::i()->getCompiledListByField("fid", $fid);
+	}
 }

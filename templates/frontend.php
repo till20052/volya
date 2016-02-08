@@ -26,6 +26,7 @@
 		<? } ?>
 		
 		<script src="/jquery/js/jquery.min.js"></script>
+		<script src="/jquery/js/notices.js"></script>
 		<!--[if lt IE 9]>
 			<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 		<![endif]-->
@@ -64,7 +65,8 @@
 		
 		<link rel="stylesheet" href="/css/tools.css" />
 		<link rel="stylesheet" href="/css/fonts.css" />
-		
+<!--		<link rel="stylesheet" href="/css/font-awesome.css">-->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 		<? if($loadKendo){ ?>
 			<link rel="stylesheet" href="/kendo/styles/kendo.common.min.css" />
 			<link rel="stylesheet" href="/kendo/styles/kendo.volya.min.css" />
@@ -81,6 +83,8 @@
 		<? if($loadGallery){ ?>
 			<link rel="stylesheet/less" type="text/css" href="/less/gallery.less" />
 		<? } ?>
+
+		<link rel="stylesheet/less" type="text/css" href="/less/notices.less" />
 
 		<? if(($lesses = HeadClass::getLess()) && count($lesses) > 0){ ?>
 			<? foreach($lesses as $href){ ?>

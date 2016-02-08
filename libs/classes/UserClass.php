@@ -326,6 +326,11 @@ class UserClass extends ExtendedClass
 	{
 		return isset($this->__user["city_name"]) ? $this->__user["city_name"] : "";
 	}
+
+	public function getGeo()
+	{
+		return isset($this->__user["geo_koatuu_code"]) ? $this->__user["geo_koatuu_code"] : "";
+	}
 	
 	public function getName($tpl = "&fn &ln")
 	{

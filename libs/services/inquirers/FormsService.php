@@ -17,11 +17,11 @@ class FormsService extends \Keeper
 		return parent::getInstance(get_class());
 	}
 
-	public function getList()
+	public function getList($cond = [], $bind = [])
 	{
 		$__list = [];
 
-		foreach(FormsModel::i()->getCompiledList([], [], ["id DESC"]) as $__item)
+		foreach(FormsModel::i()->getCompiledList($cond, $bind, ["id DESC"]) as $__item)
 			$__list[] = array_merge(
 				$__item,
 				[
@@ -32,9 +32,12 @@ class FormsService extends \Keeper
 		return $__list;
 	}
 
-	public function getItem($id)
+	public function getItem($id, $geo)
 	{
-		$__item = FormsModel::i()->getItem($id);
+		if(is_null($geo))
+			$__item = FormsModel::i()->getItem($id);
+		else
+			$__item = FormsModel::i()->getItemByField("geo", $geo);
 
 		return array_merge(
 			$__item,
@@ -72,5 +75,14 @@ class FormsService extends \Keeper
 	public function delete($id)
 	{
 		FormsModel::i()->deleteItem($id);
+	}
+
+	public function getListByGeo($geo)
+	{
+		$__code = rtrim($geo, '0');
+		$__cond[] = "geo REGEXP :regexp";
+		$__bind["regexp"] = $__code . "[0-9]{" . (10 - strlen($__code)) . "}";
+
+		return $this->getList($__cond, $__bind);
 	}
 }

@@ -18,6 +18,7 @@ class AdminInquirersController extends InquirersController
 			"inquirers/admin/windows/blocks",
 			"inquirers/admin/windows/answers"
 		]);
+		parent::addBreadcrumb("/inquirers/admin", t("Керування анкетою"));
 
 		HeadClass::addLess("/less/frontend/inquirers/admin.less");
 
@@ -163,6 +164,15 @@ class AdminInquirersController extends InquirersController
 		return true;
 	}
 
+	public function isTextQuestion()
+	{
+		parent::setViewer("json");
+
+		InquirersService::i()->isTextQuestion(Request::getInt("qid"), Request::getInt("is_text"));
+
+		return true;
+	}
+
 	public function deleteQuestion()
 	{
 		parent::setViewer("json");
@@ -211,6 +221,15 @@ class AdminInquirersController extends InquirersController
 		return true;
 	}
 
+	public function isTextAnswer()
+	{
+		parent::setViewer("json");
+
+		InquirersService::i()->isTextAnswer(Request::getInt("aid"), Request::getInt("is_text"));
+
+		return true;
+	}
+
 	public function publicateAnswer()
 	{
 		parent::setViewer("json");
@@ -225,6 +244,15 @@ class AdminInquirersController extends InquirersController
 		parent::setViewer("json");
 
 		InquirersService::i()->deleteAnswer(Request::getInt("aid"));
+
+		return true;
+	}
+
+	public function saveResult()
+	{
+		parent::setViewer("json");
+
+		InquirersService::i()->saveResult(Request::getArray("data"));
 
 		return true;
 	}

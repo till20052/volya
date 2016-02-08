@@ -13,11 +13,14 @@ namespace libs\services;
 \Loader::loadService("inquirers.QuestionsService");
 \Loader::loadService("inquirers.AnswersService");
 \Loader::loadService("inquirers.settings.ModeratorsService");
+\Loader::loadService("inquirers.ResultsService");
 
+use libs\models\inquirers\FormsModel;
 use libs\services\inquirers\FormsService;
 use libs\services\inquirers\BlocksService;
 use libs\services\inquirers\QuestionsService;
 use libs\services\inquirers\AnswersService;
+use libs\services\inquirers\ResultsService;
 use libs\services\inquirers\settings\ModeratorsService;
 
 class InquirersService extends \Keeper
@@ -37,9 +40,9 @@ class InquirersService extends \Keeper
 		return FormsService::i()->getList();
 	}
 
-	public function getForm($id)
+	public function getForm($id, $geo = null)
 	{
-		return FormsService::i()->getItem($id);
+		return FormsService::i()->getItem($id, $geo);
 	}
 
 	public function saveForm($id, $geo)
@@ -55,6 +58,11 @@ class InquirersService extends \Keeper
 	public function deleteForm($id)
 	{
 		FormsService::i()->delete($id);
+	}
+
+	public function getFormsByGeo($geo)
+	{
+		return FormsService::i()->getListByGeo($geo);
 	}
 
 	// BLOCKS
@@ -83,6 +91,20 @@ class InquirersService extends \Keeper
 		BlocksService::i()->delete($id);
 	}
 
+	public function getBlocksByFormId($fid)
+	{
+		return BlocksService::i()->getListByFormId($fid);
+	}
+
+	public function getBlocksByGeo($geo)
+	{
+		$__list = [];
+		foreach ($this->getFormsByGeo($geo) as $form)
+			$__list[] = $this->getBlocksByFormId($form["id"]);
+
+		return $__list;
+	}
+
 	// QUESTIONS
 	public function getQuestions($bid)
 	{
@@ -102,6 +124,11 @@ class InquirersService extends \Keeper
 	public function publicateQuestion($id, $state)
 	{
 		QuestionsService::i()->publicate($id, $state);
+	}
+
+	public function isTextQuestion($id, $state)
+	{
+		QuestionsService::i()->isText($id, $state);
 	}
 
 	public function deleteQuestion($id)
@@ -128,6 +155,11 @@ class InquirersService extends \Keeper
 	public function isProblemAnswer($aid, $state)
 	{
 		AnswersService::i()->isProblem($aid, $state);
+	}
+
+	public function isTextAnswer($id, $state)
+	{
+		AnswersService::i()->isText($id, $state);
 	}
 
 	public function publicateAnswer($aid, $state)
@@ -157,5 +189,39 @@ class InquirersService extends \Keeper
 	public function saveModerator($data)
 	{
 		return ModeratorsService::i()->save($data);
+	}
+
+	// ANSWERS
+
+	public function getCompiledInquirer()
+	{
+		$item["form"] = $this->getForm(0, \UserClass::i()->getGeo());
+
+		foreach ($this->getBlocks($item["form"]["id"]) as $block) {
+			$questions = [];
+
+			foreach ($this->getQuestions($block["id"]) as $question) {
+				foreach ($this->getAnswers($question["id"]) as $answer)
+					$question["answers"][] = $answer;
+
+				$questions[] = $question;
+			}
+
+			$item["blocks"][] = array_merge(
+				$block,
+				[
+					"questions" => $questions
+				]
+			);
+		}
+
+		return $item;
+	}
+
+	// RESULTS
+
+	public function saveResult($data)
+	{
+		return ResultsService::i()->save($data);
 	}
 }

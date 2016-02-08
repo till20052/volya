@@ -60,6 +60,14 @@ class AnswersService extends \Keeper
 		]);
 	}
 
+	public function isText($aid, $value)
+	{
+		AnswersModel::i()->update([
+			"id" => $aid,
+			"is_text" => $value
+		]);
+	}
+
 	public function delete($id)
 	{
 		AnswersModel::i()->deleteItem($id);

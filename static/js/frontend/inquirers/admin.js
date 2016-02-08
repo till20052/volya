@@ -721,12 +721,32 @@
 					}
 				});
 
-				var __publicateItem = (function(id, state){
+				var __publicateItem = (function(qid, state){
 					$.post(inquirers.tokens.questions.actions.publicate_item, {
-						qid: id,
+						qid: qid,
 						is_public: state
-					}, function(){
-						__uiTable.dataSource.get(id).set("is_public", state);
+					}, function(res){
+						if( ! res.success)
+							return;
+
+						__uiTable.dataSource.get(qid).set("is_public", state);
+					}, "json");
+				});
+
+				var __isTextItem = (function(qid, state){
+					$.post(inquirers.tokens.questions.actions.is_text_item, {
+						qid: qid,
+						is_text: state
+					}, function(res){
+						if( ! res.success)
+							return;
+
+						__uiTable.dataSource.get(qid).set("is_text", state);
+
+						if(state)
+							$("[data-action='add_answers'][data-id='" + qid + "']").hide();
+						else
+							$("[data-action='add_answers'][data-id='" + qid + "']").show();
 					}, "json");
 				});
 
@@ -782,6 +802,10 @@
 
 						case "delete":
 							__deleteItem($(__element).attr("data-id"), $(__element).attr("data-text"));
+							break;
+
+						case "is_text":
+							__isTextItem($(__element).attr("data-id"), $(__element).prop("checked") ? 1 : 0);
 							break;
 
 						case "publicate":
@@ -853,9 +877,12 @@
 								inquirers.questions.id = __item.id;
 								inquirers.blocks.title = __item.title;
 
-								if(__item.type == 2) {
-									$("[data-box='answers_num']", __uiWindow.element).show();
+								$('[data-ui="question"]').html(__item.title);
+
+								answers_type.value(__item.type);
+								if(__item.type == 2){
 									answers_num.value(__item.num);
+									$("[data-box='answers_num']").show();
 								}
 
 								$("[data-ui='answer_title']", __uiWindow.element).val(__item.title);
@@ -891,10 +918,6 @@
 				}, "json");
 			});
 
-			var answers_num = $("[data-ui='answers_num']", __formUiWindow.element).kendoDropDownList({
-				dataTextField: "text",
-				dataValueField: "value"
-			}).data("kendoDropDownList");
 			var answers_type = $("[data-ui='answers_type']", __formUiWindow.element).kendoDropDownList({
 				change: function(e){
 					if(e.sender.value() == 2)
@@ -902,6 +925,11 @@
 					else
 						$("[data-box='answers_num']", __formUiWindow.element).hide();
 				}
+			}).data("kendoDropDownList");
+
+			var answers_num = $("[data-ui='answers_num']", __formUiWindow.element).kendoDropDownList({
+				dataTextField: "text",
+				dataValueField: "value"
 			}).data("kendoDropDownList");
 
 			var __answersUiTable = (function (element) {
@@ -956,6 +984,31 @@
 					}
 				});
 
+				var __isTextItem = (function(aid, state){
+					$.post(inquirers.tokens.answers.actions.is_text_item, {
+						aid: aid,
+						is_text: state
+					}, function(res){
+						if( ! res.success)
+							return;
+
+						__uiTable.dataSource.get(aid).set("is_text", state);
+
+						if(state)
+							$("[data-action='is_problem'][data-id='" + aid + "']").prop("disabled", true);
+						else
+							$("[data-action='is_problem'][data-id='" + aid + "']").prop("disabled", false);
+					}, "json");
+
+					if(state)
+						$.post(inquirers.tokens.answers.actions.is_problem, {
+							aid: aid,
+							is_problem: ! state
+						}, function () {
+							__uiTable.dataSource.get(aid).set("is_problem", ! state);
+						}, "json");
+				});
+
 				var __editItem = (function (element) {
 					var __parentDiv = $($(element).parents("div").eq(0)),
 						__a = $(element).clone(),
@@ -1007,12 +1060,16 @@
 							__deleteItem($(__element).attr("data-id"), $(__element).attr("data-text"));
 							break;
 
-						case "publicate":
-							__publicateItem($(__element).attr("data-id"), ($(__element).prop("checked") ? 1 : 0));
-							break;
-
 						case "is_problem":
 							__problemItem($(__element).attr("data-id"), ($(__element).prop("checked") ? 1 : 0));
+							break;
+
+						case "is_text":
+							__isTextItem($(__element).attr("data-id"), $(__element).prop("checked") ? 1 : 0);
+							break;
+
+						case "publicate":
+							__publicateItem($(__element).attr("data-id"), ($(__element).prop("checked") ? 1 : 0));
 							break;
 					}
 				});
@@ -1066,7 +1123,8 @@ $(document).ready(function(){
 				save_item: "/inquirers/admin/save_question",
 				publicate_item: "/inquirers/admin/publicate_question",
 				is_problem: "/inquirers/admin/is_problem_question",
-				delete_item: "/inquirers/admin/delete_question"
+				delete_item: "/inquirers/admin/delete_question",
+				is_text_item: "/inquirers/admin/is_text_question"
 			}
 		},
 		answers: {
@@ -1078,7 +1136,8 @@ $(document).ready(function(){
 				save_item: "/inquirers/admin/save_answer",
 				publicate_item: "/inquirers/admin/publicate_answer",
 				is_problem: "/inquirers/admin/is_problem_answer",
-				delete_item: "/inquirers/admin/delete_answer"
+				delete_item: "/inquirers/admin/delete_answer",
+				is_text_item: "/inquirers/admin/is_text_answer"
 			}
 		}
 	};

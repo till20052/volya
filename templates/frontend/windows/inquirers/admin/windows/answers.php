@@ -38,7 +38,7 @@
 						<tr data-box="answers_num" class="dnone">
 							<td class="taright pr15"><?=t("Кількість можливих відповідей")?></td>
 							<td class="pl10" colspan="2">
-								<input type="number" data-ui="answers_num" style="width:100%">
+								<select data-ui="answers_num" style="width:100%"></select>
 							</td>
 						</tr>
 
@@ -66,6 +66,7 @@
 								"columns" => array(
 									["title" => t("Відповідь")],
 									["title" => t("Проблема"), "width" => "15%"],
+									["title" => t("Текстова"), "width" => "12%"],
 									["title" => t("Публічна"), "width" => "12%"],
 									["title" => t("Дії"), "width" => "15%"],
 								)
@@ -77,7 +78,12 @@
 						</script>
 						<script type="text/x-kendo-template">
 							<div class="tacenter">
-								<input type="checkbox" data-action="is_problem" data-id="#=id#"# if(is_problem == 1){ # checked# } # />
+								<input type="checkbox" data-action="is_problem" data-id="#=id#"# if(is_problem == 1 && is_text == 0){ # checked# } if(is_text == 1){ # disabled # } #/>
+							</div>
+						</script>
+						<script type="text/x-kendo-template">
+							<div class="tacenter">
+								<input type="checkbox" data-action="is_text" data-id="#=id#"# if(is_text == 1){ # checked# } # />
 							</div>
 						</script>
 						<script type="text/x-kendo-template">

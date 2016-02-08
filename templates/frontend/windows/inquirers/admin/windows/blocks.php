@@ -47,7 +47,8 @@
 						<script id="data">(<?=json_encode([
 								"columns" => array(
 									["title" => t("Питання")],
-									["title" => t("Публічне"), "width" => "15%"],
+									["title" => t("Текстове"), "width" => "13%"],
+									["title" => t("Публічне"), "width" => "13%"],
 									["title" => t("Дії"), "width" => "15%"],
 								)
 							])?>);</script>
@@ -58,14 +59,21 @@
 						</script>
 						<script type="text/x-kendo-template">
 							<div class="tacenter">
+								<input type="checkbox" data-action="is_text" data-id="#=id#"# if(is_text == 1){ # checked# } # />
+							</div>
+						</script>
+						<script type="text/x-kendo-template">
+							<div class="tacenter">
 								<input type="checkbox" data-action="publicate" data-id="#=id#"# if(is_public == 1){ # checked# } # />
 							</div>
 						</script>
 						<script type="text/x-kendo-template">
 							<div class="pt5 pl5 pb5">
-								<div>
-									<a href="javascript:void(0);" data-action="add_answers" data-id="#=id#"><i class="icon-circleadd mr5"></i><?=t("Відповіді")?></a>
-								</div>
+								# if(is_text != 1){ #
+									<div>
+										<a href="javascript:void(0);" data-action="add_answers" data-id="#=id#"><i class="icon-circleadd mr5"></i><?=t("Відповіді")?></a>
+									</div>
+								# } #
 								<div>
 									<a href="javascript:void(0);" data-action="delete" data-id="#=id#" data-text="<?=t("Ви дійсно бажаєте видалити цю новину?")?>"><i class="icon-remove mr5"></i><?=t("Видалити")?></a>
 								</div>

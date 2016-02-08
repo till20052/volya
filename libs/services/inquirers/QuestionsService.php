@@ -45,6 +45,14 @@ class QuestionsService extends \Keeper
 		]);
 	}
 
+	public function isText($id, $value)
+	{
+		QuestionsModel::i()->update([
+			"id" => $id,
+			"is_text" => $value
+		]);
+	}
+
 	public function delete($id)
 	{
 		QuestionsModel::i()->deleteItem($id);

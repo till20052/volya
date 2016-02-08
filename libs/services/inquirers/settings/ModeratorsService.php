@@ -3,6 +3,7 @@
 namespace libs\services\inquirers\settings;
 
 \Loader::loadModel("inquirers.settings.ModeratorsModel");
+\Loader::loadModel("UsersModel");
 
 use \libs\models\inquirers\settings\ModeratorsModel;
 
@@ -35,6 +36,7 @@ class ModeratorsService extends \Keeper
 	public function getItem($id)
 	{
 		$__item = ModeratorsModel::i()->getItem($id);
+		$__item["user"] = \UsersModel::i()->getItem($__item["uid"]);
 
 		return array_merge(
 			$__item,
@@ -46,8 +48,15 @@ class ModeratorsService extends \Keeper
 
 	public function save($data)
 	{
-		if( ! QuestionsModel::i()->update($data))
-			return QuestionsModel::i()->insert($data);
+		list($fname, $lname) = explode(" ", $data["user"]);
+
+		$uid = \UsersModel::i()->getCompiledList(["first_name = :fname", "last_name = :lname"], ["fname" => $fname, "lname" => $lname])[0]["id"];
+
+		unset($data["user"]);
+		$data["uid"] = $uid;
+
+		if( ! ModeratorsModel::i()->update($data))
+			return ModeratorsModel::i()->insert($data);
 
 		return $data["id"];
 	}
