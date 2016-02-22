@@ -17,6 +17,16 @@ class ProfileService extends \Keeper
 		return parent::getInstance(get_class());
 	}
 
+	public function getList($cond, $bind)
+	{
+		return ProfileModel::i()->getCompiledList($cond, $bind);
+	}
+
+	public function getItem($id)
+	{
+		return ProfileModel::i()->getItem($id);
+	}
+
 	public function save($data)
 	{
 		if( ! isset($data["id"]))
@@ -30,5 +40,10 @@ class ProfileService extends \Keeper
 	public function getTypeByKey($key)
 	{
 		return ProfileModel::i()->getTypeByKey($key);
+	}
+
+	public function getTypeById($id)
+	{
+		return ProfileModel::i()->getTypeById($id);
 	}
 }

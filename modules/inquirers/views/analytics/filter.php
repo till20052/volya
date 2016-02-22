@@ -13,9 +13,11 @@
 	</div>
 	<div class="cboth"></div>
 
+	<a data-action="filter" href="javascript:void(0);" class="v-button button-yellow mt5">
+		<i class="icon icon-plus-sign"></i>
+		<?=t("Фільтрувати")?>
+	</a>
+
 </div>
 
-<a data-action="filter" href="javascript:void(0);" class="v-button button-yellow mt5">
-	<i class="icon icon-plus-sign"></i>
-	<?=t("Фільтрувати")?>
-</a>
+<div class="cboth"></div>

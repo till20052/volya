@@ -329,7 +329,7 @@ $(document).ready(function(){
 					transport: {
 						read: (function(options){
 							$.ajax({
-								url: "/api/users/find?q="+options.data.filter.filters[0].value + "&geo=" + __geo.fn.geo(),
+								url: "/api/users/find?q="+options.data.filter.filters[0].value,
 								dataType: "jsonp",
 								complete: (function(response){
 									options.success($.map(eval("("+response.responseText+")").list, function(item){

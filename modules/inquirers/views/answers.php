@@ -1,7 +1,7 @@
 <? include "common/header.php"; ?>
 
 <div class="section">
-	<div class="grid" data-form-id="<?=$inquirer["form"]["id"]?>">
+	<div class="grid" data-form-id="<?=$inquirer["form"]["id"]?>" data-form-geo="<?=$inquirer["form"]["geo"]?>">
 
 		<? foreach ($inquirer["blocks"] as $block) { ?>
 
@@ -11,7 +11,7 @@
 				<? foreach ($block["questions"] as $question) { ?>
 
 					<div class="m10" data-block="question" data-question-id="<?=$question["id"]?>">
-						<div class="mb10">
+						<div class="mb10 ml15">
 							<div class="marker"></div>
 							<span class="question"><?=$question["title"]?></span>
 						</div>
@@ -32,7 +32,7 @@
 									</div>
 
 									<? if($answer["is_text"]){ ?>
-										<textarea class="textbox"></textarea>
+										<span class="answer_title"><?=$answer["title"]?> :</span> <textarea class="textbox"></textarea>
 									<? } else{ ?>
 										<span class="answer_title"><?=$answer["title"]?></span>
 									<? } ?>
@@ -41,7 +41,7 @@
 								</div>
 							<? } ?>
 						<? } else{ ?>
-							<textarea class="textbox" data-question-type="text"></textarea>
+							<textarea class="textbox" data-question-type="text" data-question-id="<?=$question["id"]?>" data-block-id="<?=$block["id"]?>"></textarea>
 						<? } ?>
 
 					</div>

@@ -31,4 +31,13 @@ class ProfileModel extends \ExtendedModel
 	{
 		return self::$types[$key];
 	}
+
+	public function getTypeById($id)
+	{
+		foreach (self::$types as $type)
+			if($type["id"] == $id)
+				return $type;
+
+		return false;
+	}
 }

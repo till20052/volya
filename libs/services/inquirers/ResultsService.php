@@ -27,6 +27,60 @@ class ResultsService extends \Keeper
 		return parent::getInstance(get_class());
 	}
 
+	public function getItem($rid)
+	{
+		return ResultsModel::i()->getItem($rid);
+	}
+
+	public function getResultsBySupporterId($sid)
+	{
+		$__result = ResultsModel::i()->getItemByField("sid", $sid);
+		
+		return array_merge(
+			$__result,
+			[
+				"results" => ResultsAnswersModel::i()->getCompiledListByField("rid", $__result["id"])
+			]
+		);
+	}
+
+	public function getSupportersByAnswers($answers)
+	{
+		$__list = [];
+
+		foreach ($answers as $answer)
+			foreach (ResultsAnswersModel::i()->getCompiledListByField("aid", $answer) as $result)
+				$__list[] = SupportersService::i()->getSupporter( ResultsModel::i()->getItem($result["rid"])["sid"] );
+
+		return $__list;
+	}
+
+	public function getSupportersByQuestion($question)
+	{
+		$__list = [];
+
+		foreach(\Model::getCols("SELECT rid FROM inquirers_results_answers WHERE qid = " . $question . " GROUP BY rid") as $__result){
+			$__result = ResultsModel::i()->getItem($__result);
+
+			$__list[] = SupportersService::i()->getSupporter( $__result["sid"] );
+		}
+
+		return $__list;
+	}
+
+	public function getSupportersByBlock($block)
+	{
+		$__list = [];
+
+		foreach(\Model::getCols("SELECT rid FROM inquirers_results_answers WHERE bid = " . $block . " GROUP BY rid") as $__result){
+			$__result = ResultsModel::i()->getItem($__result);
+
+			$__list[] = SupportersService::i()->getSupporter( $__result["sid"] );
+		}
+
+		return $__list;
+	}
+
 	public function save($data)
 	{
 		$data["other_problem"] = $data["fields"]["other_problem"];
@@ -42,7 +96,9 @@ class ResultsService extends \Keeper
 		foreach ($data["answers"] as $answer)
 			ResultsAnswersModel::i()->insert([
 				"rid" => $rid,
-				"aid" => $answer["aid"],
+				"bid" => $answer["bid"],
+				"qid" => $answer["qid"],
+				"aid" => isset($answer["aid"]) ? $answer["aid"] : 0,
 				"value" => isset($answer["val"]) ? $answer["val"] : null
 			]);
 

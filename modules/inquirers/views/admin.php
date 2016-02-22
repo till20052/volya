@@ -1,22 +1,3 @@
-<script id="data">(<?=json_encode(array(
-		"table#list" => array(
-			"columns" => array(
-				array("title" => "ID", "width" => "5%"),
-				array("title" => t("Інформація")),
-				array("title" => t("Публічна"), "width" => "10%"),
-				array("title" => t("Дії"), "width" => "15%"),
-			),
-			"dataSource" => array(
-				"data" => $list,
-				"schema" => array(
-					"model" => array(
-						"id" => "id"
-					)
-				)
-			)
-		)
-	))?>);</script>
-
 <? include "common/header.php"; ?>
 
 <div class="section">

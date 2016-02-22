@@ -83,19 +83,27 @@ $(document).ready(function(){
 		data.answers = [];
 
 		$.each($("[data-block='question']", grid), function(n, e){
+			var textarea = $("textarea[data-question-type='text']", e);
+
 			if(
 				(
 					$(".checkbox.active", e).length == 0
-					&& $("textarea[data-question-type='text']", e).length > 0
-					&& $("textarea[data-question-type='text']", e).val() == ""
+					&& textarea.length > 0
+					&& textarea.val() == ""
 				)
 				|| (
 					$(".checkbox.active", e).length == 0
-					&& $("textarea[data-question-type='text']", e).length == 0
+					&& textarea.length == 0
 				)
 			) {
 				notices.illuminate($(".marker", e));
 				success = false;
+			} else{
+				data.answers.push({
+					bid: textarea.attr("data-block-id"),
+					qid: textarea.attr("data-question-id"),
+					val: textarea.val()
+				});
 			}
 		});
 
@@ -104,6 +112,8 @@ $(document).ready(function(){
 
 			if( block.attr("data-answer-type") != "text" )
 				data.answers.push({
+					bid: block.attr("data-block-id"),
+					qid: block.attr("data-question-id"),
 					aid: block.attr("data-answer-id")
 				});
 			else {
@@ -113,6 +123,8 @@ $(document).ready(function(){
 				}
 				else
 					data.answers.push({
+						bid: block.attr("data-block-id"),
+						qid: block.attr("data-question-id"),
 						aid: block.attr("data-answer-id"),
 						val: $("textarea", block).val()
 					});
@@ -135,8 +147,9 @@ $(document).ready(function(){
 		}
 
 		data.fid = grid.attr("data-form-id");
+		data.fields.geo = grid.attr("data-form-geo");
 
-		$.post("/inquirers/admin/save_result", {
+		$.post("/inquirers/answers/save_result", {
 			data: data
 		}, function(res){
 			if( ! res.success ){

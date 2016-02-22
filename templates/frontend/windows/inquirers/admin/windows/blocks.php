@@ -5,19 +5,8 @@
 		</div>
 
 		<div>
-			<h2><?=t("Блок питань")?></h2>
+			<h2 data-ui="block_title"></h2>
 		</div>
-
-		<form action="/inquirers/admin/save_block" method="post">
-			<table width="100%" cellspacing="0" cellpadding="0" class="mt10 mb10">
-				<tr>
-					<td style="width: 100px" class="taright pr15"><?=t("Назва блоку")?><span style="padding-left: 5px; color: red">*</span></td>
-					<td class="pr10">
-						<input type="text" data-ui="block_title" name="title" class="textbox">
-					</td>
-				</tr>
-			</table>
-		</form>
 
 		<div data-section="questions" class="mt10">
 			<div>
@@ -28,10 +17,10 @@
 						<tr>
 							<td style="width: 100px" class="taright pr15"><?=t("Питання")?></td>
 							<td>
-								<input type="text" id="question_title" class="textbox" style="width:100%" />
+								<input type="text" data-ui="question_title" class="textbox" style="width:100%" />
 							</td>
 							<td style="width: 203px" class="pl10">
-								<a data-action="create_question" href="javascript:void(0);" class="v-button button-yellow">
+								<a data-action="add_question" href="javascript:void(0);" class="v-button button-yellow">
 									<i class="icon icon-plus-sign"></i>
 									<?=t("Додати питання")?>
 								</a>
@@ -48,7 +37,7 @@
 								"columns" => array(
 									["title" => t("Питання")],
 									["title" => t("Текстове"), "width" => "13%"],
-									["title" => t("Публічне"), "width" => "13%"],
+									["title" => t("Проблеми"), "width" => "15%"],
 									["title" => t("Дії"), "width" => "15%"],
 								)
 							])?>);</script>
@@ -64,7 +53,7 @@
 						</script>
 						<script type="text/x-kendo-template">
 							<div class="tacenter">
-								<input type="checkbox" data-action="publicate" data-id="#=id#"# if(is_public == 1){ # checked# } # />
+								<input type="checkbox" data-action="is_problem" data-id="#=id#"# if(is_problem == 1){ # checked# } # />
 							</div>
 						</script>
 						<script type="text/x-kendo-template">
@@ -99,6 +88,7 @@
 						<?=t("Готово")?>
 					</a>
 				</div>
+				<div class="cboth"></div>
 
 			</div>
 		</div>

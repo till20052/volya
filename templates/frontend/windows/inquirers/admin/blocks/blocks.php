@@ -1,18 +1,31 @@
 <div data-uiBox="toolbar">
-	<table width="100%" cellspacing="0" cellpadding="0">
-		<tbody>
-		<tr>
+	<div class="mt10">
+		<table width="100%" cellspacing="0" cellpadding="0">
+			<tbody>
 
-			<td>
-				<a data-action="create_block" href="javascript:void(0);" class="v-button button-yellow">
-					<i class="icon icon-plus-sign"></i>
-					<?=t("Додати блок")?>
-				</a>
-			</td>
+			<tr>
+				<td style="width: 100px" class="taright pr15"><?=t("Назва блоку")?></td>
+				<td>
+					<input type="text" data-ui="block_title" class="textbox" style="width:100%" placeholder="Введіть назву блоку або оберіть з існуючих" />
+				</td>
+				<td style="width: 170px" class="pl5">
+					<a data-action="add_block" href="javascript:void(0);" class="v-button button-yellow">
+						<i class="icon icon-plus-sign"></i>
+						<?=t("Додати блок")?>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<span class="cgray"><?=t("Введіть назву блоку або оберіть з існуючих")?></span>
+				</td>
+				<td></td>
+			</tr>
 
-		</tr>
-		</tbody>
-	</table>
+			</tbody>
+		</table>
+	</div>
 </div>
 
 <div class="mt15">
@@ -21,7 +34,6 @@
 				"columns" => array(
 					["title" => "ID", "width" => "5%"],
 					["title" => t("Назва блоку проблем")],
-					["title" => t("Публічний"), "width" => "15%"],
 					["title" => t("Дії"), "width" => "15%"],
 				)
 			])?>);</script>
@@ -31,11 +43,6 @@
 		<script type="text/x-kendo-template">
 			<div class="p5" style="line-height:normal">
 				<div class="fwbold">#=title#</div>
-			</div>
-		</script>
-		<script type="text/x-kendo-template">
-			<div class="tacenter">
-				<input type="checkbox" data-action="publicate" data-id="#=id#"# if(is_public == 1){ # checked# } # />
 			</div>
 		</script>
 		<script type="text/x-kendo-template">

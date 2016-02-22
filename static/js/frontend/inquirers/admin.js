@@ -7,21 +7,32 @@
 		init: function(){
 
 			var __inquirersFormUiWindow = (function(element){
-				var __uiWindow = (new Window(element)).afterOpen(function(){
+				var __uiWindow = (new Window(element)).beforeOpen(function(){
 
-					$.post(inquirers.tokens.blocks.actions.get_list, {
-						fid: inquirers.forms.id
-					}, function(res){
-						__blocksUiTable.dataSource.data(res.list);
+					$.post(inquirers.tokens.blocks.actions.get_list, {}, function(res){
+						if( ! res.success)
+							return;
+
+						__blockTitle.dataSource.data(res.list);
 					}, "json");
 
+					if(inquirers.forms.id > 0)
+						$.post(inquirers.tokens.blocks.actions.get_list, {
+							fid: inquirers.forms.id
+						}, function(res){
+							if( ! res.success)
+								return;
+
+							__blocksUiTable.dataSource.data(res.list);
+						}, "json");
+
 				}).afterClose(function(){
-					$("span", "[data-block='location_name']").attr("data-geo", "");
+					__blocksUiTable.dataSource.data([]);
 				});
 
 				var __uiForm = (new Form($("form", __uiWindow.element))).beforeSend(function(){
 
-					if( ! inquirers.forms.geo || __geo.fn.geo())
+					if( ! inquirers.forms.geo && __geo.fn.geo())
 						inquirers.forms.geo = __geo.fn.geo();
 
 					var __data = {
@@ -29,7 +40,7 @@
 						geo: inquirers.forms.geo
 					};
 
-					if( ! __data.geo) {
+					if( ! (__data.geo > 0)) {
 						alert("Оберіть регіон на території якого діє ця анкета");
 						return false;
 					}
@@ -39,10 +50,10 @@
 					if( ! response.success)
 						return;
 
-					if( ! (inquirers.forms.id > 0)) {
+					if(inquirers.forms.id == 0) {
 						__formsUiTable.dataSource.insert(0, response.item);
 						inquirers.forms.id = response.item.id;
-					}else {
+					} else {
 						var __item = __formsUiTable.dataSource.get(inquirers.forms.id);
 						for(var __field in response.item)
 							__item.set(__field, response.item[__field]);
@@ -62,6 +73,8 @@
 								$(e.sender.list).width($(e.sender.wrapper).width() - 2);
 							},
 							change: function(e){
+
+								inquirers.forms.geo = e.sender.value();
 
 								if(e.sender.value() == 0){
 									__article.fn.geo(null);
@@ -84,8 +97,6 @@
 								} else {
 									__areaUiDDL.fn.show(e.sender.value());
 								}
-
-								inquirers.forms.geo = e.sender.value();
 							}
 						}).data('kendoDropDownList');
 					})($("select[data-ui-ddl='region']", ui));
@@ -100,6 +111,7 @@
 							},
 							change: function(e){
 
+								inquirers.forms.geo = e.sender.value();
 								__article.fn.geo(e.sender.value() != 0 ? e.sender.value() : undefined);
 
 								if(e.sender.value().match(/[0-9]{2}2[0-9]{7}/i)) {
@@ -115,8 +127,6 @@
 										__cityDistrictUiDDL.fn.hide();
 									});
 								}
-
-								inquirers.forms.geo = e.sender.value();
 							}
 						}).data('kendoDropDownList')), {
 							fn: {
@@ -206,6 +216,8 @@
 							},
 							change: function(e){
 
+								inquirers.forms.geo = e.sender.value();
+
 								if( ! __re.test(e.sender.value())){
 									__article.fn.geo(undefined);
 									__cityDistrictUiDDL.fn.hide();
@@ -218,8 +230,6 @@
 										return;
 									__cityDistrictUiDDL.fn.hide();
 								});
-
-								inquirers.forms.geo = e.sender.value();
 							}
 						}).data('kendoComboBox')), {
 							fn: {
@@ -256,15 +266,14 @@
 							},
 							change: function(e){
 
+								inquirers.forms.geo = e.sender.value();
 								__article.fn.geo(e.sender.value() != 0 ? e.sender.value() : undefined);
 
 								if(e.sender.value() != null && e.sender.value() > 0) {
-									__article.fn.geo(e.sender.value())
+									__article.fn.geo(e.sender.value());
 
 									return;
 								}
-
-								inquirers.forms.geo = e.sender.value();
 							}
 						}).data('kendoDropDownList')), {
 							fn: {
@@ -373,77 +382,14 @@
 						__geo.initialize();
 					}),
 					geo: (function(){
-						inquirers.forms.geo = __geo.fn.geo();
+						if( ! inquirers.forms.geo)
+							inquirers.forms.geo = __geo.fn.geo();
+
 						return inquirers.forms.geo;
 					})
 				});
 
 			}(inquirers.tokens.forms.window));
-
-			var __blocksUiTable = (function(element){
-				var __data = eval($(">script#data", element).text()),
-					__templates = $(">script[type='text/x-kendo-template']", element);
-
-				var __deleteItem = (function(bid, text){
-					if(confirm(text)){
-						$.post(inquirers.tokens.blocks.actions.delete_item, {
-							bid: bid
-						}, function(response){
-							if( ! response.success)
-								return;
-
-							__uiTable.dataSource.remove(__uiTable.dataSource.get(bid));
-						}, "json");
-					}
-				});
-
-				var __publicateItem = (function(id, state){
-					$.post(inquirers.tokens.blocks.actions.publicate_item, {
-						bid: id,
-						is_public: state
-					}, function(){
-						__uiTable.dataSource.get(id).set("is_public", state);
-					}, "json");
-				});
-
-				__templates.each(function(i){
-					if(typeof __data.columns[i] == "undefined")
-						return;
-					__data.columns[i]["template"] = kendo.template($(this).html());
-				});
-
-				var __uiTable = $(element).kendoGrid($.extend(__data, {
-					dataBound: (function(e){
-						if( ! (e.sender.dataSource.data().length > 0))
-							$(e.sender.tbody).append(kendo.template($(__templates[__templates.length - 1]).html())({}));
-
-						__inquirersFormUiWindow.checkPosition();
-					})
-				})).data("kendoGrid");
-
-				$(__uiTable.tbody).click(function(event){
-					var __a = $(event.srcElement);
-
-					switch($(__a).attr("data-action")){
-						case "edit":
-							inquirers.blocks.fn.getItemAndOpenWindow($(__a).attr("data-id"));
-							break;
-
-						case "publicate":
-							__publicateItem($(__a).attr("data-id"), ($(__a).attr("checked") ? 1 : 0));
-							break;
-
-						case "delete":
-							__deleteItem($(__a).attr("data-id"), $(__a).attr("data-text"));
-							break;
-					}
-				});
-
-				if( ! ($(">tr", __uiTable.tbody).length > 0))
-					$(__uiTable.tbody).append(kendo.template($(__templates[__templates.length - 1]).html())({}));
-
-				return __uiTable;
-			}( $(inquirers.tokens.forms.table.blocks, __inquirersFormUiWindow.element) ));
 
 			var __formsUiTable = (function(element){
 				var __data = eval($(">script#data", element).text()),
@@ -511,6 +457,64 @@
 				return __uiTable;
 			}(inquirers.tokens.forms.table.forms));
 
+			var __blocksUiTable = (function(element){
+				var __data = eval($(">script#data", element).text()),
+					__templates = $(">script[type='text/x-kendo-template']", element);
+
+				var __deleteItem = (function(bid, text){
+					if(confirm(text)){
+						$.post(inquirers.tokens.blocks.actions.delete_item, {
+							fid: inquirers.forms.id,
+							bid: bid,
+						}, function(response){
+							if( ! response.success)
+								return;
+
+							__uiTable.dataSource.remove(__uiTable.dataSource.get(bid));
+						}, "json");
+					}
+				});
+
+				__templates.each(function(i){
+					if(typeof __data.columns[i] == "undefined")
+						return;
+					__data.columns[i]["template"] = kendo.template($(this).html());
+				});
+
+				var __uiTable = $(element).kendoGrid($.extend(__data, {
+					dataBound: (function(e){
+						if( ! (e.sender.dataSource.data().length > 0))
+							$(e.sender.tbody).append(kendo.template($(__templates[__templates.length - 1]).html())({}));
+
+						__inquirersFormUiWindow.checkPosition();
+					})
+				})).data("kendoGrid");
+
+				$(__uiTable.tbody).click(function(event){
+					var __a = $(event.srcElement);
+
+					switch($(__a).attr("data-action")){
+						case "edit":
+							inquirers.blocks.fn.getItemAndOpenWindow($(__a).attr("data-id"));
+							break;
+
+						case "delete":
+							__deleteItem($(__a).attr("data-id"), $(__a).attr("data-text"));
+							break;
+					}
+				});
+
+				if( ! ($(">tr", __uiTable.tbody).length > 0))
+					$(__uiTable.tbody).append(kendo.template($(__templates[__templates.length - 1]).html())({}));
+
+				return __uiTable;
+			}( $(inquirers.tokens.forms.table.blocks, __inquirersFormUiWindow.element) ));
+
+			var __blockTitle = $("input[data-ui='block_title']", __inquirersFormUiWindow.element).kendoAutoComplete({
+				dataTextField: "title",
+				dataValueField: "id"
+			}).data("kendoAutoComplete");
+
 			$("a[data-action='create']", inquirers.section).click(function(){
 				$("[data-block='geo']", __inquirersFormUiWindow.element).show();
 
@@ -523,27 +527,39 @@
 				__inquirersFormUiWindow.checkPosition();
 			});
 
-			$("a[data-action='create_block']").click(function(){
-				$.post(inquirers.tokens.forms.actions.save_item, {
+			$("a[data-action='add_block']", __inquirersFormUiWindow.element).click(function(){
+				if( ! __inquirersFormUiWindow.geo()) {
+					alert("Оберіть регіон на території якого діє ця анкета");
+					return;
+				}
+
+				if(__blockTitle.value() == "") {
+					alert("Введіть назву блоку або оберіть з існуючих");
+					return;
+				}
+
+				if(inquirers.forms.id == 0)
+					$.post(inquirers.tokens.forms.actions.save_item, {
+						fid: inquirers.forms.id,
+						geo: __inquirersFormUiWindow.geo()
+					}, function(response){
+						if( ! response.success)
+							return;
+
+						__formsUiTable.dataSource.insert(0, response.item);
+						inquirers.forms.id = response.item.id;
+					}, "json");
+
+				$.post(inquirers.tokens.blocks.actions.save_item, {
 					fid: inquirers.forms.id,
-					geo: __inquirersFormUiWindow.geo()
-				}, function(response){
-					if( ! response.success)
+					btitle: __blockTitle.value()
+				}, function(res){
+					if( ! res.success)
 						return;
 
-					if( ! (inquirers.forms.id > 0))
-						__formsUiTable.dataSource.insert(0, response.item);
-					else {
-						var __item = __formsUiTable.dataSource.get(inquirers.blocks.id );
-
-						for(var __field in response.item)
-							__item.set(__field, response.item[__field]);
-					}
-
-					inquirers.forms.id = response.item.id;
+					__blocksUiTable.dataSource.insert(res.item);
+					__blockTitle.value("");
 				}, "json");
-
-				inquirers.blocks.fn.open();
 			});
 
 			inquirers.forms.fn = $.extend(__inquirersFormUiWindow, {
@@ -567,58 +583,25 @@
 		id: 0,
 		fn: {},
 		init: function(){
-			var element = inquirers.tokens.blocks.element;
-
 			var __formUiWindow = (function(element){
 				var __uiWindow = (new Window(element)).afterOpen(function(){
-					if(inquirers.blocks.id)
-						$.post(inquirers.tokens.questions.actions.get_list, {
-							bid: inquirers.blocks.id
-						}, function(res){
-							__questionsListUiTable.dataSource.data(res.list);
-						}, "json");
+
+					$.post(inquirers.tokens.questions.actions.get_list, {
+						fid: inquirers.forms.id,
+						bid: inquirers.blocks.id
+					}, function(res){
+						__questionsListUiTable.dataSource.data(res.list.existing);
+						__questionTitle.dataSource.data(res.list.available);
+					}, "json");
+
 				}).afterClose(function(){
 					__questionsListUiTable.dataSource.data([]);
 					inquirers.blocks.id = 0;
 					inquirers.forms.fn.open();
-					$("[data-ui='block_title']", __formUiWindow.element).val("");
-				});
-
-				var __uiForm = (new Form($("form", __uiWindow.element))).beforeSend(function(){
-					var __data = {
-						id: inquirers.blocks.id,
-						fid: inquirers.forms.id,
-						title: $("[data-ui='block_title']", __formUiWindow.element).val()
-					};
-
-					if( ! __data.title || ! __data.fid) {
-						alert("Введіть назву блоку питань");
-						return false;
-					}
-
-					__uiForm.data(__data);
-				}).afterSend(function(response){
-					if( ! response.success)
-						return;
-
-					if( ! (inquirers.blocks.id > 0))
-						inquirers.forms.fn.addBlock(response.item);
-					else
-						inquirers.forms.fn.updateBlock(inquirers.blocks.id, response.item);
-
-					inquirers.blocks.id = response.item.id;
-
-					$("[data-ui='block_title']", __formUiWindow.element).val("");
-					inquirers.blocks.id = 0;
-
-					__uiWindow.close();
+					__questionTitle.value("");
 				});
 
 				$("a[data-action='save']", __uiWindow.element).click(function(){
-					__uiForm.send();
-				});
-
-				$("a[data-action='cancel']", __uiWindow.element).click(function(){
 					__uiWindow.close();
 				});
 
@@ -636,58 +619,30 @@
 								inquirers.blocks.id = __item.id;
 
 								$("[data-ui='block_title']", __formUiWindow.element).val(__item.title);
+								$("[data-ui='block_title']", __formUiWindow.element).html(__item.title);
 
 								__uiWindow.open();
 							}, "json");
 						}
 
 						inquirers.blocks.id = 0;
-					}),
-					saveBlock: function(){
-						__uiForm.send();
-					}
+					})
 				});
 
 			}(inquirers.tokens.blocks.window));
 
-			$("a[data-action='create_question']").click(function(){
-				$.post(inquirers.tokens.blocks.actions.save_item, {
-					id: inquirers.blocks.id,
+			$("a[data-action='add_question']", __formUiWindow.element).click(function(){
+				$.post(inquirers.tokens.questions.actions.save_item, {
 					fid: inquirers.forms.id,
-					title: $("[data-ui='block_title']", __formUiWindow.element).val()
-				}, function(response){
-					if( ! response.success)
+					bid: inquirers.blocks.id,
+					qtitle: __questionTitle.value().replace("'", "&#039;")
+				}, function(res){
+					if( ! res.success)
 						return;
 
-					if( ! (inquirers.blocks.id > 0))
-						inquirers.forms.fn.addBlock(response.item);
-					else {
-						inquirers.forms.fn.updateBlock(inquirers.blocks.id, response.item);
-					}
-
-					inquirers.blocks.id = response.item.id;
-
-					$.post(inquirers.tokens.questions.actions.save_item, {
-						bid: response.item.id,
-						title: $("input#question_title").val()
-					}, function(response){
-						if( ! response.success)
-							return;
-
-						inquirers.blocks.title = $("input#question_title").val();
-
-						$("#question_title").val("");
-						__questionsListUiTable.dataSource.add(response.item);
-					}, "json");
+					__questionsListUiTable.dataSource.insert(res.item);
+					__questionTitle.value("");
 				}, "json");
-
-				if($("input#question_title").val() == ""){
-					$("input#question_title").css("borderColor", "red");
-					setTimeout(function(){
-						$("input#question_title").css("borderColor", "");
-					}, 2000);
-					return;
-				}
 			});
 
 			var __questionsListUiTable = (function(element){
@@ -712,6 +667,7 @@
 				var __deleteItem = (function(qid, text){
 					if(confirm(text)){
 						$.post(inquirers.tokens.questions.actions.delete_item, {
+							fid: inquirers.forms.id,
 							qid: qid
 						}, function(response){
 							if( ! response.success)
@@ -719,18 +675,6 @@
 							__uiTable.dataSource.remove(__uiTable.dataSource.get(qid));
 						}, "json");
 					}
-				});
-
-				var __publicateItem = (function(qid, state){
-					$.post(inquirers.tokens.questions.actions.publicate_item, {
-						qid: qid,
-						is_public: state
-					}, function(res){
-						if( ! res.success)
-							return;
-
-						__uiTable.dataSource.get(qid).set("is_public", state);
-					}, "json");
 				});
 
 				var __isTextItem = (function(qid, state){
@@ -750,55 +694,69 @@
 					}, "json");
 				});
 
-				var __editItem = (function(element){
-					var __parentDiv = $($(element).parents("div").eq(0)),
-						__a = $(element).clone(),
-						__input = $("<input type=\"text\" class=\"textbox\" style=\"width: 100%\" />").bind("blur keyup", function(e){
-							var __this = this;
-							var __qid = $(__a).attr("data-id");
+				var __isProblemItem = (function(qid, state){
+					$.post(inquirers.tokens.questions.actions.is_problem, {
+						qid: qid,
+						is_problem: state
+					}, function(res){
+						if( ! res.success)
+							return;
 
-							if( ! ($.inArray(e.type, ["blur", "keyup"]) > -1) || (e.type == "keyup" && e.keyCode != 13))
-								return;
+						inquirers.questions.is_problem = state;
 
-							if($(__this).val() == ""){
-								$(__this).css("borderColor", "red");
-								setTimeout(function(){
-									$(__this).css("borderColor", "");
-								}, 2000);
-								return;
-							}
-
-							$.post(inquirers.tokens.questions.actions.save_item, {
-								qid: __qid,
-								bid: inquirers.blocks.id,
-								title: $(__this).val()
-							}, function(){
-								$(__parentDiv).css("padding", "")
-									.append($(__a));
-								$(__a).html($(__this).val());
-								$(__this).remove();
-
-								inquirers.blocks.title = $(__this).val();
-
-								__uiTable.dataSource.get(__qid).set("title", $(__this).val());
-							}, "json");
-						});
-
-					$(element).remove();
-
-					$(__parentDiv).css("padding", 0)
-						.append($(__input).val($(__a).html()));
-
-					$(__input).focus();
+						__uiTable.dataSource.get(qid).set("is_problem", state);
+					}, "json");
 				});
+
+				//var __editItem = (function(element){
+				//	var __parentDiv = $($(element).parents("div").eq(0)),
+				//		__a = $(element).clone(),
+				//		__input = $("<input type=\"text\" class=\"textbox\" style=\"width: 100%\" />").bind("blur keyup", function(e){
+				//			var __this = this;
+				//			var __qid = $(__a).attr("data-id");
+				//
+				//			if( ! ($.inArray(e.type, ["blur", "keyup"]) > -1) || (e.type == "keyup" && e.keyCode != 13))
+				//				return;
+				//
+				//			if($(__this).val() == ""){
+				//				$(__this).css("borderColor", "red");
+				//				setTimeout(function(){
+				//					$(__this).css("borderColor", "");
+				//				}, 2000);
+				//				return;
+				//			}
+				//
+				//			$.post(inquirers.tokens.questions.actions.save_item, {
+				//				qid: __qid,
+				//				bid: inquirers.blocks.id,
+				//				title: $(__this).val()
+				//			}, function(){
+				//				$(__parentDiv).css("padding", "")
+				//					.append($(__a));
+				//				$(__a).html($(__this).val());
+				//				$(__this).remove();
+				//
+				//				inquirers.blocks.title = $(__this).val();
+				//
+				//				__uiTable.dataSource.get(__qid).set("title", $(__this).val());
+				//			}, "json");
+				//		});
+				//
+				//	$(element).remove();
+				//
+				//	$(__parentDiv).css("padding", 0)
+				//		.append($(__input).val($(__a).html()));
+				//
+				//	$(__input).focus();
+				//});
 
 				$(__uiTable.tbody).click(function(event){
 					var __element = $(event.srcElement);
 
 					switch($(__element).attr("data-action")){
-						case "edit":
-							__editItem(__element);
-							break;
+						//case "edit":
+						//	__editItem(__element);
+						//	break;
 
 						case "delete":
 							__deleteItem($(__element).attr("data-id"), $(__element).attr("data-text"));
@@ -808,8 +766,8 @@
 							__isTextItem($(__element).attr("data-id"), $(__element).prop("checked") ? 1 : 0);
 							break;
 
-						case "publicate":
-							__publicateItem($(__element).attr("data-id"), $(__element).prop("checked") ? 1 : 0);
+						case "is_problem":
+							__isProblemItem($(__element).attr("data-id"), $(__element).prop("checked") ? 1 : 0);
 							break;
 
 						case "add_answers":
@@ -820,12 +778,12 @@
 
 				return __uiTable;
 			})($("table[data-ui='questions']", $('[data-section="questions"]')));
+			var __questionTitle = $("input[data-ui='question_title']", __formUiWindow.element).kendoAutoComplete({
+				dataTextField: "title",
+				dataValueField: "id"
+			}).data("kendoAutoComplete");
 
-			inquirers.blocks.fn = $.extend(__formUiWindow, {
-				addBlocks: (function(data){
-					__questionsListUiTable.dataSource.data(data);
-				})
-			});
+			inquirers.blocks.fn = __formUiWindow;
 		}
 	},
 
@@ -835,31 +793,43 @@
 		fn: {},
 		init: function () {
 			var __formUiWindow = (function(element){
-				var __uiWindow = (new Window(element)).afterOpen(function(){
-					if(inquirers.questions.id)
-						$.post(inquirers.tokens.answers.actions.get_list, {
-							qid: inquirers.questions.id
-						}, function(res){
-							__answersUiTable.dataSource.data(res.list);
-						}, "json");
+				var __uiWindow = (new Window(element)).beforeOpen(function(){
 
-					$("[data-box='answers_num']", __formUiWindow.element).hide();
+					$.post(inquirers.tokens.answers.actions.get_list, {
+						fid: inquirers.forms.id,
+						qid: inquirers.questions.id
+					}, function(res){
+						__answersUiTable.dataSource.data(res.list.existing);
+						__answerTitle.dataSource.data(res.list.available);
+
+						__questionType.value(inquirers.questions.type);
+						if(inquirers.questions.type == 2){
+							__answersNum.value(inquirers.questions.num);
+							$("[data-box='answers_num']", __formUiWindow.element).show();
+						} else
+							$("[data-box='answers_num']", __formUiWindow.element).hide();
+					}, "json");
+
 				}).afterClose(function(){
+
+					$.post(inquirers.tokens.questions.actions.save_item, {
+						fid: inquirers.forms.id,
+						bid: inquirers.blocks.id,
+						qid: inquirers.questions.id,
+						qtitle: inquirers.questions.title,
+						type: __questionType.value(),
+						num: __answersNum.value()
+					}, function(res){
+
+					}, "json");
+
 					__answersUiTable.dataSource.data([]);
 					inquirers.questions.id = 0;
 					inquirers.blocks.fn.open();
-					$("input#answer_title").val("");
+					__answerTitle.value("");
 				});
 
 				$("a[data-action='save']", __uiWindow.element).click(function(){
-					$.post(inquirers.tokens.questions.actions.save_item, {
-						qid: inquirers.questions.id,
-						bid: inquirers.blocks.id,
-						title: inquirers.blocks.title,
-						type: answers_type.value(),
-						num: answers_type.value() == 2 ? answers_num.value() : 0
-					}, "json");
-
 					__uiWindow.close();
 				});
 
@@ -867,6 +837,7 @@
 					getItemAndOpenWindow: (function(qid){
 						if(qid > 0) {
 							$.post(inquirers.tokens.questions.actions.get_item, {
+								fid: inquirers.forms.id,
 								qid: qid
 							}, function (response) {
 								if ( ! response.success)
@@ -875,17 +846,11 @@
 								var __item = response.item;
 
 								inquirers.questions.id = __item.id;
-								inquirers.blocks.title = __item.title;
+								inquirers.questions.title = __item.title;
+								inquirers.questions.type = __item.type;
+								inquirers.questions.num = __item.num;
 
 								$('[data-ui="question"]').html(__item.title);
-
-								answers_type.value(__item.type);
-								if(__item.type == 2){
-									answers_num.value(__item.num);
-									$("[data-box='answers_num']").show();
-								}
-
-								$("[data-ui='answer_title']", __uiWindow.element).val(__item.title);
 
 								__uiWindow.open();
 							}, "json");
@@ -897,28 +862,30 @@
 
 			}(inquirers.tokens.answers.window));
 
-			$("a[data-action='create_answer']").click(function () {
-				if ($("input#answer_title").val() == "") {
-					$("input#answer_title").css("borderColor", "red");
+			$("a[data-action='add_answer']").click(function () {
+				if ($("input[data-ui='answer_title']").val() == "") {
+					$("input[data-ui='answer_title']").css("borderColor", "red");
 					setTimeout(function () {
-						$("input#answer_title").css("borderColor", "");
+						$("input[data-ui='answer_title']").css("borderColor", "");
 					}, 2000);
 					return;
 				}
 
 				$.post(inquirers.tokens.answers.actions.save_item, {
+					fid: inquirers.forms.id,
+					bid: inquirers.blocks.id,
 					qid: inquirers.questions.id,
-					title: $("input#answer_title").val()
+					title: __answerTitle.value()
 				}, function (response) {
 					if ( ! response.success)
 						return;
 
-					$("input#answer_title").val("");
+					__answerTitle.value("");
 					__answersUiTable.dataSource.add(response.item);
 				}, "json");
 			});
 
-			var answers_type = $("[data-ui='answers_type']", __formUiWindow.element).kendoDropDownList({
+			var __questionType = $("[data-ui='question_type']", __formUiWindow.element).kendoDropDownList({
 				change: function(e){
 					if(e.sender.value() == 2)
 						$("[data-box='answers_num']", __formUiWindow.element).show();
@@ -926,11 +893,14 @@
 						$("[data-box='answers_num']", __formUiWindow.element).hide();
 				}
 			}).data("kendoDropDownList");
-
-			var answers_num = $("[data-ui='answers_num']", __formUiWindow.element).kendoDropDownList({
+			var __answersNum = $("[data-ui='answers_num']", __formUiWindow.element).kendoDropDownList({
 				dataTextField: "text",
 				dataValueField: "value"
 			}).data("kendoDropDownList");
+			var __answerTitle = $("input[data-ui='answer_title']", __formUiWindow.element).kendoAutoComplete({
+				dataTextField: "title",
+				dataValueField: "id"
+			}).data("kendoAutoComplete");
 
 			var __answersUiTable = (function (element) {
 				var __data = eval($(">script#data", element).text()),
@@ -947,9 +917,9 @@
 						if (!(e.sender.dataSource.data().length > 0))
 							$(e.sender.tbody).append(kendo.template($(__templates[__templates.length - 1]).html())({}));
 
-						answers_num.dataSource.data([]);
+						__answersNum.dataSource.data([]);
 						for(var i = (e.sender.dataSource.data().length); i > 0; i--) {
-							answers_num.dataSource.insert({"text" : i, "value" : i});
+							__answersNum.dataSource.insert({"text" : i, "value" : i});
 						}
 					})
 				})).data("kendoGrid");

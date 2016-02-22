@@ -6,11 +6,7 @@
 
 		<? include "analytics/filter.php"; ?>
 
-		<div class="results">
-
-
-
-		</div>
+		<? include "analytics/results.php"; ?>
 
 	</div>
 

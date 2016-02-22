@@ -19,29 +19,51 @@ class AnswersService extends \Keeper
 		return parent::getInstance(get_class());
 	}
 
-	public function getList($qid)
+	public function getList($qid, $uniq = false)
 	{
-		return AnswersModel::i()->getCompiledListByField("qid", $qid);
+		if($qid > 0)
+			if( ! $uniq)
+				return AnswersModel::i()->getCompiledListByField("qid", $qid);
+			else{
+				$__list = [];
+				foreach (\Model::getCols("SELECT `id` FROM inquirers_answers WHERE `qid` = '$qid' AND `id` NOT IN (SELECT `aid` FROM inquirers_forms_content WHERE `qid` = '$qid')") as $__aid)
+					$__list[] = $this->getItem($__aid);
+
+				return $__list;
+			}
+		else
+			return AnswersModel::i()->getCompiledList();
 	}
 
-	public function getItem($id)
+	public function getItem($aid, $qid = 0, $title = "")
 	{
-		return AnswersModel::i()->getItem($id);
+		if($aid > 0)
+			return AnswersModel::i()->getItem($aid);
+		elseif($title != "")
+		{
+			$__list = AnswersModel::i()->getCompiledList(["title LIKE '$title'", "qid = $qid"]);
+
+			return isset($__list[0]) ? $__list[0] : false;
+		}
+
+		return false;
 	}
 
 	public function save($aid, $qid, $title)
 	{
-		if( ! AnswersModel::i()->update([
-			"id" => $aid,
-			"qid" => $qid,
-			"title" => $title
-		]))
+		if( ! ($__answer = $this->getItem(0, $qid, $title)))
 			return AnswersModel::i()->insert([
 				"qid" => $qid,
 				"title" => $title
 			]);
 
-		return $aid;
+		AnswersModel::i()->update([
+			"id" => $aid,
+			"qid" => $qid,
+			"title" => $title
+		]);
+
+		return $__answer["id"];
 	}
 
 	public function publicate($aid, $value)

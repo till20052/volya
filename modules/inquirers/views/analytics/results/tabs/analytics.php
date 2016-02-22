@@ -1,0 +1,1 @@
+<div id="container" style="width: 950px; height: 500px; margin: 0 auto"></div>

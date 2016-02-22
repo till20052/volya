@@ -9,13 +9,17 @@ namespace libs\services;
 \Loader::loadClass("UserClass");
 
 \Loader::loadService("inquirers.FormsService");
+\Loader::loadService("inquirers.FormsContentService");
 \Loader::loadService("inquirers.BlocksService");
 \Loader::loadService("inquirers.QuestionsService");
 \Loader::loadService("inquirers.AnswersService");
 \Loader::loadService("inquirers.settings.ModeratorsService");
 \Loader::loadService("inquirers.ResultsService");
+\Loader::loadService("SupportersService");
 
+use libs\models\inquirers\FormsContentModel;
 use libs\models\inquirers\FormsModel;
+use libs\services\inquirers\FormsContentService;
 use libs\services\inquirers\FormsService;
 use libs\services\inquirers\BlocksService;
 use libs\services\inquirers\QuestionsService;
@@ -68,17 +72,23 @@ class InquirersService extends \Keeper
 	// BLOCKS
 	public function getBlocks($fid)
 	{
+		if($fid > 0)
+			return FormsContentService::i()->getBlocks($fid);
+
 		return BlocksService::i()->getList($fid);
 	}
 
-	public function getBlock($bid)
+	public function getBlock($bid, $btitle = "")
 	{
-		return BlocksService::i()->getItem($bid);
+		return BlocksService::i()->getItem($bid, $btitle);
 	}
 
-	public function saveBlock($id, $fid, $title)
+	public function saveBlock($fid, $title)
 	{
-		return BlocksService::i()->save($id, $fid, $title);
+		$__bid = BlocksService::i()->save($fid, $title);
+		FormsContentService::i()->addBlock($fid, $__bid);
+
+		return $__bid;
 	}
 
 	public function publicateBlock($id, $state)
@@ -86,9 +96,9 @@ class InquirersService extends \Keeper
 		BlocksService::i()->publicate($id, $state);
 	}
 
-	public function deleteBlock($id)
+	public function deleteBlock($fid, $bid)
 	{
-		BlocksService::i()->delete($id);
+		FormsContentService::i()->deleteBlock($fid, $bid);
 	}
 
 	public function getBlocksByFormId($fid)
@@ -100,15 +110,22 @@ class InquirersService extends \Keeper
 	{
 		$__list = [];
 		foreach ($this->getFormsByGeo($geo) as $form)
-			$__list[] = $this->getBlocksByFormId($form["id"]);
+			$__list = array_merge($__list, $this->getBlocksByFormId($form["id"]));
 
 		return $__list;
 	}
 
 	// QUESTIONS
-	public function getQuestions($bid)
+	public function getQuestions($fid, $bid)
 	{
-		return QuestionsService::i()->getList($bid);
+		$__list = [];
+		$__list["existing"] = [];
+		$__list["available"] = [];
+
+		$__list["existing"] = FormsContentService::i()->getQuestions($fid, $bid);
+		$__list["available"] = QuestionsService::i()->getList($bid, true);
+
+		return $__list;
 	}
 
 	public function getQuestion($qid)
@@ -116,9 +133,12 @@ class InquirersService extends \Keeper
 		return QuestionsService::i()->getItem($qid);
 	}
 
-	public function saveQuestion($data)
+	public function saveQuestion($fid, $bid, $qid, $title, $type, $num)
 	{
-		return QuestionsService::i()->save($data);
+		$qid = QuestionsService::i()->save($bid, $qid, $title, $type, $num);
+		FormsContentService::i()->addQuestion($fid, $bid, $qid);
+
+		return $qid;
 	}
 
 	public function publicateQuestion($id, $state)
@@ -131,15 +151,27 @@ class InquirersService extends \Keeper
 		QuestionsService::i()->isText($id, $state);
 	}
 
-	public function deleteQuestion($id)
+	public function isProblemQuestion($id, $state)
 	{
-		QuestionsService::i()->delete($id);
+		QuestionsService::i()->isProblem($id, $state);
+	}
+
+	public function deleteQuestion($fid, $bid)
+	{
+		FormsContentService::i()->deleteQuestion($fid, $bid);
 	}
 
 	// ANSWERS
-	public function getAnswers($qid)
+	public function getAnswers($fid, $qid)
 	{
-		return AnswersService::i()->getList($qid);
+		$__list = [];
+		$__list["existing"] = [];
+		$__list["available"] = [];
+
+		$__list["existing"] = FormsContentService::i()->getAnswers($fid, $qid);
+		$__list["available"] = AnswersService::i()->getList($qid, true);
+
+		return $__list;
 	}
 
 	public function getAnswer($aid)
@@ -147,9 +179,12 @@ class InquirersService extends \Keeper
 		return AnswersService::i()->getItem($aid);
 	}
 
-	public function saveAnswer($aid, $qid, $title)
+	public function saveAnswer($fid, $bid, $qid, $aid, $title)
 	{
-		return AnswersService::i()->save($aid, $qid, $title);
+		$aid = AnswersService::i()->save($aid, $qid, $title);
+		FormsContentService::i()->addAnswer($fid, $bid, $qid, $aid);
+
+		return $aid;
 	}
 
 	public function isProblemAnswer($aid, $state)
@@ -193,29 +228,17 @@ class InquirersService extends \Keeper
 
 	// ANSWERS
 
-	public function getCompiledInquirer()
+	public function getCompiledInquirer($id = 0)
 	{
-		$item["form"] = $this->getForm(0, \UserClass::i()->getGeo());
+		if($id > 0)
+			$geo = null;
+		else
+			$geo = \UserClass::i()->getGeo();
 
-		foreach ($this->getBlocks($item["form"]["id"]) as $block) {
-			$questions = [];
+		$__item["form"] = $this->getForm($id, $geo);
+		$__item = array_merge($__item, FormsContentService::i()->getInquirer($__item["form"]["id"]));
 
-			foreach ($this->getQuestions($block["id"]) as $question) {
-				foreach ($this->getAnswers($question["id"]) as $answer)
-					$question["answers"][] = $answer;
-
-				$questions[] = $question;
-			}
-
-			$item["blocks"][] = array_merge(
-				$block,
-				[
-					"questions" => $questions
-				]
-			);
-		}
-
-		return $item;
+		return $__item;
 	}
 
 	// RESULTS
@@ -223,5 +246,73 @@ class InquirersService extends \Keeper
 	public function saveResult($data)
 	{
 		return ResultsService::i()->save($data);
+	}
+
+	public function getResultsBySupporterId($pid)
+	{
+		$__profile = SupportersService::i()->getSupporter($pid);
+		$__results = ResultsService::i()->getResultsBySupporterId($pid);
+		$__form = $this->getCompiledInquirer($__results["fid"]);
+
+		foreach ($__results["results"] as $__result) {
+			if (
+				isset($__form["blocks"][$__result["bid"]]["questions"][$__result["qid"]]["is_text"])
+				&& $__form["blocks"][$__result["bid"]]["questions"][$__result["qid"]]["is_text"]
+			)
+				$__form["blocks"][$__result["bid"]]["questions"][$__result["qid"]]["answer"] = $__result["value"];
+			else
+				$__form["blocks"][$__result["bid"]]["questions"][$__result["qid"]]["answers"][$__result["aid"]]["selected"] = [
+					"state" => true,
+					"value" => $__result["value"]
+				];
+		}
+
+		return [
+			"profile" => $__profile,
+			"form" => $__form
+		];
+	}
+
+	// SUPPORTERS
+
+	public function getSupporters()
+	{
+		return SupportersService::i()->getSupporters();
+	}
+
+	public function getSupportersByAnswers($answers)
+	{
+		return ResultsService::i()->getSupportersByAnswers($answers);
+	}
+
+	public function getSupportersByQuestion($question)
+	{
+		return ResultsService::i()->getSupportersByQuestion($question);
+	}
+
+	public function getSupportersByBlock($block)
+	{
+		return ResultsService::i()->getSupportersByBlock($block);
+	}
+
+	public function getSupportersByGeo($geo)
+	{
+		return SupportersService::i()->getSupportersByGeo($geo);
+	}
+
+	// ANALYTICS
+
+	public function getAnalyticsData($options)
+	{
+		$data = [];
+		switch ($options["type"]) {
+			case "by_block":
+
+				$data["categories"] = $this->getQuestions($options["bid"]);
+
+				return $data["categories"];
+
+				break;
+		}
 	}
 }

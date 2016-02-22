@@ -27,12 +27,57 @@ class SupportersService extends \Keeper
 		return parent::getInstance(get_class());
 	}
 
+	public function getSupporters($cond = [], $bind = [])
+	{
+		$__list = [];
+
+		foreach (ProfileService::i()->getList($cond, $bind) as $__profile) {
+			$__list[] = array_merge(
+				$__profile,
+				DataService::i()->getDataBySupporterId($__profile["id"]),
+				[
+					"type" => ProfileService::i()->getTypeById($__profile["type"])["title"]
+				]
+			);
+		}
+
+		return $__list;
+	}
+
+	public function getSupporter($sid)
+	{
+		$__profile = ProfileService::i()->getItem($sid);
+
+		return array_merge(
+			$__profile,
+			DataService::i()->getDataBySupporterId($sid),
+			[
+				"type" => ProfileService::i()->getTypeById($__profile["type"])["title"],
+				"geo" => [
+					"value" => \GeoClass::i()->location($__profile["geo"])["location"],
+					"field_title" => t("Населений пункт")
+				]
+			]
+		);
+	}
+
+	public function getSupportersByGeo($geo)
+	{
+		$__code = rtrim($geo, '0');
+		$__cond[] = "geo REGEXP :regexp";
+		$__bind["regexp"] = $__code . "[0-9]{" . (10 - strlen($__code)) . "}";
+
+		return $this->getSupporters($__cond, $__bind);
+	}
+
 	public function save($data)
 	{
 		$sid = ProfileService::i()->save([
 			"status" => 0,
-			"type" => ProfileService::i()->getTypeByKey("inquirers")["id"]
+			"type" => ProfileService::i()->getTypeByKey("inquirers")["id"],
+			"geo" => $data["geo"]
 		]);
+		unset($data["geo"]);
 
 		foreach ($data as $key => $val) {
 			$data = [

@@ -19,22 +19,55 @@ class QuestionsService extends \Keeper
 		return parent::getInstance(get_class());
 	}
 
-	public function getList($bid)
+	public function getList($bid, $uniq = false)
 	{
-		return QuestionsModel::i()->getCompiledListByField("bid", $bid);
+		if($bid > 0)
+			if( ! $uniq)
+				return QuestionsModel::i()->getCompiledListByField("bid", $bid);
+			else{
+				$__list = [];
+				foreach (\Model::getCols("SELECT `id` FROM inquirers_questions WHERE `bid` = '$bid' AND `id` NOT IN (SELECT `qid` FROM inquirers_forms_content WHERE `bid` = '$bid')") as $__qid)
+					$__list[] = $this->getItem($__qid);
+
+				return $__list;
+			}
+		else
+			return QuestionsModel::i()->getCompiledList();
 	}
 
-	public function getItem($id)
+	public function getItem($qid, $bid = 0, $title = "")
 	{
-		return QuestionsModel::i()->getItem($id);
+		if($qid > 0)
+			return QuestionsModel::i()->getItem($qid);
+		elseif($title != "")
+		{
+			$__list = QuestionsModel::i()->getCompiledList(["title LIKE '$title'", "bid = $bid"]);
+
+			return isset($__list[0]) ? $__list[0] : false;
+		}
+
+		return false;
 	}
 
-	public function save($data)
+	public function save($bid, $qid, $title, $type, $num)
 	{
-		if( ! QuestionsModel::i()->update($data))
-			return QuestionsModel::i()->insert($data);
+		if( ! ($__question = $this->getItem(0, $bid, $title)))
+			return QuestionsModel::i()->insert([
+				"bid" => $bid,
+				"title" => $title,
+				"type" => $type,
+				"num" => $num
+			]);
 
-		return $data["id"];
+		QuestionsModel::i()->update([
+			"id" => $qid,
+			"bid" => $bid,
+			"title" => $title,
+			"type" => $type,
+			"num" => $num
+		]);
+
+		return $__question["id"];
 	}
 
 	public function publicate($id, $value)
@@ -50,6 +83,14 @@ class QuestionsService extends \Keeper
 		QuestionsModel::i()->update([
 			"id" => $id,
 			"is_text" => $value
+		]);
+	}
+
+	public function isProblem($id, $value)
+	{
+		QuestionsModel::i()->update([
+			"id" => $id,
+			"is_problem" => $value
 		]);
 	}
 

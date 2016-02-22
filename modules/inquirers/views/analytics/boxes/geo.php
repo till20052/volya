@@ -13,7 +13,7 @@
 				</td>
 			</tr>
 
-			<tr data-block="geo" data-id="area"><td style="height: 15px"></td></tr>
+			<tr data-block="geo" data-id="area"><td style="height: 3px"></td></tr>
 			<tr data-block="geo" data-id="area">
 				<td>
 					<select data-ui-ddl="area" style="width: 100%">
@@ -22,7 +22,7 @@
 				</td>
 			</tr>
 
-			<tr data-block="geo" data-id="location"><td style="height: 15px"></td></tr>
+			<tr data-block="geo" data-id="location"><td style="height: 3px"></td></tr>
 			<tr data-block="geo" data-id="location">
 				<td>
 					<select data-ui-cb="location" style="width: 100%">
@@ -51,7 +51,7 @@
 				</td>
 			</tr>
 
-			<tr data-block="geo" data-id="city_district"><td style="height: 15px"></td></tr>
+			<tr data-block="geo" data-id="city_district"><td style="height: 3px"></td></tr>
 			<tr data-block="geo" data-id="city_district">
 				<td>
 					<select data-ui-ddl="city_district" style="width: 100%">

@@ -21,27 +21,31 @@ class BlocksService extends \Keeper
 
 	public function getList($fid)
 	{
-		return BlocksModel::i()->getCompiledListByField("fid", $fid);
+		if($fid > 0)
+			return BlocksModel::i()->getCompiledListByField("fid", $fid);
+		else
+			return BlocksModel::i()->getCompiledList();
 	}
 
-	public function getItem($id)
+	public function getItem($id, $title = "")
 	{
-		return BlocksModel::i()->getItem($id);
+		if($id > 0)
+			return BlocksModel::i()->getItem($id);
+		elseif($title != "")
+			return BlocksModel::i()->getItemByField("title", $title);
+
+		return false;
 	}
 
-	public function save($id, $fid, $title)
+	public function save($fid, $title)
 	{
-		if( ! BlocksModel::i()->update([
-			"id" => $id,
-			"fid" => $fid,
-			"title" => $title
-		]))
+		if( ! ($__block = $this->getItem(0, $title)))
 			return BlocksModel::i()->insert([
 				"fid" => $fid,
 				"title" => $title
 			]);
 
-		return $id;
+		return $__block["id"];
 	}
 
 	public function publicate($id, $value)

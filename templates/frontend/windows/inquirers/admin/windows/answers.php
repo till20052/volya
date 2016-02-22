@@ -5,17 +5,8 @@
 		</div>
 
 		<div>
-			<h2><?=t("Варіанти відповідей")?></h2>
+			<h2 data-ui="question"></h2>
 		</div>
-
-		<table width="100%" cellspacing="0" cellpadding="0" class="mt10 mb10">
-			<tr>
-				<td style="width: 100px" class="taright pr15"><?=t("Питання")?></td>
-				<td class="pr10">
-					<span data-ui="question"></span>
-				</td>
-			</tr>
-		</table>
 
 		<div data-section="answers" class="mt10">
 			<div>
@@ -26,9 +17,9 @@
 						<tr>
 							<td style="width: 150px" class="taright pr15"><?=t("Тип питання")?></td>
 							<td style="width: 203px" class="pl10" colspan="2">
-								<select data-ui="answers_type" style="width:100%">
-									<option value="1"><?=t("Одна з декількох")?></option>
-									<option value="2"><?=t("Декілька")?></option>
+								<select data-ui="question_type" style="width:100%">
+									<option value="1"><?=t("Одна відповідь з декількох")?></option>
+									<option value="2"><?=t("Декілька відповідей")?></option>
 								</select>
 							</td>
 						</tr>
@@ -46,10 +37,10 @@
 
 						<tr>
 							<td colspan="2">
-								<input type="text" id="answer_title" class="textbox" style="width:100%" placeholder="<?=t("Відповідь")?>" />
+								<input type="text" data-ui="answer_title" class="textbox" style="width:100%" placeholder="<?=t("Відповідь")?>" />
 							</td>
 							<td style="width: 203px" class="pl10">
-								<a data-action="create_answer" href="javascript:void(0);" class="v-button button-yellow">
+								<a data-action="add_answer" href="javascript:void(0);" class="v-button button-yellow">
 									<i class="icon icon-plus-sign"></i>
 									<?=t("Додати відповідь")?>
 								</a>
@@ -67,7 +58,6 @@
 									["title" => t("Відповідь")],
 									["title" => t("Проблема"), "width" => "15%"],
 									["title" => t("Текстова"), "width" => "12%"],
-									["title" => t("Публічна"), "width" => "12%"],
 									["title" => t("Дії"), "width" => "15%"],
 								)
 							])?>);</script>
@@ -84,11 +74,6 @@
 						<script type="text/x-kendo-template">
 							<div class="tacenter">
 								<input type="checkbox" data-action="is_text" data-id="#=id#"# if(is_text == 1){ # checked# } # />
-							</div>
-						</script>
-						<script type="text/x-kendo-template">
-							<div class="tacenter">
-								<input type="checkbox" data-action="publicate" data-id="#=id#"# if(is_public == 1){ # checked# } # />
 							</div>
 						</script>
 						<script type="text/x-kendo-template">
@@ -118,6 +103,7 @@
 						<?=t("Готово")?>
 					</a>
 				</div>
+				<div class="cboth"></div>
 
 			</div>
 		</div>

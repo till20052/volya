@@ -32,7 +32,7 @@ class FormsService extends \Keeper
 		return $__list;
 	}
 
-	public function getItem($id, $geo)
+	public function getItem($id, $geo = null)
 	{
 		if(is_null($geo))
 			$__item = FormsModel::i()->getItem($id);
@@ -57,6 +57,9 @@ class FormsService extends \Keeper
 
 	public function save($id, $geo)
 	{
+		if( ! $geo > 0)
+			return false;
+
 		if(
 			! ($id > 0)
 			|| ! FormsModel::i()->update([
