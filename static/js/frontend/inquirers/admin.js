@@ -32,7 +32,7 @@
 
 				var __uiForm = (new Form($("form", __uiWindow.element))).beforeSend(function(){
 
-					if( ! inquirers.forms.geo && __geo.fn.geo())
+					if( inquirers.forms.geo == 0 && __geo.fn.geo())
 						inquirers.forms.geo = __geo.fn.geo();
 
 					var __data = {
@@ -382,8 +382,12 @@
 						__geo.initialize();
 					}),
 					geo: (function(){
-						if( ! inquirers.forms.geo)
+						if(inquirers.forms.geo == 0) {
+							if ( !__geo.fn.geo())
+								return false;
+
 							inquirers.forms.geo = __geo.fn.geo();
+						}
 
 						return inquirers.forms.geo;
 					})
@@ -542,24 +546,35 @@
 					$.post(inquirers.tokens.forms.actions.save_item, {
 						fid: inquirers.forms.id,
 						geo: __inquirersFormUiWindow.geo()
-					}, function(response){
-						if( ! response.success)
+					}, function(res){
+						if( ! res.success)
 							return;
 
-						__formsUiTable.dataSource.insert(0, response.item);
-						inquirers.forms.id = response.item.id;
+						inquirers.forms.id = res.item.id;
+						__formsUiTable.dataSource.insert(0, res.item);
+
+						$.post(inquirers.tokens.blocks.actions.save_item, {
+							fid: res.item.id,
+							btitle: __blockTitle.value()
+						}, function(res){
+							if( ! res.success)
+								return;
+
+							__blocksUiTable.dataSource.insert(res.item);
+							__blockTitle.value("");
+						}, "json");
 					}, "json");
+				else
+					$.post(inquirers.tokens.blocks.actions.save_item, {
+						fid: inquirers.forms.id,
+						btitle: __blockTitle.value()
+					}, function(res){
+						if( ! res.success)
+							return;
 
-				$.post(inquirers.tokens.blocks.actions.save_item, {
-					fid: inquirers.forms.id,
-					btitle: __blockTitle.value()
-				}, function(res){
-					if( ! res.success)
-						return;
-
-					__blocksUiTable.dataSource.insert(res.item);
-					__blockTitle.value("");
-				}, "json");
+						__blocksUiTable.dataSource.insert(res.item);
+						__blockTitle.value("");
+					}, "json");
 			});
 
 			inquirers.forms.fn = $.extend(__inquirersFormUiWindow, {

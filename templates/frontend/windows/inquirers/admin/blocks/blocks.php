@@ -4,7 +4,7 @@
 			<tbody>
 
 			<tr>
-				<td style="width: 100px" class="taright pr15"><?=t("Назва блоку")?></td>
+				<td style="width: 115px" class="taright pr15"><?=t("Назва блоку")?></td>
 				<td>
 					<input type="text" data-ui="block_title" class="textbox" style="width:100%" placeholder="Введіть назву блоку або оберіть з існуючих" />
 				</td>
@@ -63,8 +63,4 @@
 			</tr>
 		</script>
 	</table>
-</div>
-
-<div class="mt30">
-	<div><?=t("Всього")?>: <span id="total_blocks"></span></div>
 </div>

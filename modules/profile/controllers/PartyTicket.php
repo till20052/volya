@@ -3,6 +3,7 @@
 Loader::loadModule("Profile");
 
 Loader::loadClass("GeoClass");
+Loader::loadClass("OldGeoClass");
 Loader::loadClass("PHPExcel", Loader::SYSTEM);
 Loader::loadClass("barcodegen.BCGFontFile", Loader::SYSTEM);
 Loader::loadClass("barcodegen.BCGColor", Loader::SYSTEM);
@@ -33,7 +34,7 @@ class PartyTicketProfileController extends ProfileController
 			$__decision["date"] = date("d.m.Y", strtotime($__uvItem["created_at"]));
 		}
 
-		$__user["geo"] = GeoClass::i()->getCity($__user["geo_koatuu_code"]);
+		$__user["geo"] = OldGeoClass::i()->getCity($__user["geo_koatuu_code"]);
 
 		if(count(($__list = CellsMembersModel::i()->getList(["user_id = :uid"], ["uid" => $__user["id"]], null, 1))) > 0)
 			$__user["cell_id"] = $__list[0];

@@ -19,14 +19,14 @@ class AnswersService extends \Keeper
 		return parent::getInstance(get_class());
 	}
 
-	public function getList($qid, $uniq = false)
+	public function getList($qid, $fid, $uniq = false)
 	{
 		if($qid > 0)
 			if( ! $uniq)
 				return AnswersModel::i()->getCompiledListByField("qid", $qid);
 			else{
 				$__list = [];
-				foreach (\Model::getCols("SELECT `id` FROM inquirers_answers WHERE `qid` = '$qid' AND `id` NOT IN (SELECT `aid` FROM inquirers_forms_content WHERE `qid` = '$qid')") as $__aid)
+				foreach (\Model::getCols("SELECT `id` FROM inquirers_answers WHERE `qid` = '$qid' AND `id` NOT IN (SELECT `aid` FROM inquirers_forms_content WHERE `qid` = '$qid' AND `fid` = '$fid')") as $__aid)
 					$__list[] = $this->getItem($__aid);
 
 				return $__list;

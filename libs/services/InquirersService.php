@@ -123,7 +123,7 @@ class InquirersService extends \Keeper
 		$__list["available"] = [];
 
 		$__list["existing"] = FormsContentService::i()->getQuestions($fid, $bid);
-		$__list["available"] = QuestionsService::i()->getList($bid, true);
+		$__list["available"] = QuestionsService::i()->getList($bid, $fid, true);
 
 		return $__list;
 	}
@@ -169,7 +169,7 @@ class InquirersService extends \Keeper
 		$__list["available"] = [];
 
 		$__list["existing"] = FormsContentService::i()->getAnswers($fid, $qid);
-		$__list["available"] = AnswersService::i()->getList($qid, true);
+		$__list["available"] = AnswersService::i()->getList($qid, $fid, true);
 
 		return $__list;
 	}

@@ -39,6 +39,9 @@ class FormsService extends \Keeper
 		else
 			$__item = FormsModel::i()->getItemByField("geo", $geo);
 
+		if( ! $__item)
+			return false;
+
 		return array_merge(
 			$__item,
 			[
