@@ -58,7 +58,7 @@ class FormsService extends \Keeper
 		]);
 	}
 
-	public function save($id, $geo)
+	public function save($id, $geo, $text)
 	{
 		if( ! $geo > 0)
 			return false;
@@ -67,11 +67,13 @@ class FormsService extends \Keeper
 			! ($id > 0)
 			|| ! FormsModel::i()->update([
 					"id" => $id,
-					"geo" => $geo
+					"geo" => $geo,
+					"text" => $text
 				])
 		){
 			$id = FormsModel::i()->insert([
-				"geo" => $geo
+				"geo" => $geo,
+				"text" => $text
 			]);
 		}
 

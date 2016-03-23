@@ -41,7 +41,7 @@
 				</script>
 				<script type="text/x-kendo-template">
 					<div class="p5" style="line-height:normal">
-						<div class="fwbold">#=title#</div>
+						<div class="fwbold"><a href="/inquirers/answers/#=id#" target="_blank">#=title#</a></div>
 						<div class="mt5 fs12"><?=t("Дата публікаціЇ")?>: #=kendo.toString(kendo.parseDate(created_at), "HH:mm dd MMMM yyyy")#</div>
 					</div>
 				</script>

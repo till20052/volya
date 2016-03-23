@@ -1,8 +1,39 @@
 body > section > div {
 
-	>div {
+	> div.grid {
 
 		color: #0181C5;
+		text-transform: uppercase;
+
+		> .gridHeader {
+
+			> .gridLogo {
+				width: 16%;
+				float: left;
+				height: 205px;
+
+				> img {
+					width: 155px;
+				}
+			}
+
+			> .gridTitle {
+				width: 84%;
+				height: 205px;
+				float: left;
+				font-size: 48px;
+				text-transform: none;
+				text-align: center;
+			}
+		}
+
+		.gridStartText {
+			width: 100%;
+			margin: 15px 5px;
+			color: #0181C5;
+			text-transform: none;
+			font-size: 30px;
+		}
 
 		.grid-item {
 			width: 465px;
@@ -12,12 +43,8 @@ body > section > div {
 		}
 
 		.block_title {
-			margin: 15px 0 0 15px;
+			margin: 15px 0 0 25px;
 			font-size: 22px;
-		}
-
-		span.question {
-			font-size: 21px;
 		}
 
 		.marker {
@@ -25,10 +52,14 @@ body > section > div {
 			width: 12px;
 			height: 12px;
 			background: #F4E200;
-			margin: 7px 15px 0 0;
+			margin: 5px 15px 0 0;
 		}
 
 		[data-block=question] {
+			span.question {
+				font-size: 18px;
+			}
+
 			> textarea {
 				width: 385px;
 				margin-left: 40px;
@@ -36,6 +67,7 @@ body > section > div {
 
 			> [data-block=answer] {
 				cursor: pointer;
+				padding-left: 70px;
 
 				> textarea {
 					width: 350px;
@@ -53,7 +85,7 @@ body > section > div {
 					height: 25px;
 					border: 1px solid #0181C5;
 					float: left;
-					margin: 0 10px 0 35px;
+					margin: 0 10px 0 -35px;
 
 					cursor: pointer;
 
@@ -89,18 +121,124 @@ body > section > div {
 	}
 
 	[data-id="personal_info"] {
+		color: #0181C5;
+		text-transform: uppercase;
 		padding: 10px;
 		width: 930px;
 		border: 1px solid #0181C5;
 
-		>h2 {
+		table {
+			width: 933px;
+		}
+
+		> h2 {
 			text-align: center;
 			margin-bottom: 10px;
 		}
 
-		>textarea {
+		> textarea {
 			resize: none;
 			height: 200px
 		}
 	}
+
+	.approve {
+		padding-top: 10px;
+
+		>.approveCheckbox {
+			width: 50px;
+			height: 50px;
+			border: 1px solid #0181C5;
+			float: left;
+			margin-right: 15px;
+
+			cursor: pointer;
+
+			&.active {
+				border: 2px solid #0181C5;
+
+				> i {
+					display: block;
+				}
+			}
+
+			>i {
+				display: none;
+				font-size: 60px;
+				color: #F4E200;
+				position: relative;
+				top: -20px;
+				left: 5px;
+			}
+		}
+
+		>.approveText {
+			font-size: 24px;
+		}
+	}
+}
+
+@media print {
+
+	header { display: none; }
+
+	section {
+
+		.gridBody {
+
+			.grid-item {
+				width: 100% !important;
+				border: none !important;
+				margin-left: 0 !important;
+
+				h1.block_title {
+					padding: 0 !important;
+				}
+
+				[data-block="question"] {
+					margin-left: 0 !important;
+
+					.questionTitle {
+						margin-left: 10px !important;
+
+						.marker {
+							background: #0181C5 !important;
+						}
+					}
+
+					[data-block="answer"] {
+						padding-left: 60px;
+
+						.checkbox {
+							i {
+								display: none;
+							}
+						}
+
+						textarea {
+							width: 100%;
+						}
+					}
+				}
+			}
+		}
+
+		.gridStartText {
+			margin: 15px 0 !important;
+		}
+
+		[data-id="personal_info"] {
+			border: none !important;
+		}
+
+		[data-action="send"] {
+			display: none !important;
+		}
+
+		div.header { display: none; }
+
+		div.noPrint { display: none; }
+	}
+
+    footer { display: none; }
 }

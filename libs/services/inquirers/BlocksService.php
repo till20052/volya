@@ -37,13 +37,18 @@ class BlocksService extends \Keeper
 		return false;
 	}
 
-	public function save($fid, $title)
+	public function save($fid, $bid, $title)
 	{
 		if( ! ($__block = $this->getItem(0, $title)))
 			return BlocksModel::i()->insert([
 				"fid" => $fid,
 				"title" => $title
 			]);
+
+		BlocksModel::i()->update([
+			"id" => $bid,
+			"title" => $title
+		]);
 
 		return $__block["id"];
 	}

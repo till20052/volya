@@ -8,11 +8,15 @@ use \libs\services\StructuresService;
 class IndexStructuresController extends StructuresController
 {
 
-	private function __getStructure($sid)
+	private function __getStructure($fild)
 	{
-		$__structure = StructuresService::i()->getStructure($sid, true);
-		$__structure["head"] = StructuresService::i()->getStructureHead($sid);
-		$__structure["coordinator"] = StructuresService::i()->getStructureCoordinator($sid);
+		if(
+			strlen($fild) != 10
+			|| ! ($__structure = StructuresService::i()->getStructureByGeo($fild))
+		)
+			$__structure = StructuresService::i()->getStructure($fild, true);
+
+		$__structure["coordinator"] = StructuresService::i()->getStructureCoordinator($__structure["id"]);
 
 		$__code = rtrim($__structure["geo"], '0');
 		$__user = UsersModel::i()->getItem(UserClass::i()->getId());
@@ -56,11 +60,16 @@ class IndexStructuresController extends StructuresController
 
 		HeadClass::addJs("/js/form.js");
 
+		$this->page = "";
+
 		if(isset($args[0]))
 		{
-			switch($args[0]) {
+			$this->page = $args[0];
+
+			switch($this->page) {
 				case "regional":
 					parent::setView("regional");
+					parent::addBreadcrumb("/structures/regional", t("Інтерактивна карта партійних організацій"));
 
 					HeadClass::addLess([
 						"/less/frontend/structures/regional.less"
@@ -75,6 +84,8 @@ class IndexStructuresController extends StructuresController
 				default:
 					parent::setView("structure");
 
+					$this->page = "structure";
+
 					HeadClass::addLess([
 						"/less/frontend/structures/common/structure.less"
 					]);
@@ -84,6 +95,12 @@ class IndexStructuresController extends StructuresController
 					]);
 
 					$this->structure = $this->__getStructure($args[0]);
+
+					if($this->structure["levelInt"] < 6)
+						$this->structure["structures"] = StructuresService::i()->getSubstructures( $this->structure["id"] );
+
+					parent::addBreadcrumb("/structures/regional", t("Карта"));
+					parent::addBreadcrumb("/structures/regional/" . $args[0], $this->structure["locality"]);
 
 					break;
 			}

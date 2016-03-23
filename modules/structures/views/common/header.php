@@ -1,17 +1,25 @@
-<div data-id="structure_header" class="header" style="margin-bottom: 0">
-	<div class="breadcrumbs">
+<div class="headerNew">
 
-		<div>
+	<div>
+		<ul class="breadcrumb">
 
-			<h3>
-				<a href="/structures"><?=t("Структура партії")?></a>
-				<? if(isset($filter["geo"])){ ?>
-					/ <?=$filter["geo"]["location"]?>
-				<? }elseif(isset($structure)){?>
-					/ <?=$structure["title"]?>
-				<?}?>
-			</h3>
+			<? $__counter = 0; ?>
+			<? foreach($application->breadcrumbs as $__breadcrumb){ ?>
 
-		</div>
+				<? if(count($application->breadcrumbs) - 1 != $__counter){ ?>
+
+					<li><a href="<?=$__breadcrumb["href"]?>"><?=$__breadcrumb["text"]?></a></li>
+
+				<? } else { ?>
+
+					<li class="current"><?=$__breadcrumb["text"]?></li>
+
+				<? } ?>
+
+				<? $__counter++ ?>
+
+			<? } ?>
+		</ul>
 	</div>
+
 </div>

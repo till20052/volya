@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	var raphael = Raphael('map', 960, 670),
+	var raphael = Raphael('map', 600, 400),
 		attributes = {
 			'stroke-width': 0.5,
 			'stroke-linejoin': 'round',
@@ -19,7 +19,7 @@ $(document).ready(function(){
 			if( region.status == 1 ) {
 				obj.attr({
 					fill: '#0181C5',
-					stroke: '#FFE515',
+					stroke: '#FFE515'
 				});
 
 				color.fill = '#0181C5';
@@ -29,7 +29,7 @@ $(document).ready(function(){
 			if( region.status == 0 ) {
 				obj.attr({
 					fill: 'rgb(209, 210, 212)',
-					stroke: '#fff',
+					stroke: '#fff'
 				});
 
 				color.fill = 'rgb(209, 210, 212)';
@@ -39,7 +39,7 @@ $(document).ready(function(){
 			if( region.status == -1 ) {
 				obj.attr({
 					fill: 'rgba(255, 31, 31)',
-					stroke: '#fff',
+					stroke: '#fff'
 				});
 
 				color.fill = 'rgba(255, 31, 31)';
@@ -47,6 +47,8 @@ $(document).ready(function(){
 			}
 
 			obj.name = region.name;
+			obj.geo = region.geo;
+			obj.status = region.status;
 
 			obj
 				.hover(function(){
@@ -61,7 +63,10 @@ $(document).ready(function(){
 					}, 300);
 				})
 				.click(function(){
-					alert(this.id);
+					if(this.status == 1)
+						window.location.href = "/structures/" + this.geo;
+					else
+						alert("Нажаль в даній області немає наших партійних організацій");
 				});
 		});
 

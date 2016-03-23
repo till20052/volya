@@ -34,4 +34,24 @@ class AnswersInquirersController extends InquirersController
 
 		return true;
 	}
+
+	public function exportInquirer($args)
+	{
+		parent::setLayout("document");
+		parent::execute($args);
+		parent::setView("answers");
+
+		parent::title(t("Анкета"));
+
+		$id = 0;
+		if(isset($args[0]))
+			$id = $args[0];
+
+		$this->inquirer = InquirersService::i()->getCompiledInquirer($id);
+
+		$this->intlDateFormatter = new IntlDateFormatter('UK_ua', IntlDateFormatter::LONG, IntlDateFormatter::NONE, 'Europe/Berlin');
+		$this->intlDateFormatter->setPattern("dd MMMM yyyy");
+
+		return true;
+	}
 }

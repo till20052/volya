@@ -42,13 +42,13 @@
 		</script>
 		<script type="text/x-kendo-template">
 			<div class="p5" style="line-height:normal">
-				<div class="fwbold">#=title#</div>
+				<div class="fwbold" data-id="#=id#" data-action="edit">#=title#</div>
 			</div>
 		</script>
 		<script type="text/x-kendo-template">
 			<div class="tacenter pt5 pb5">
 				<div>
-					<a href="javascript:void(0);" data-action="edit" data-id="#=id#"><?=t("Змінити")?></a>
+					<a href="javascript:void(0);" data-action="add_questions" data-id="#=id#"><?=t("Змінити")?></a>
 				</div>
 				<div>
 					<a href="javascript:void(0);" data-action="delete" data-id="#=id#" data-text="<?=t("Ви дійсно бажаєте видалити цю новину?")?>"><?=t("Видалити")?></a>

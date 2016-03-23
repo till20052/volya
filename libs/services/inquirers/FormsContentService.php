@@ -85,18 +85,25 @@ class FormsContentService extends \Keeper
 
 	public function getAnswers($fid, $qid)
 	{
-		$__answers = [];
+		$__list = [];
 		$__sql = "SELECT `aid` FROM inquirers_forms_content WHERE `fid` = '$fid' AND `qid` = '$qid' AND `aid` > 0";
 
 		foreach (\Model::getCols($__sql) as $__aid)
-			$__answers[] = AnswersService::i()->getItem($__aid);
+			$__list[] = AnswersService::i()->getItem($__aid);
 
-		return $__answers;
+		return $__list;
 	}
 
 	public function deleteBlock($fid, $bid)
 	{
 		\Model::exec("DELETE FROM inquirers_forms_content WHERE `fid` = '$fid' AND `bid` = '$bid'");
+
+		return true;
+	}
+
+	public function deleteAnswer($fid, $aid)
+	{
+		\Model::exec("DELETE FROM inquirers_forms_content WHERE `fid` = '$fid' AND `aid` = '$aid'");
 
 		return true;
 	}
@@ -130,5 +137,12 @@ class FormsContentService extends \Keeper
 		}
 
 		return $__item;
+	}
+	
+	public function replaceQuestion($fid, $oldQid, $newQid)
+	{
+		\Model::exec("UPDATE inquirers_forms_content SET `qid` = $newQid WHERE `fid` = '$fid' AND `qid` = '$oldQid'");
+
+		return true;
 	}
 }

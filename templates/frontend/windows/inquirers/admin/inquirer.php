@@ -81,15 +81,27 @@
 						<td></td>
 					</tr>
 
-					<tr data-block="location_name" class="fs16">
-						<td class="taright pr15 fwbold" style="width: 150px"><?=t("Регіон")?></td>
+					<tr data-block="location_name">
+						<td style="width: 115px" class="taright pr15"><?=t("Регіон")?></td>
 						<td>
 							<span style="color: #868686"></span>
 						</td>
 						<td></td>
-					</tr>
+					</tr
 
 					<tr><td colspan="2" style="height:10px"></td></tr>
+
+					<tr>
+						<td style="width: 115px" class="taright pr15"><?=t("Вступний текст")?></td>
+						<td>
+							<textarea
+									data-ui="form_start_text"
+									class="textbox"
+									placeholder="Введіть вступний текст. Він буде відображатись в горі анкети перед запитаннями."
+									style="resize: none"></textarea>
+						</td>
+						<td></td>
+					</tr>
 
 					<tr>
 						<td colspan="3">

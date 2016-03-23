@@ -14,6 +14,6 @@ class StructuresController extends Frontend
 	public function execute()
 	{
 		parent::execute();
-		parent::addBreadcrumb("/structures", t("Осередки"));
+		parent::addBreadcrumb("/structures", t("Партійна структура"));
 	}
 }

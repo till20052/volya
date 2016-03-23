@@ -37,7 +37,8 @@
 
 					var __data = {
 						fid: inquirers.forms.id,
-						geo: inquirers.forms.geo
+						geo: inquirers.forms.geo,
+						text: $("textarea[data-ui='form_start_text']").val()
 					};
 
 					if( ! (__data.geo > 0)) {
@@ -372,6 +373,7 @@
 
 								$("span", "[data-block='location_name']").html(__item.title);
 								$("[data-block='location_name']").show();
+								$("textarea[data-ui='form_start_text']").val(__item.text);
 
 								__uiWindow.open();
 							}, "json");
@@ -479,6 +481,47 @@
 					}
 				});
 
+				var __editItem = (function(element){
+					var __parentDiv = $($(element).parents("div").eq(0)),
+						__a = $(element).clone(),
+						__input = $("<input type=\"text\" class=\"textbox\" style=\"width: 100%\" />").bind("blur keyup", function(e){
+							var __this = this;
+							var __bid = $(__a).attr("data-id");
+
+							if( ! ($.inArray(e.type, ["blur", "keyup"]) > -1) || (e.type == "keyup" && e.keyCode != 13))
+								return;
+
+							if($(__this).val() == ""){
+								$(__this).css("borderColor", "red");
+								setTimeout(function(){
+									$(__this).css("borderColor", "");
+								}, 2000);
+								return;
+							}
+
+							$.post(inquirers.tokens.blocks.actions.save_item, {
+								bid: __bid,
+								btitle: $(__this).val().replace("'", "&#039;")
+							}, function(){
+								$(__parentDiv).css("padding", "")
+									.append($(__a));
+								$(__a).html($(__this).val());
+								$(__this).remove();
+
+								inquirers.blocks.title = $(__this).val();
+
+								__uiTable.dataSource.get(__bid).set("title", $(__this).val());
+							}, "json");
+						});
+
+					$(element).remove();
+
+					$(__parentDiv).css("padding", 0)
+						.append($(__input).val($(__a).html()));
+
+					$(__input).focus();
+				});
+
 				__templates.each(function(i){
 					if(typeof __data.columns[i] == "undefined")
 						return;
@@ -499,6 +542,10 @@
 
 					switch($(__a).attr("data-action")){
 						case "edit":
+							__editItem(__a);
+							break;
+
+						case "add_questions":
 							inquirers.blocks.fn.getItemAndOpenWindow($(__a).attr("data-id"));
 							break;
 
@@ -555,10 +602,13 @@
 
 						$.post(inquirers.tokens.blocks.actions.save_item, {
 							fid: res.item.id,
+							bid: inquirers.blocks.id,
 							btitle: __blockTitle.value()
 						}, function(res){
 							if( ! res.success)
 								return;
+
+							inquirers.blocks.id = res.item.id;
 
 							__blocksUiTable.dataSource.insert(res.item);
 							__blockTitle.value("");
@@ -567,10 +617,13 @@
 				else
 					$.post(inquirers.tokens.blocks.actions.save_item, {
 						fid: inquirers.forms.id,
+						bid: inquirers.blocks.id,
 						btitle: __blockTitle.value()
 					}, function(res){
 						if( ! res.success)
 							return;
+
+						inquirers.blocks.id = res.item.id;
 
 						__blocksUiTable.dataSource.insert(res.item);
 						__blockTitle.value("");
@@ -723,55 +776,55 @@
 					}, "json");
 				});
 
-				//var __editItem = (function(element){
-				//	var __parentDiv = $($(element).parents("div").eq(0)),
-				//		__a = $(element).clone(),
-				//		__input = $("<input type=\"text\" class=\"textbox\" style=\"width: 100%\" />").bind("blur keyup", function(e){
-				//			var __this = this;
-				//			var __qid = $(__a).attr("data-id");
-				//
-				//			if( ! ($.inArray(e.type, ["blur", "keyup"]) > -1) || (e.type == "keyup" && e.keyCode != 13))
-				//				return;
-				//
-				//			if($(__this).val() == ""){
-				//				$(__this).css("borderColor", "red");
-				//				setTimeout(function(){
-				//					$(__this).css("borderColor", "");
-				//				}, 2000);
-				//				return;
-				//			}
-				//
-				//			$.post(inquirers.tokens.questions.actions.save_item, {
-				//				qid: __qid,
-				//				bid: inquirers.blocks.id,
-				//				title: $(__this).val()
-				//			}, function(){
-				//				$(__parentDiv).css("padding", "")
-				//					.append($(__a));
-				//				$(__a).html($(__this).val());
-				//				$(__this).remove();
-				//
-				//				inquirers.blocks.title = $(__this).val();
-				//
-				//				__uiTable.dataSource.get(__qid).set("title", $(__this).val());
-				//			}, "json");
-				//		});
-				//
-				//	$(element).remove();
-				//
-				//	$(__parentDiv).css("padding", 0)
-				//		.append($(__input).val($(__a).html()));
-				//
-				//	$(__input).focus();
-				//});
+				var __editItem = (function(element){
+					var __parentDiv = $($(element).parents("div").eq(0)),
+						__a = $(element).clone(),
+						__input = $("<input type=\"text\" class=\"textbox\" style=\"width: 100%\" />").bind("blur keyup", function(e){
+							var __this = this;
+							var __qid = $(__a).attr("data-id");
+
+							if( ! ($.inArray(e.type, ["blur", "keyup"]) > -1) || (e.type == "keyup" && e.keyCode != 13))
+								return;
+
+							if($(__this).val() == ""){
+								$(__this).css("borderColor", "red");
+								setTimeout(function(){
+									$(__this).css("borderColor", "");
+								}, 2000);
+								return;
+							}
+
+							$.post(inquirers.tokens.questions.actions.save_item, {
+								qid: __qid,
+								bid: inquirers.blocks.id,
+								qtitle: $(__this).val().replace("'", "&#039;")
+							}, function(){
+								$(__parentDiv).css("padding", "")
+									.append($(__a));
+								$(__a).html($(__this).val());
+								$(__this).remove();
+
+								inquirers.blocks.title = $(__this).val();
+
+								__uiTable.dataSource.get(__qid).set("title", $(__this).val());
+							}, "json");
+						});
+
+					$(element).remove();
+
+					$(__parentDiv).css("padding", 0)
+						.append($(__input).val($(__a).html()));
+
+					$(__input).focus();
+				});
 
 				$(__uiTable.tbody).click(function(event){
 					var __element = $(event.srcElement);
 
 					switch($(__element).attr("data-action")){
-						//case "edit":
-						//	__editItem(__element);
-						//	break;
+						case "edit":
+							__editItem(__element);
+							break;
 
 						case "delete":
 							__deleteItem($(__element).attr("data-id"), $(__element).attr("data-text"));
@@ -960,6 +1013,7 @@
 				var __deleteItem = (function (aid, text) {
 					if (confirm(text)) {
 						$.post(inquirers.tokens.answers.actions.delete_item, {
+							fid: inquirers.forms.id,
 							aid: aid
 						}, function (response) {
 							if ( ! response.success)
@@ -1012,6 +1066,7 @@
 							}
 
 							$.post(inquirers.tokens.answers.actions.save_item, {
+								fid: inquirers.forms.id,
 								aid: $(__a).attr("data-id"),
 								qid: inquirers.questions.id,
 								title: $(__this).val()

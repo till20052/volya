@@ -12,10 +12,10 @@ class PdfSController extends SController
 		
 		$__url = "http://".Uri::getUrl().urldecode(Request::getString("url"));
 //		$__url = "http://".urldecode(Request::getString("url"));
-		
+
 		$__tokens = explode(".", microtime(true));
 		$__filename = md5($__tokens[0].str_pad($__tokens[1], 4, "0"));
-		
+
 		$__path = Router::getAppFolder().DS."data".DS."temp".DS.$__filename.".pdf";
 		
 		$exec = "xvfb-run -a -s \"-screen 0 1024x768x16\" wkhtmltopdf "

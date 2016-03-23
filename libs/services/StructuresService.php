@@ -37,27 +37,32 @@ class StructuresService extends \Keeper
 		self::LEVEL_REGION => [
 			"long" => "Обласна партійна огранізація",
 			"short" => "Обласна",
-			"type" => "region"
+			"type" => "region",
+			"substructures" => [self::LEVEL_DISTRICT, self::LEVEL_CITY_WITH_DISTRICTS, self::LEVEL_CITY_WITHOUTH_DISTRICTS]
 		],
 		self::LEVEL_CITY_WITH_DISTRICTS => [
 			"long" => "Міська партійна огранізація з поділом на райони",
 			"short" => "Міська обласного значення",
-			"type" => "city"
+			"type" => "city",
+			"substructures" => [self::LEVEL_CITY_DISTRICT]
 		],
 		self::LEVEL_DISTRICT => [
 			"long" => "Районна партійна огранізація",
 			"short" => "Районна",
-			"type" => "district"
+			"type" => "district",
+			"substructures" => [self::LEVEL_CITY_WITHOUTH_DISTRICTS, self::LEVEL_PRIMARY]
 		],
 		self::LEVEL_CITY_DISTRICT => [
 			"long" => "Районна в місті партійна огранізація",
 			"short" => "Районна в місті",
-			"type" => "city_district"
+			"type" => "city_district",
+			"substructures" => [self::LEVEL_PRIMARY]
 		],
 		self::LEVEL_CITY_WITHOUTH_DISTRICTS => [
 			"long" => "Міська партійна огранізація без поділу на райони",
 			"short" => "Міська",
-			"type" => "city"
+			"type" => "city",
+			"substructures" => [self::LEVEL_PRIMARY]
 		],
 		self::LEVEL_PRIMARY => [
 			"long" => "Первинна партійна огранізація",
@@ -412,13 +417,16 @@ class StructuresService extends \Keeper
 
 		$__location = \GeoClass::i()->location($__structure["geo"]);
 
-		if( ! isset($__level["type"]))
-		{
-			$__locationTitle = explode("/", $__location["location"]);
-			$__locationTitle = $__locationTitle[count($__locationTitle) - 1];
-		}
+		if($__structure["geo"] == "8000000000")
+			$__locationTitle = $__location["city"]["title"];
 		else
-			$__locationTitle = $__location[$__level["type"]]["title"];
+			if( ! isset($__level["type"]))
+			{
+				$__locationTitle = explode("/", $__location["location"]);
+				$__locationTitle = $__locationTitle[count($__locationTitle) - 1];
+			}
+			else
+				$__locationTitle = $__location[$__level["type"]]["title"];
 
 		$__structure["title"] = $__level["long"] . " " . t("у") . " " . $__locationTitle;
 
@@ -429,6 +437,7 @@ class StructuresService extends \Keeper
 			$__structure["documents"] = $this->__getDocuments($id);
 			$__structure["members"] = $this->__getMembers($id);
 			$__structure["locality"] = $__location["location"];
+			$__structure["levelInt"] = $__structure["level"];
 			$__structure["level"] = $__level["long"];
 			$__structure["mcount"] = count($__structure["members"]);
 		}
@@ -438,9 +447,28 @@ class StructuresService extends \Keeper
 		return $__structure;
 	}
 
+	public function getSubstructures($sid)
+	{
+		$__structure = StructuresModel::i()->getItem($sid);
+		$__level = self::$levels[$__structure["level"]];
+
+		$__code = rtrim($__structure["geo"], '0');
+		$__cond[] = "geo REGEXP :regexp";
+		$__bind["regexp"] = $__code . "[0-9]{" . (10 - strlen($__code)) . "}";
+
+		$__cond[] = "level IN (" . implode(", ", $__level["substructures"]) . ")";
+
+		$__structures = [];
+
+		foreach($this->getStructures($__cond, $__bind) as $__structure)
+			$__structures[] = $this->getStructure($__structure, true);
+
+		return $__structures;
+	}
+
 	public function getStructureByGeo($geo)
 	{
-		return $this->__getStructureByGeo($geo);
+		return $this->getStructure($this->__getStructureByGeo($geo)["id"], true);
 	}
 
 	public function getStructureHead($sid)

@@ -603,7 +603,8 @@ body {
 			&:last-child {
 				position: relative;
 				background-color: white;
-				box-shadow: 0 0 30px rgba(0,0,0,.5);
+				//box-shadow: 0 0 30px rgba(0,0,0,.5);
+				border-bottom: 1px solid #F3F3F3;
 				z-index: 998;
 				
 				>div>div>div {
@@ -829,14 +830,74 @@ body>section {
 		text-transform: uppercase;
 		height: auto;
 		margin-bottom: 30px;
-		
+
 		>div {
 			padding-left: 160px;
 			box-sizing: border-box;
-			
-/*			h1 {
-				text-transform: uppercase;
-			}*/
+
+			/*			h1 {
+							text-transform: uppercase;
+						}*/
+		}
+	}
+
+	>div.headerNew {
+		height: 51px;
+
+		>div {
+			padding-left: 160px;
+			box-sizing: border-box;
+			font-size: 18px;
+
+			.breadcrumb {
+				padding-left: 0;
+				margin: 12px 0 0 0;
+			}
+
+			.breadcrumb:after {
+				content: "";
+				display: table;
+				clear: both;
+			}
+			.breadcrumb li {
+				display: inline-block;
+				float: left;
+				margin: 0.5em 0;
+			}
+			.breadcrumb li::after {
+				display: inline-block;
+				content: '\00bb';
+				margin: 0 .6em;
+				color: #0181C5;
+			}
+			.breadcrumb li:last-of-type::after {
+				display: none;
+			}
+			.breadcrumb li > * {
+				display: inline-block;
+				color: #0181C5;
+			}
+			.breadcrumb li.current > * {
+				color: #000;
+			}
+			.no-touch .breadcrumb a:hover {
+				color: #000;
+			}
+			.breadcrumb.custom-separator li::after {
+				content: '';
+				height: 16px;
+				width: 16px;
+				vertical-align: middle;
+			}
+			.breadcrumb.custom-icons li > *::before {
+				content: '';
+				display: inline-block;
+				height: 20px;
+				width: 20px;
+				margin-right: .4em;
+				margin-top: -2px;
+				vertical-align: middle;
+			}
 		}
 	}
 

@@ -16,57 +16,83 @@
 
 <? }else{ ?>
 
-	<div class="section">
-		<div class="grid" data-form-id="<?=$inquirer["form"]["id"]?>" data-form-geo="<?=$inquirer["form"]["geo"]?>">
+	<div class="section noPrint">
+		<div>
+			<a id="printForm" class="v-button button-yellow" style="margin-top: 7px">
+				<i class="icon icon-print"></i>
+				<?=t("Друк анкети")?>
+			</a>
+		</div>
+	</div>
+	<div class="cboth"></div>
 
-			<? foreach ($inquirer["blocks"] as $block) { ?>
+	<div id="printedArea" class="section">
+		<div class="grid">
+			<div class="gridHeader">
+				<div class="gridLogo">
+					<img src="/img/frontend/inquirers/logo.jpg" />
+				</div>
+				<div class="gridTitle">
+					<?=t("Представників місцевої команди партії <b>\"ВОЛЯ\"</b> цікавить Ваша думка")?>
+				</div>
+				<div class="cboth"></div>
+			</div>
 
-				<div class="grid-item" data-block="block" data-block-id="<?=$block["id"]?>">
-					<h1 class="block_title"><?=$block["title"]?></h1>
+			<div class="gridStartText">
+				<?= $inquirer["form"]["text"] ?>
+			</div>
 
-					<? foreach ($block["questions"] as $question) { ?>
+			<div class="gridBody" data-form-id="<?=$inquirer["form"]["id"]?>" data-form-geo="<?=$inquirer["form"]["geo"]?>">
 
-						<div class="m10" data-block="question" data-question-id="<?=$question["id"]?>">
-							<div class="mb10 ml15">
-								<div class="marker"></div>
-								<span class="question"><?=$question["title"]?></span>
+				<? foreach ($inquirer["blocks"] as $block) { ?>
+
+					<div class="grid-item" data-block="block" data-block-id="<?=$block["id"]?>">
+						<h1 class="block_title"><?=$block["title"]?></h1>
+
+						<? foreach ($block["questions"] as $question) { ?>
+
+							<div class="m10" data-block="question" data-question-id="<?=$question["id"]?>">
+								<div class="mb10 ml15 questionTitle">
+									<div class="marker"></div>
+									<span class="question"><?=$question["title"]?></span>
+								</div>
+
+								<? if( ! $question["is_text"]){ ?>
+									<? foreach ($question["answers"] as $answer) { ?>
+										<div class="m5"
+										     data-block="answer"
+										     data-block-id="<?=$block["id"]?>"
+										     data-question-id="<?=$question["id"]?>"
+										     data-question-type="<?=$question["type"]?>"
+										     data-answer-id="<?=$answer["id"]?>"
+										     data-answer-num="<?=$question["num"]?>"
+										     data-answer-type="<?=$answer["is_text"] ? "text" : "answer" ?>"
+										>
+											<div class="checkbox">
+												<i class="icon icon-ok"></i>
+											</div>
+
+											<? if($answer["is_text"]){ ?>
+												<span class="answer_title"><?=$answer["title"]?> :</span> <textarea class="textbox"></textarea>
+											<? } else{ ?>
+												<span class="answer_title"><?=$answer["title"]?></span>
+											<? } ?>
+
+											<div class="cboth"></div>
+										</div>
+									<? } ?>
+								<? } else{ ?>
+									<textarea class="textbox" data-question-type="text" data-question-id="<?=$question["id"]?>" data-block-id="<?=$block["id"]?>"></textarea>
+								<? } ?>
+
 							</div>
 
-							<? if( ! $question["is_text"]){ ?>
-								<? foreach ($question["answers"] as $answer) { ?>
-									<div class="m5"
-									     data-block="answer"
-									     data-block-id="<?=$block["id"]?>"
-									     data-question-id="<?=$question["id"]?>"
-									     data-question-type="<?=$question["type"]?>"
-									     data-answer-id="<?=$answer["id"]?>"
-									     data-answer-num="<?=$question["num"]?>"
-									     data-answer-type="<?=$answer["is_text"] ? "text" : "answer" ?>"
-									>
-										<div class="checkbox">
-											<i class="icon icon-ok"></i>
-										</div>
+						<? } ?>
+					</div>
 
-										<? if($answer["is_text"]){ ?>
-											<span class="answer_title"><?=$answer["title"]?> :</span> <textarea class="textbox"></textarea>
-										<? } else{ ?>
-											<span class="answer_title"><?=$answer["title"]?></span>
-										<? } ?>
+				<? } ?>
 
-										<div class="cboth"></div>
-									</div>
-								<? } ?>
-							<? } else{ ?>
-								<textarea class="textbox" data-question-type="text" data-question-id="<?=$question["id"]?>" data-block-id="<?=$block["id"]?>"></textarea>
-							<? } ?>
-
-						</div>
-
-					<? } ?>
-				</div>
-
-			<? } ?>
-
+			</div>
 		</div>
 
 		<div data-id="personal_info">
@@ -74,7 +100,7 @@
 
 			<textarea class="textbox" data-field-id="other_problem"></textarea>
 
-			<table style="width: 100%" class="mt10">
+			<table class="mt10">
 				<tr>
 					<td style="width: 115px" class="taright pr10">
 						<?=t("Ім'я")?>
@@ -113,7 +139,16 @@
 				</tr>
 			</table>
 
-			<a data-action="send" href="javascript:void(0);" class="v-button button-yellow">
+			<div class="approve">
+				<div class="approveCheckbox">
+					<i class="icon icon-ok"></i>
+				</div>
+				<div class="approveText">
+					<?=t('Я даю згоду працівникам секретаріату політичної партії "ВОЛЯ" використовувати мої персональні дані для зв`язку зі мною')?>
+				</div>
+			</div>
+
+			<a data-action="send" href="javascript:void(0);" class="v-button button-yellow" style="margin-top: 7px">
 				<i class="icon icon-plus-sign"></i>
 				<?=t("Відправити відповіді")?>
 			</a>
@@ -147,6 +182,6 @@
 				</div>
 			</div>
 		</div>
-
+		<div class="cboth"></div>
 	</div>
 <?} ?>

@@ -49,9 +49,9 @@ class InquirersService extends \Keeper
 		return FormsService::i()->getItem($id, $geo);
 	}
 
-	public function saveForm($id, $geo)
+	public function saveForm($id, $geo, $text)
 	{
-		return FormsService::i()->save($id, $geo);
+		return FormsService::i()->save($id, $geo, $text);
 	}
 
 	public function publicateForm($id, $value)
@@ -83,9 +83,9 @@ class InquirersService extends \Keeper
 		return BlocksService::i()->getItem($bid, $btitle);
 	}
 
-	public function saveBlock($fid, $title)
+	public function saveBlock($fid, $bid, $title)
 	{
-		$__bid = BlocksService::i()->save($fid, $title);
+		$__bid = BlocksService::i()->save($fid, $bid, $title);
 		FormsContentService::i()->addBlock($fid, $__bid);
 
 		return $__bid;
@@ -156,6 +156,11 @@ class InquirersService extends \Keeper
 		QuestionsService::i()->isProblem($id, $state);
 	}
 
+	public function replaceQuestion($fid, $oldQid, $newQid)
+	{
+		FormsContentService::i()->replaceQuestion($fid, $oldQid, $newQid);
+	}
+	
 	public function deleteQuestion($fid, $bid)
 	{
 		FormsContentService::i()->deleteQuestion($fid, $bid);
@@ -202,9 +207,9 @@ class InquirersService extends \Keeper
 		AnswersService::i()->publicate($aid, $state);
 	}
 
-	public function deleteAnswer($id)
+	public function deleteAnswer($fid, $aid)
 	{
-		AnswersService::i()->delete($id);
+		FormsContentService::i()->deleteAnswer($fid, $aid);
 	}
 
 	// SETTINGS

@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-	var grid = $('.grid'),
+	var grid = $('.gridBody'),
 		pinfo = $("[data-id='personal_info']"),
 		notices = $("[data-role='notices']").notices({
 			duration: 800,
@@ -76,6 +76,14 @@ $(document).ready(function(){
 		});
 	});
 
+	$(".approveCheckbox").click(function(){
+
+		if( ! $(this).hasClass("active"))
+			$(this).addClass("active");
+		else
+			$(this).removeClass("active");
+	});
+
 	$("[data-action='send']", pinfo).click(function(){
 		var data = {};
 		var success = true;
@@ -146,6 +154,12 @@ $(document).ready(function(){
 			return;
 		}
 
+		if( ! $(".approveCheckbox").hasClass("active")) {
+			notices.illuminate($(".approveCheckbox"));
+			notices.show("error", "Помилка", "Ви не дали згоду на використання персональних даних");
+			return;
+		}
+
 		data.fid = grid.attr("data-form-id");
 		data.fields.geo = grid.attr("data-form-geo");
 
@@ -169,4 +183,15 @@ $(document).ready(function(){
 		}, "json");
 	});
 
+	$("#printForm").click(function(){
+
+		grid.masonry('destroy');
+
+		window.print();
+
+		grid.masonry({
+			itemSelector: '.grid-item',
+			columnWidth: 480
+		});
+	});
 });

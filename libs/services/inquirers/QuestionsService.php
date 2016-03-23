@@ -59,13 +59,19 @@ class QuestionsService extends \Keeper
 				"num" => $num
 			]);
 
-		QuestionsModel::i()->update([
+		$__data = [
 			"id" => $qid,
 			"bid" => $bid,
-			"title" => $title,
-			"type" => $type,
-			"num" => $num
-		]);
+			"title" => $title
+		];
+
+		if($num > 0)
+			$__data["num"] = $num;
+
+		if($type > 0)
+			$__data["type"] = $type;
+
+		QuestionsModel::i()->update($__data);
 
 		return $__question["id"];
 	}
