@@ -1,0 +1,92 @@
+body>section>div.section {
+	table.fixed_table {
+		width: 100%;
+		table-layout: fixed;
+		
+		>tbody>tr {
+			>td {
+				vertical-align: top;
+				
+				&:nth-child(even) {
+					width: 30px;
+				}
+			}
+		}
+		
+		&[data-ui='images']>tbody>tr>td {
+			box-sizing: border-box;
+			vertical-align: bottom;
+			background: center no-repeat;
+			background-size: cover;
+			height: 150px;
+			
+			>div {
+				padding: 10px 25px;
+			}
+			
+			a {
+				font-size: 24px;
+				color: white;
+				text-decoration: underline;
+			}
+		}
+		
+		&[data-ui='members']>tbody {
+			>tr {
+				>td {
+					padding-top: 15px;
+					
+					>div {
+						background-color: white;
+					}
+				}
+				
+				&:first-child>td {
+					padding-top: 0;
+				}
+			}
+		}
+	}
+	
+	div[data-uiBox='charts'] {
+		div.tabbar {
+			li {
+				>a {
+					padding: 10px 15px;
+				}
+			}
+		}
+	}
+	
+	div[data-uiGrid='candidates'] {
+		min-height: 100px;
+		box-sizing: border-box;
+
+		>div {
+			cursor: pointer;
+			float: left;
+			margin-left: 30px;
+			margin-top: 30px;
+			width: 300px;
+			box-sizing: border-box;
+			background-color: white;
+			
+			&:last-child {
+				float: none;
+				width: auto;
+				height: auto;
+				margin: 0;
+				border: none;
+				clear: both;
+			}
+			
+			&:nth-child(-n+2) {
+				margin-top: 0;
+			}
+			
+			&:nth-child(2n+1) {
+				margin-left: 0;
+			}
+		}
+	}
+}

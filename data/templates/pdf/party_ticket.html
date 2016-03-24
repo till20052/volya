@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="UTF-8">
+	<title>Party Ticket</title>
+
+	<link rel="stylesheet" href="/css/tools.css">
+	<link rel="stylesheet/less" type="text/css" href="/less/frontend/profile/party_ticket.less">
+
+	<script src="/js/less.min.js"></script>
+</head>
+<body>
+
+<table cellspacing="0" cellpadding="0">
+	<tbody>
+	<tr>
+
+		<td>
+			<div id="a_side" class="card">
+				<img src="/img/frontend/profile/party_ticket/a_side.png">
+			</div>
+		</td>
+
+	</tr>
+	<tr>
+
+		<td class="pt15">
+			<div id="b_side" class="card">
+				<div style="left: 157px; top: 40px; color: #FEDE00; font-size: 11px">www.volya.ua</div>
+				<div class="avatar" style="background-image: url('/s/img/thumb/105x140/<?=$__user["avatar"]?>')"></div>
+				<div class="fsitalic" style="left: 146px; top: 77px;">
+					<div class="fs16 fwbold ttuppercase"><?=$__user["last_name"]?></div>
+					<div><?=$__user["first_name"]?> <?=$__user["middle_name"]?></div>
+				</div>
+				<div class="fs11 fsitalic" style="left: 146px; top: 125px; width: 145px">
+					<div>
+						<? if(in_array(substr($__user["geo"]["id"], 0, 2), ["80"])){ ?>
+						м. <?=$__user["geo"]["region"]?><br /><?=$__user["geo"]["title"]?> район
+						<? } else { ?>
+						м. <?=$__user["geo"]["title"]?><br /><?=$__user["geo"]["region"]?>
+						<? } ?>
+					</div>
+				</div>
+				<div class="fwbold fsitalic" style="left: 146px; top: 187px; color: #810000"><?=$__partyTicketNumber?></div>
+				<div class="fs11" style="right: 10px; bottom: 19px"><?=$__decision["date"]?></div>
+				<div class="barcode">
+					<div style="background-image: url('/profile/party_ticket/bar_code/<?=$__partyTicketNumber?>')"></div>
+				</div>
+				<img src="/img/frontend/profile/party_ticket/b_side.png">
+			</div>
+		</td>
+
+	</tr>
+	</tbody>
+</table>
+
+</body>
+</html>

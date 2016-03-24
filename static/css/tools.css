@@ -1,0 +1,144 @@
+/* DISPLAY */
+.dnone{display:none}
+.dtable{display:table}
+.dtable .dtable-cell{display:table-cell;vertical-align:top}
+/* FLOAT */
+.fleft{float:left}
+.fright{float:right}
+.cboth{clear:both}
+/* PADDING */
+.p0{padding:0px}
+.pt0{padding-top:0px}
+.pb0{padding-bottom:0px}
+.pl0{padding-left:0px}
+.pr0{padding-right:0px}
+.p5{padding:5px}
+.pt5{padding-top:5px}
+.pb5{padding-bottom:5px}
+.pl5{padding-left:5px}
+.pr5{padding-right:5px}
+.p10{padding:10px}
+.pt10{padding-top:10px}
+.pb10{padding-bottom:10px}
+.pl10{padding-left:10px}
+.pr10{padding-right:10px}
+.p15{padding:15px}
+.pt15{padding-top:15px}
+.pb15{padding-bottom:15px}
+.pl15{padding-left:15px}
+.pr15{padding-right:15px}
+.p20{padding:20px}
+.pt20{padding-top:20px}
+.pb20{padding-bottom:20px}
+.pl20{padding-left:20px}
+.pr20{padding-right:20px}
+.p25{padding:25px}
+.pt25{padding-top:25px}
+.pb25{padding-bottom:25px}
+.pl25{padding-left:25px}
+.pr25{padding-right:25px}
+.p30{padding:30px}
+.pt30{padding-top:30px}
+.pb30{padding-bottom:30px}
+.pl30{padding-left:30px}
+.pr30{padding-right:30px}
+/* MARGIN */
+.mauto{margin: 0px auto}
+.m0{margin:0px}
+.mt0{margin-top:0px}
+.mb0{margin-bottom:0px}
+.ml0{margin-left:0px}
+.mr0{margin-right:0px}
+.m5{margin:5px}
+.mt5{margin-top:5px}
+.mb5{margin-bottom:5px}
+.ml5{margin-left:5px}
+.mr5{margin-right:5px}
+.m10{margin:10px}
+.mt10{margin-top:10px}
+.mb10{margin-bottom:10px}
+.ml10{margin-left:10px}
+.mr10{margin-right:10px}
+.m15{margin:15px}
+.mt15{margin-top:15px}
+.mb15{margin-bottom:15px}
+.ml15{margin-left:15px}
+.mr15{margin-right:15px}
+.m20{margin:20px}
+.mt20{margin-top:20px}
+.mb20{margin-bottom:20px}
+.ml20{margin-left:20px}
+.mr20{margin-right:20px}
+.m25{margin:25px}
+.mt25{margin-top:25px}
+.mb25{margin-bottom:25px}
+.ml25{margin-left:25px}
+.mr25{margin-right:25px}
+.m30{margin:30px}
+.mt30{margin-top:30px}
+.mb30{margin-bottom:30px}
+.ml30{margin-left:30px}
+.mr30{margin-right:30px}
+/* FONT */
+.ffgeorgia{font-family:Georgia,'Times New Roman',serif}
+.ffpalatinolinotype{font-family:'Palatino Linotype','Book Antiqua', Palatino,serif}
+.fftimesnewroman{font-family:'Times New Roman',Times,serif}
+.ffarial{font-family:Arial,Helvetica,sans-serif}
+.ffarialblack{font-family:'Arial Black',Gadget,sans-serif}
+.ffcomic{font-family:'Comic Sans MS',cursive,sans-serif}
+.fflucida{font-family:'Lucida Sans Unicode','Lucida Grande',sans-serif}
+.fftahoma{font-family:'Tahoma',Geneva,sans-serif}
+.fftrebuchet{font-family:'Trebuchet MS',Helvetica,sans-serif}
+.ffverdana{font-family:Verdana,Geneva,sans-serif}
+.ffcouriernew{font-family:'Courier New',Courier,monospace}
+.fflucidaconsole{font-family:'Lucida Console',Monaco,monospace}
+.fs8{font-size:8px}
+.fs9{font-size:9px}
+.fs10{font-size:10px}
+.fs11{font-size:11px}
+.fs12{font-size:12px}
+.fs13{font-size:13px}
+.fs14{font-size:14px}
+.fs15{font-size:15px}
+.fs16{font-size:16px}
+.fs17{font-size:17px}
+.fs18{font-size:18px}
+.fs19{font-size:19px}
+.fs20{font-size:20px}
+.fs21{font-size:21px}
+.fs22{font-size:22px}
+.fs23{font-size:23px}
+.fs24{font-size:24px}
+.fs25{font-size:25px}
+.fs26{font-size:26px}
+.fs27{font-size:27px}
+.fs28{font-size:28px}
+.fs29{font-size:29px}
+.fs30{font-size:30px}
+.fs31{font-size:31px}
+.fs32{font-size:32px}
+.fs48{font-size:48px}
+.fs72{font-size:72px}
+.fwbold{font-weight:bold}
+.fsitalic{font-style:italic}
+/* TEXT ALIGN */
+.taleft{text-align:left}
+.tacenter{text-align:center}
+.taright{text-align:right}
+.tajustify{text-align:justify}
+/* VERTICAL ALIGN */
+.vatop{vertical-align: top}
+.vacentral{vertical-align: central}
+.vabottom{vertical-align: bottom}
+.vamiddle{vertical-align: middle}
+/* TEXT DECORATION */
+.tdunderline{text-decoration:underline}
+/* TEXT TRANSFORM */
+.ttuppercase{text-transform:uppercase}
+.ttlowercase{text-transform:lowercase}
+/* COLOR */
+.cwhite{color:white}
+.cgray{color:gray}
+.cblack{color:black}
+/* CURSOR */
+.cpointer{cursor:pointer}

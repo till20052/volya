@@ -1,0 +1,18 @@
+div.k-animation-container>div#birthday_day-list.k-list-container li,
+div.k-animation-container>div#birthday_month-list.k-list-container li,
+div.k-animation-container>div#birthday_year-list.k-list-container li
+{text-align:center;padding-right:25px!important}
+
+body>div[ui-box='windows']>div[ui-window='profile.registration.requirements'] ul>li
+{padding:5px 0}
+
+body>section span[aria-owns='birthday_day_listbox'].k-dropdown>span.k-dropdown-wrap,
+body>section span[aria-owns='birthday_month_listbox'].k-dropdown>span.k-dropdown-wrap,
+body>section span[aria-owns='birthday_year_listbox'].k-dropdown>span.k-dropdown-wrap
+{text-align:center}
+
+body>section div.cover
+{position:absolute;background:url('/kendo/styles/Volya/loading_2x.gif') center no-repeat;
+background-color:rgba(255,255,255,.75);margin-top:1px;width:36px;height:36px;z-index:1000;
+display:none}
+

@@ -1,0 +1,39 @@
+body>section {
+	
+	table.list {
+		background-color: white;
+		
+		>tbody>tr {
+			
+			&:first-child>td {
+				border: 0;
+			}
+			
+			>td {
+				padding: 15px;
+				border-top: 1px solid #DCDAD4;
+				
+				&:first-child {
+					padding-left: 30px;
+					width: 1%;
+				}
+				
+				&[ui='subscribe'] div#done {
+					color:green
+				}
+			}
+			
+		}
+	}
+	
+	div.cover {
+		position: absolute;
+		background: url('/kendo/styles/Volya/loading_2x.gif') center no-repeat;
+		background-color: rgba(255,255,255,.75);
+		width: 300px;
+		height: 38px;
+		z-index: 1000;
+		display: none
+	}
+	
+}

@@ -1,0 +1,44 @@
+body {
+	margin: 0;
+	padding: 0;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
+		Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-size: 12px;
+
+	div.card {
+		position: relative;
+		width: 335px;
+
+		>div {
+			position: absolute;
+
+			&.avatar {
+				background: center no-repeat;
+				background-size: cover;
+				left: 20px;
+				top: 77px;
+				width: 101px;
+				height: 125px;
+			}
+
+			&.barcode {
+				box-sizing: border-box;
+				padding: 5px;
+				background: white;
+				right: 0;
+				bottom: 50px;
+
+				>div {
+					background: left top no-repeat;
+					background-size: cover;
+					width: 30px;
+					height: 68px;
+				}
+			}
+		}
+
+		>img {
+			width: 100%;
+		}
+	}
+}

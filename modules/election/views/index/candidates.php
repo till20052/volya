@@ -1,0 +1,1 @@
+<? include "candidates/".(is_array($subView) ? $subView[0] : $subView).".php" ?>

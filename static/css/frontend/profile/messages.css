@@ -1,0 +1,45 @@
+body>section div[ui-frame='conversations'] table>tbody>tr
+{background-color:white;-webkit-transition:background-color .2s;-moz-transition:background-color .2s;
+-o-transition:background-color .2s;-ms-transition:background-color .2s;transition:background-color .2s}
+body>section div[ui-frame='conversations'] table>tbody>tr:hover
+{background-color:#F2F6FC}
+body>section div[ui-frame='conversations'] table>tbody>tr>td
+{width:1%;padding:15px;border-top:1px solid #DCDAD4;vertical-align:top}
+body>section div[ui-frame='conversations'] table>tbody>tr:first-child>td
+{border:0}
+body>section div[ui-frame='conversations'] table>tbody>tr>td:last-child
+{width:auto}
+/*body>section div[ui-frame='conversations'] table>tbody>tr>td:first-child,
+body>section div[ui-frame='conversations'] table>tbody>tr>td:nth-child(2)
+{width:1%}*/
+body>section div[ui-frame='conversations'] table>tbody>tr>td:first-child
+{padding-left:30px}
+
+body>section div[ui-frame='messages']
+{border:1px solid #CCC}
+
+body>section div[ui-frame='messages'] div.header,
+body>section div[ui-frame='messages'] div.navi
+{padding:15px 0;background-color:#F2F6FC}
+
+body>section div[ui-frame='messages'] div.header
+{padding:15px}
+
+body>section div[ui-frame='messages'] div.content
+{padding:15px 0;height:450px;overflow:auto;background-color:white}
+body>section div[ui-frame='messages'] div.content table
+{width:100%}
+body>section div[ui-frame='messages'] div.content table td
+{width:1%;padding:0 15px;padding-top:30px;vertical-align:top}
+body>section div[ui-frame='messages'] div.content table tr:first-child>td
+{padding-top:0}
+body>section div[ui-frame='messages'] div.content table td:nth-child(2)
+{width:auto;padding:0;padding-top:30px}
+
+
+body>section div[ui-frame='messages'] div.navi table
+{width:100%}
+body>section div[ui-frame='messages'] div.navi table td
+{width:1%;padding:0 15px;vertical-align:top}
+body>section div[ui-frame='messages'] div.navi table td:nth-child(2)
+{width:auto;padding:0}
