@@ -1,4 +1,4 @@
-﻿var inquirers = {
+﻿﻿var inquirers = {
 	tokens: {},
 	forms: {
 		id: 0,
