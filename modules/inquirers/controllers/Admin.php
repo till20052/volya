@@ -96,7 +96,10 @@ class AdminInquirersController extends InquirersController
 		parent::setViewer("json");
 
 		$__bid = InquirersService::i()->saveBlock(Request::getInt("fid"), Request::getInt("bid"), Request::getString("btitle"));
-
+		
+		if($__bid != Request::getInt("bid"))
+			InquirersService::i()->replaceBlock(Request::getInt("fid"), Request::getInt("bid"), $__bid);
+		
 		$this->json["item"] = InquirersService::i()->getBlock($__bid);
 
 		return true;
@@ -219,7 +222,7 @@ class AdminInquirersController extends InquirersController
 	{
 		parent::setViewer("json");
 
-		$__qid = InquirersService::i()->saveAnswer(
+		$__aid = InquirersService::i()->saveAnswer(
 			Request::getInt("fid"),
 			Request::getInt("bid"),
 			Request::getInt("qid"),
@@ -227,7 +230,7 @@ class AdminInquirersController extends InquirersController
 			Request::getString("title")
 		);
 
-		$this->json["item"] = InquirersService::i()->getAnswer($__qid);
+		$this->json["item"] = InquirersService::i()->getAnswer($__aid);
 
 		return true;
 	}

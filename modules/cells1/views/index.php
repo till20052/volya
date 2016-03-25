@@ -53,7 +53,7 @@
 									<div id="slider">
 										<div id="features">
 											<? foreach($topNews as $__item){ ?>
-												<div onclick="window.location.href='http://volya.ua/news/<?=$__item["id"]?>'" style="background: url('http://volya.ua/s/img/thumb/630x/<?=$__item["images"][0]?>') no-repeat; cursor:pointer" title="Test">
+												<div style="background: url('http://volya.ua/s/img/thumb/630x/<?=$__item["images"][0]?>') no-repeat;" title="Test">
 													<div>
 														<?=$__item['title'][Router::getLang()]?>
 													</div>
@@ -158,9 +158,7 @@
 <!--						</div>-->
 
 						<div data-ui-block="projects">
-							<a href="/volya_people">
-								<img src="/img/frontend/cells1/Banner.gif" width="290px">
-							</a>
+							<img src="/img/frontend/cells1/Banner.gif" width="290px">
 						</div>
 
 						<? if(count($volya_people) > 0){ ?>

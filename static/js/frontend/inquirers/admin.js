@@ -1,4 +1,4 @@
-﻿var inquirers = {
+﻿﻿var inquirers = {
 	tokens: {},
 	forms: {
 		id: 0,
@@ -1069,6 +1069,7 @@
 
 							$.post(inquirers.tokens.answers.actions.save_item, {
 								fid: inquirers.forms.id,
+								bid: inquirers.blocks.id,
 								aid: $(__a).attr("data-id"),
 								qid: inquirers.questions.id,
 								title: $(__this).val()

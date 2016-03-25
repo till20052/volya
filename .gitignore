@@ -3,9 +3,7 @@
 /static/ckeditor
 /static/ckfinder
 /static/fonts
-/static/img
 /static/jquery
 /static/kendo
-/static/pdf
+!/static/kendo/styles/kendo.volya.min.css /static/pdf
 /static/upload
-

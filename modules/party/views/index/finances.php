@@ -59,7 +59,7 @@
 					
 					<div class="mt15">
 						<div>
-							<a href="/pdf/party/index/finances/CF29_02_2016.pdf" target="_blank" class="icon">
+							<a href="/pdf/party/index/finances/CF_10_2015.pdf" target="_blank" class="icon">
 								<i class="icon-document fs30"></i>
 								<span style="text-align: left">Звіт про рух грошових коштів (поточний місяць)</span>
 							</a>

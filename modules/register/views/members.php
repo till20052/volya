@@ -52,7 +52,7 @@
 
 				<? if($cred->showRegionsFilter) {?>
 					<tr>
-						<? if( ! (count($registerUser["geo_koatuu_code"]) > 0)){ ?>
+						<? if( ! (strlen($registerUser["geo_koatuu_code"]) > 0)){ ?>
 							<td>
 								<div class="mt15"><?=t("Область")?></div>
 								<div class="mt5" style="width: 250px">

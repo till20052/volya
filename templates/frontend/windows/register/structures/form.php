@@ -147,17 +147,17 @@
 					</td>
 				</tr>
 
-				<tr data-id="coordinator" class="dnone">
-					<td colspan="3" style="height: 15px"></td>
-				</tr>
-
-				<tr data-id="coordinator" class="dnone">
-					<td class="taright pr15"><?=t("Координатор")?></td>
-					<td colspan="2">
-						<select data-ui="coordinator" style="width: 100%"></select>
-						<script type="text/x-kendo-template" data-ui="input_template">#=first_name# #=last_name#</script>
-					</td>
-				</tr>
+<!--				<tr data-id="coordinator" class="dnone">-->
+<!--					<td colspan="3" style="height: 15px"></td>-->
+<!--				</tr>-->
+<!---->
+<!--				<tr data-id="coordinator" class="dnone">-->
+<!--					<td class="taright pr15">--><?//=t("Координатор")?><!--</td>-->
+<!--					<td colspan="2">-->
+<!--						<select data-ui="coordinator" style="width: 100%"></select>-->
+<!--						<script type="text/x-kendo-template" data-ui="input_template">#=first_name# #=last_name#</script>-->
+<!--					</td>-->
+<!--				</tr>-->
 
 				<tr data-id="scans" class="dnone">
 					<td colspan="3" style="height: 15px"></td>

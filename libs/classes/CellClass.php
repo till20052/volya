@@ -82,7 +82,7 @@ class CellClass extends ExtendedClass
 			return false;
 		
 		$__tokens = array();
-		$__city = GeoClass::i()->getCity($this->__cell["geo_koatuu_code"]);
+		$__city = OldGeoClass::i()->getCity($this->__cell["geo_koatuu_code"]);
 		
 		foreach(["region", "area", "title"] as $__field)
 		{

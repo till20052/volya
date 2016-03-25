@@ -6,6 +6,9 @@ return [
 	'if.volya.ua' => [
 		'module' => 'cells1'
 	],
+	'if.volya.dev' => [
+		'module' => 'cells1'
+	],
 	'cdi.volya.ua' => [
 		'module' => 'projects',
 		'controller' => 'Cdi'

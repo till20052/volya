@@ -2,8 +2,8 @@
 
 Loader::loadModule("Profile");
 
-Loader::loadClass("OldGeoClass");
 Loader::loadClass("GeoClass");
+Loader::loadClass("OldGeoClass");
 Loader::loadClass("PHPExcel", Loader::SYSTEM);
 Loader::loadClass("barcodegen.BCGFontFile", Loader::SYSTEM);
 Loader::loadClass("barcodegen.BCGColor", Loader::SYSTEM);
@@ -111,13 +111,12 @@ class PartyTicketProfileController extends ProfileController
 		foreach(["", "ПІП", "Location_1", "Location_2", "Номер посвідчення", "Дата", "Фото"] as $__i => $__field)
 			$__phpExcelSheet->setCellValue($__columns[$__i]."1", $__field);
 
-		$__cond = ["OR" => ["type = :type", "id IN (4653, 5827, 952, 5834, 4649, 5832, 5833, 4650, 4651, 5831, 5830, 5828, 5829, 5235, 5276, 5234, 5843, 5844, 4293, 4328, 4824, 5274, 5821)"]];
+		$__cond = ["type = :type"];
 		$__bind = ["type" => 100];
 
 		$__i = 0;
 		$__buffer = [];
 		$__avatars = [];
-
 		foreach(UsersModel::i()->getList($__cond, $__bind) as $__uid)
 		{
 			if(in_array($__uid, [
@@ -129,7 +128,6 @@ class PartyTicketProfileController extends ProfileController
 				continue;
 
 			$__uItem = UsersModel::i()->getItem($__uid, ["id", "first_name", "last_name", "middle_name", "geo_koatuu_code", "avatar"]);
-
 			$__uvList = UsersVerificationsModel::i()->getList(["user_id = :uid", "type = :type"], [
 				"uid" => $__uid,
 				"type" => 10
@@ -137,20 +135,21 @@ class PartyTicketProfileController extends ProfileController
 			$__uptList = UsersPartyTicketsModel::i()->getList(["uid = :uid"], [
 				"uid" => $__uid
 			], [], 1);
+			
+			if(
+				strlen($__uItem["geo_koatuu_code"]) != 10
+				|| ! (count($__uvList) > 0)
+//				|| strlen($__uItem["avatar"]) != 32
+				|| count($__uptList) > 0
+			)
+				continue;
 
-			if( ! in_array($__uid, [4653, 5827, 952, 5834, 4649, 5832, 5833, 4650, 4651, 5831, 5830, 5828, 5829, 5235, 5276, 5234, 5843, 5844, 4293, 4328, 4824, 5274, 5821]))
-				if(
-					strlen($__uItem["geo_koatuu_code"]) != 10
-					|| ! (count($__uvList) > 0)
-	//				|| strlen($__uItem["avatar"]) != 32
-					|| count($__uptList) > 0
-				)
-					continue;
 
 			$__TMPBuff = [];
 
 			// SEQUENCE
 			$__phpExcelSheet->setCellValue("A".($__i+2), ($__i+1));
+
 
 			// NAME
 			$__name = mb_strtoupper($__uItem["last_name"], "UTF8")." "
@@ -230,8 +229,8 @@ class PartyTicketProfileController extends ProfileController
 			$__phpExcelSheet->setCellValue("G".($__i+2), $__avatar);
 			$__TMPBuff['avatar'] = $__avatar;
 
-			if($__debugMode)
-				Console::log($__location1, $__location2, "---");
+//			if($__debugMode)
+//				Console::log($__location1, $__location2, "---");
 
 			$__buffer[] = $__TMPBuff;
 			$__i++;
@@ -337,7 +336,7 @@ class PartyTicketProfileController extends ProfileController
 			$__location1 = $__location2 = "";
 			if(strlen($__uItem["geo_koatuu_code"]) == 10)
 			{
-				$__geo = OldGeoClass::i()->getCity($__uItem["geo_koatuu_code"]);
+				$__geo = GeoClass::i()->getCity($__uItem["geo_koatuu_code"]);
 				if(in_array(substr($__geo["id"], 0, 2), ["80"]))
 				{
 					if(isset($__geo["region"]))
