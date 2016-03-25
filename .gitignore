@@ -1,1 +1,11 @@
-data/temp
+/.idea
+/data/temp
+/static/ckeditor
+/static/ckfinder
+/static/fonts
+/static/img
+/static/jquery
+/static/kendo
+/static/pdf
+/static/upload
+
