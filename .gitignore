@@ -3,7 +3,6 @@
 /static/ckeditor
 /static/ckfinder
 /static/fonts
-/static/img
 /static/jquery
 /static/kendo
 !/static/kendo/styles/kendo.volya.min.css
