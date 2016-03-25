@@ -49,7 +49,7 @@ class AnswersService extends \Keeper
 		return false;
 	}
 
-	public function save($aid, $qid, $title)
+	public function save($qid, $title)
 	{
 		if( ! ($__answer = $this->getItem(0, $qid, $title)))
 			return AnswersModel::i()->insert([
@@ -57,11 +57,11 @@ class AnswersService extends \Keeper
 				"title" => $title
 			]);
 
-		AnswersModel::i()->update([
-			"id" => $aid,
-			"qid" => $qid,
-			"title" => $title
-		]);
+//		AnswersModel::i()->update([
+//			"id" => $aid,
+//			"qid" => $qid,
+//			"title" => $title
+//		]);
 
 		return $__answer["id"];
 	}

@@ -53,7 +53,7 @@
 									<div id="slider">
 										<div id="features">
 											<? foreach($topNews as $__item){ ?>
-												<div onclick="window.location.href='volyz.ua/news/<?=$__item["id"]?>'" style="background: url('http://volya.ua/s/img/thumb/630x/<?=$__item["images"][0]?>') no-repeat; cursor:pointer" title="Test">
+												<div style="background: url('http://volya.ua/s/img/thumb/630x/<?=$__item["images"][0]?>') no-repeat;" title="Test">
 													<div>
 														<?=$__item['title'][Router::getLang()]?>
 													</div>

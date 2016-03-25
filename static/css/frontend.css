@@ -32,6 +32,13 @@ a.v-button:hover
 {background-color:#D0D0D0}
 a.v-button:active
 {background-color:#ACACAC}
+a.v-button.v-button-green
+{padding:10px 45px 7px;border-bottom:3px solid #57ab00;background-color: #7eda00
+}
+a.v-button.v-button-green:hover
+{background-color:#7eda00}
+a.v-button.v-button-green:active
+{background-color:#57ab00}
 a.v-button.v-button-yellow
 {padding:10px 45px 7px;border-bottom:3px solid #C85900;background-color:#F29200}
 a.v-button.v-button-yellow:hover

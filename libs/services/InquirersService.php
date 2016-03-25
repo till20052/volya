@@ -191,10 +191,16 @@ class InquirersService extends \Keeper
 
 	public function saveAnswer($fid, $bid, $qid, $aid, $title)
 	{
-		$aid = AnswersService::i()->save($aid, $qid, $title);
-		FormsContentService::i()->addAnswer($fid, $bid, $qid, $aid);
+		$newAid = AnswersService::i()->save($qid, $title);
 
-		return $aid;
+		\Console::log( $newAid, $aid );
+
+		if( ! $aid)
+			FormsContentService::i()->addAnswer($fid, $bid, $qid, $newAid);
+		elseif($newAid != $aid)
+			FormsContentService::i()->replaceAnswer($fid, $aid, $newAid);
+
+		return $newAid;
 	}
 
 	public function isProblemAnswer($aid, $state)
