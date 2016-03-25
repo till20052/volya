@@ -5,6 +5,5 @@
 /static/fonts
 /static/jquery
 /static/kendo
-!/static/kendo/styles/kendo.volya.min.css
-/static/pdf
+!/static/kendo/styles/kendo.volya.min.css /static/pdf
 /static/upload
