@@ -114,6 +114,11 @@ class InquirersService extends \Keeper
 
 		return $__list;
 	}
+	
+	public function replaceBlock($fid, $oldBid, $newBid)
+	{
+		FormsContentService::i()->replaceBlock($fid, $oldBid, $newBid);
+	}
 
 	// QUESTIONS
 	public function getQuestions($fid, $bid)
@@ -186,10 +191,16 @@ class InquirersService extends \Keeper
 
 	public function saveAnswer($fid, $bid, $qid, $aid, $title)
 	{
-		$aid = AnswersService::i()->save($aid, $qid, $title);
-		FormsContentService::i()->addAnswer($fid, $bid, $qid, $aid);
+		$newAid = AnswersService::i()->save($qid, $title);
 
-		return $aid;
+		\Console::log( $newAid, $aid );
+
+		if( ! $aid)
+			FormsContentService::i()->addAnswer($fid, $bid, $qid, $newAid);
+		elseif($newAid != $aid)
+			FormsContentService::i()->replaceAnswer($fid, $aid, $newAid);
+
+		return $newAid;
 	}
 
 	public function isProblemAnswer($aid, $state)
@@ -210,6 +221,11 @@ class InquirersService extends \Keeper
 	public function deleteAnswer($fid, $aid)
 	{
 		FormsContentService::i()->deleteAnswer($fid, $aid);
+	}
+
+	public function replaceAnswer($fid, $oldAid, $newAid)
+	{
+		FormsContentService::i()->replaceAnswer($fid, $oldAid, $newAid);
 	}
 
 	// SETTINGS

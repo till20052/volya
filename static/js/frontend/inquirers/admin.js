@@ -500,6 +500,7 @@
 							}
 
 							$.post(inquirers.tokens.blocks.actions.save_item, {
+								fid: inquirers.forms.id,
 								bid: __bid,
 								btitle: $(__this).val().replace("'", "&#039;")
 							}, function(){
@@ -795,6 +796,7 @@
 							}
 
 							$.post(inquirers.tokens.questions.actions.save_item, {
+								fid: inquirers.forms.id,
 								qid: __qid,
 								bid: inquirers.blocks.id,
 								qtitle: $(__this).val().replace("'", "&#039;")
@@ -1067,6 +1069,7 @@
 
 							$.post(inquirers.tokens.answers.actions.save_item, {
 								fid: inquirers.forms.id,
+								bid: inquirers.blocks.id,
 								aid: $(__a).attr("data-id"),
 								qid: inquirers.questions.id,
 								title: $(__this).val()

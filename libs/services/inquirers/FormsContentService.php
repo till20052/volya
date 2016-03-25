@@ -9,6 +9,7 @@ namespace libs\services\inquirers;
 \Loader::loadService("inquirers.QuestionsService");
 \Loader::loadService("inquirers.AnswersService");
 
+use libs\models\inquirers\AnswersModel;
 use \libs\models\inquirers\FormsContentModel;
 
 class FormsContentService extends \Keeper
@@ -34,14 +35,15 @@ class FormsContentService extends \Keeper
 
 	public function addQuestion($fid, $bid, $qid)
 	{
-		\Model::exec("DELETE FROM inquirers_forms_content WHERE `fid` = '" . $fid . "' AND `bid` = '" . $bid . "' AND `qid` = 0");
+		if( ! (count(FormsContentModel::i()->getList(["aid > 0"])) > 0))
+			FormsContentModel::i()->insert([
+				"fid" => $fid,
+				"bid" => $bid,
+				"qid" => $qid,
+				"aid" => 0
+			]);
 
-		FormsContentModel::i()->insert([
-			"fid" => $fid,
-			"bid" => $bid,
-			"qid" => $qid,
-			"aid" => 0
-		]);
+		\Model::exec("DELETE FROM inquirers_forms_content WHERE `fid` = '" . $fid . "' AND `bid` = '" . $bid . "' AND `qid` = 0");
 	}
 
 	public function addAnswer($fid, $bid, $qid, $aid)
@@ -141,7 +143,25 @@ class FormsContentService extends \Keeper
 	
 	public function replaceQuestion($fid, $oldQid, $newQid)
 	{
+		\Model::exec("DELETE FROM inquirers_forms_content WHERE `fid` = '$fid' AND `qid` = '$newQid'");
 		\Model::exec("UPDATE inquirers_forms_content SET `qid` = $newQid WHERE `fid` = '$fid' AND `qid` = '$oldQid'");
+
+		return true;
+	}
+
+	public function replaceBlock($fid, $oldBid, $newBid)
+	{
+		\Model::exec("UPDATE inquirers_forms_content SET `bid` = $newBid WHERE `fid` = '$fid' AND `bid` = '$oldBid'");
+
+		return true;
+	}
+
+	public function replaceAnswer($fid, $oldAid, $newAid)
+	{
+//		\Console::log(["OLD" => $oldAid, "NEW" => $newAid]);
+
+		\Model::exec("DELETE FROM inquirers_forms_content WHERE `fid` = '$fid' AND `aid` = '$newAid'");
+		\Model::exec("UPDATE inquirers_forms_content SET `aid` = $newAid WHERE `fid` = '$fid' AND `aid` = '$oldAid'");
 
 		return true;
 	}
