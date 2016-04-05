@@ -1,5 +1,7 @@
 <? include "index/banners.php" ?>
 
+<? include "index/fsr.php" ?>
+
 <? include "index/news.php" ?>
 
 <? // include "index/election.php" ?>
