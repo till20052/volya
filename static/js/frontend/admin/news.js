@@ -413,7 +413,7 @@ $(document).ready(function()
 				opacity: 0
 			}).fileupload({
 				dataType: "json",
-				url: "/s/storage/j_save?extension[]=jpg&extension[]=png",
+				url: "/s/storage/j_save?extension[]=jpg&extension[]=jpeg&extension[]=png",
 				sequentialUploads: true,
 				done: (function(event, data){
 					if( ! data.result.files[0]){
