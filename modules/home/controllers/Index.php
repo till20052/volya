@@ -35,6 +35,26 @@ class IndexHomeController extends HomeController
 		
 		return $__list;
 	}
+
+	// Forum Small Reforms
+	private function __getFSRNews()
+	{
+		$__list = array();
+
+		$__cond = [
+			"is_public = 1",
+			"category_id = 13",
+		];
+
+		foreach(NewsMaterialsModel::i()->getCompiledList($__cond, [], array("created_at DESC"), 10) as $__item)
+		{
+			$__item["images"] = NewsImagesModel::i()->getImagesByMaterialId($__item["id"]);
+
+			$__list[] = $__item;
+		}
+
+		return $__list;
+	}
 	
 	private function __getProjects()
 	{
@@ -102,6 +122,7 @@ class IndexHomeController extends HomeController
 		$this->news = $this->__getNews();
 		$this->slides = $this->__getSlides();
 		$this->projects = $this->__getProjects();
+		$this->fsr_news = $this->__getFSRNews();
 
 		$this->cellsWork = [
 			"news" => $this->__getRegionalNews()
