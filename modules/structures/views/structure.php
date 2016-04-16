@@ -1,6 +1,6 @@
 <? include "common/header.php"; ?>
 
-<div data-box="structure" class="section">
+<div data-box="structure" class="section" ng-app="StructuresApp">
 
 	<? if($structure["status"] == 0){ ?>
 		<div data-role="notices">

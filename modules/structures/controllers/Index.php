@@ -50,6 +50,8 @@ class IndexStructuresController extends StructuresController
 		parent::loadKendo(true);
 		parent::loadFileupload(true);
 		parent::loadGallery(true);
+		parent::loadAngular(true);
+		parent::loadFileupload(true);
 
 //		$credentials = new stdClass();
 //
@@ -59,6 +61,10 @@ class IndexStructuresController extends StructuresController
 //		$this->cred = $credentials;
 
 		HeadClass::addJs("/js/form.js");
+		HeadClass::addJs("/angular/js/app/modules/structures/index.js");
+		HeadClass::addJs("/js/frontend/structures/index.js");
+
+		HeadClass::addCss("/angular/css/app/modules/structures/index.css");
 
 		$this->page = "";
 
@@ -110,10 +116,6 @@ class IndexStructuresController extends StructuresController
 
 		parent::loadWindow([
 			"register/structures/form",
-		]);
-
-		HeadClass::addJs([
-			//"/js/frontend/structures/index.js"
 		]);
 
 		HeadClass::addLess([
@@ -173,5 +175,26 @@ class IndexStructuresController extends StructuresController
 		StructuresService::i()->addMember(Request::getInt("sid"), UserClass::i()->getId());
 
 		return true;
+	}
+
+	public function getStructureMembers()
+	{
+		parent::execute();
+		parent::setViewer("json");
+
+		$this->json["members"] = $this->__getStructure(Request::get("geo"))["members"];
+	}
+
+	public function showFileUploader()
+	{
+		parent::execute();
+		parent::setLayout(false);
+
+		parent::setView("windows/fileUpload");
+	}
+	
+	public function saveDocument()
+	{
+		
 	}
 }

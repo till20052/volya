@@ -39,6 +39,15 @@
 		<? if($loadGallery){ ?>
 			<script src="/js/gallery.js"></script>
 		<? } ?>
+
+		<? if($loadAngular){ ?>
+			<script src="/angular/js/angular.min.js"></script>
+			<script src="/angular/js/angular-animate.min.js"></script>
+			<script src="/angular/js/angular-aria.min.js"></script>
+			<script src="/angular/js/angular-messages.min.js"></script>
+			<script src="/angular/js/angular-material.min.js"></script>
+			<script src="/angular/ng-flow/dist/ng-flow-standalone.min.js"></script>
+		<? } ?>
 		
 		<? if($loadKendo){ ?>
 			<script src="/kendo/js/kendo.all.min.js"></script>
@@ -70,6 +79,10 @@
 		<? if($loadKendo){ ?>
 			<link rel="stylesheet" href="/kendo/styles/kendo.common.min.css" />
 			<link rel="stylesheet" href="/kendo/styles/kendo.volya.min.css" />
+		<? } ?>
+
+		<? if($loadAngular){ ?>
+			<link rel="stylesheet" href="/angular/css/angular-material.min.css">
 		<? } ?>
 		
 		<? if(count($windows) > 0){ ?>

@@ -65,6 +65,11 @@ class Frontend extends Controller
 	{
 		$this->loadGallery = (bool) $state;
 	}
+
+	protected function loadAngular($state)
+	{
+		$this->loadAngular = (bool) $state;
+	}
 	
 	protected function loadWindow($window)
 	{
@@ -152,6 +157,7 @@ class Frontend extends Controller
 		$this->loadCKEditor = false;
 		$this->loadFileupload = false;
 		$this->loadGallery = false;
+		$this->loadAngular = false;
 		$this->windows = array();
 		
 		$this->application = new stdClass();
