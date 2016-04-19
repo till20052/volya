@@ -1,6 +1,6 @@
 <? include "common/header.php"; ?>
 
-<div data-box="structure" class="section" ng-app="StructuresApp">
+<div data-box="structure" class="section" layout="column">
 
 	<? if($structure["status"] == 0){ ?>
 		<div data-role="notices">
@@ -12,7 +12,7 @@
 		</div>
 	<? } else{ ?>
 
-		<div>
+		<div ng-init="sid = <?=$structure["id"]?>">
 
 			<div data-id="content">
 				<? include "item/content.php"; ?>

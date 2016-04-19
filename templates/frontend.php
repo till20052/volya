@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="VolyaApp">
 	<head>
 		<meta charset="utf-8" />
 		
 		<meta name="keywords" content="<?=$application->keywords?>">
 		<meta name="description" content="<?=$application->description?>">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		
 		<? if($application->isVisibleSharingButtons){ ?>
 			<meta property="og:title" content="<?=(isset($application->sharing["title"]) && $application->sharing["title"] != "" ? $application->sharing["title"] : $application->title)?>" />
@@ -43,10 +44,16 @@
 		<? if($loadAngular){ ?>
 			<script src="/angular/js/angular.min.js"></script>
 			<script src="/angular/js/angular-animate.min.js"></script>
-			<script src="/angular/js/angular-aria.min.js"></script>
 			<script src="/angular/js/angular-messages.min.js"></script>
+			<script src="/angular/js/angular-aria.min.js"></script>
+			<script src="/angular/js/angular-message-format.min.js"></script>
 			<script src="/angular/js/angular-material.min.js"></script>
-			<script src="/angular/ng-flow/dist/ng-flow-standalone.min.js"></script>
+			<script src="/angular/js/angular-loader.min.js"></script>
+			<script src="/angular/js/angular-cookies.min.js"></script>
+
+			<script src="/angular/js/app/app.js"></script>
+
+			<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 		<? } ?>
 		
 		<? if($loadKendo){ ?>
@@ -83,6 +90,7 @@
 
 		<? if($loadAngular){ ?>
 			<link rel="stylesheet" href="/angular/css/angular-material.min.css">
+			<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
 		<? } ?>
 		
 		<? if(count($windows) > 0){ ?>
@@ -139,7 +147,7 @@
 		<!-- START FOOTER -->
 		<? include "frontend/footer.php" ?>
 		<!-- END FOOTER -->
-		
+
 		<? if(Uri::getUrl() == "volya.ua"){ ?>
 			
 			<a href="https://plus.google.com/110829414389342809017" rel="publisher"></a>

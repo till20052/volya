@@ -8,13 +8,13 @@ use \libs\services\StructuresService;
 class IndexStructuresController extends StructuresController
 {
 
-	private function __getStructure($fild)
+	private function __getStructure($field)
 	{
 		if(
-			strlen($fild) != 10
-			|| ! ($__structure = StructuresService::i()->getStructureByGeo($fild))
+			strlen($field) != 10
+			|| ! ($__structure = StructuresService::i()->getStructureByGeo($field))
 		)
-			$__structure = StructuresService::i()->getStructure($fild, true);
+			$__structure = StructuresService::i()->getStructure($field, true);
 
 		$__structure["coordinator"] = StructuresService::i()->getStructureCoordinator($__structure["id"]);
 
@@ -60,9 +60,14 @@ class IndexStructuresController extends StructuresController
 //
 //		$this->cred = $credentials;
 
-		HeadClass::addJs("/js/form.js");
-		HeadClass::addJs("/angular/js/app/modules/structures/index.js");
-		HeadClass::addJs("/js/frontend/structures/index.js");
+		HeadClass::addJs([
+			"/js/form.js",
+
+			"/angular/js/app/modules/structures/item/membersController.js",
+			"/angular/js/app/modules/structures/item/documentsUploaderController.js",
+
+			"/js/frontend/structures/index.js"
+		]);
 
 		HeadClass::addCss("/angular/css/app/modules/structures/index.css");
 
@@ -185,6 +190,14 @@ class IndexStructuresController extends StructuresController
 		$this->json["members"] = $this->__getStructure(Request::get("geo"))["members"];
 	}
 
+	public function getStructureDocuments()
+	{
+		parent::execute();
+		parent::setViewer("json");
+
+		$this->json["documents"] = StructuresService::i()->getDocuments(Request::get("sid"), true);
+	}
+
 	public function showFileUploader()
 	{
 		parent::execute();
@@ -193,8 +206,23 @@ class IndexStructuresController extends StructuresController
 		parent::setView("windows/fileUpload");
 	}
 	
+	public function getDocumentsCategories()
+	{
+		parent::execute();
+		parent::setViewer("json");
+
+		$this->json["categories"] = StructuresService::i()->getDocumentsCategories();
+	}
+
 	public function saveDocument()
 	{
-		
+		parent::execute();
+		parent::setViewer("json");
+
+		$data = Request::getAll();
+
+		StructuresService::i()->addDocument($data["sid"], $data["files"], $data["title"], $data["description"], $data["category"]);
+
+		return true;
 	}
 }
