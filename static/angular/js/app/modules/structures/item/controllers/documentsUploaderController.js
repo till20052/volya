@@ -1,14 +1,6 @@
-app.controller('documentsUploaderController', function($scope, $http, $mdDialog, $timeout) {
-
-	$http.get("get_documents_categories").success(function(data){
-		$scope.documentsCategories = data.categories;
-	});
-
-	$http.post("get_structure_documents", {sid: $scope.sid}).success(function(data){
-		$scope.documentsList = data.documents;
-	});
-
-	$scope.documents = {};
+app.controller('documentsUploaderController', function($scope, $http, $mdDialog, documentsService) {
+	$scope.files = {};
+	$scope.documentsCategories = documentsService.getCategories();
 
 	$scope.openDocumentsUploadDialog = function(event) {
 		$mdDialog.show({
@@ -41,13 +33,12 @@ app.controller('documentsUploaderController', function($scope, $http, $mdDialog,
 						sid: $scope.sid,
 						title: $scope.title,
 						description: $scope.description,
-						category: $scope.category,
+						cid: $scope.cid,
 						files: (function(){
 							var files = [];
 
-							for(doc in $scope.documents) {
+							for(doc in documentsService.getFiles())
 								files.push(doc);
-							}
 
 							return files;
 						})()
@@ -55,7 +46,10 @@ app.controller('documentsUploaderController', function($scope, $http, $mdDialog,
 
 					$http.post("/structures/save_document", data)
 						.then(
-							function(){
+							function(res){
+								data.did = res.data.did;
+								documentsService.addDocument(data);
+
 								clearForm();
 								$mdDialog.cancel();
 							},
@@ -65,24 +59,19 @@ app.controller('documentsUploaderController', function($scope, $http, $mdDialog,
 						);
 				};
 
-				$scope.addFile = function (hash) {
-					$scope.documents[hash] = {
-						hash: hash,
-						isOpen: false,
-						tooltipVisible: false
-					};
-				};
-
 				function clearForm() {
-					$scope.documents = {};
+
+					documentsService.clearFiles();
+
 					delete $scope.sid;
 					delete $scope.title;
 					delete $scope.description;
-					delete $scope.category;
+					delete $scope.cid;
+					$scope.files = {};
 				}
 
 			},
-			onComplete: function($scope) {
+			onComplete: function() {
 
 				(function(element){
 					var __uploaderUiBox = $(">div[data-uiBox='uploader']", element);
@@ -97,7 +86,9 @@ app.controller('documentsUploaderController', function($scope, $http, $mdDialog,
 								return;
 							}
 
-							$scope.addFile(data.result.files[0]);
+							var hash = data.result.files[0];
+
+							$scope.files[hash] = documentsService.addFile(hash);
 
 							$("#docTitle").focus();
 						})
@@ -108,15 +99,3 @@ app.controller('documentsUploaderController', function($scope, $http, $mdDialog,
 		});
 	};
 });
-
-
-// $scope.$watch($scope.documents[hash].isOpen, function(isOpen) {
-//
-// 	if (isOpen) {
-// 		$timeout(function() {
-// 			$scope.documents[hash].tooltipVisible = isOpen;
-// 		}, 500);
-// 	} else {
-// 		$scope.documents[hash].tooltipVisible = isOpen;
-// 	}
-// });

@@ -28,7 +28,7 @@
 
 					<md-input-container class="md-block">
 						<label><?=t("Назва документу")?></label>
-						<input required="" md-maxlength="30" name="title" id="docTitle" ng-model="title">
+						<input required="" md-maxlength="50" name="title" id="docTitle" ng-model="title">
 						<div ng-messages="documentInfo.title.$error">
 							<div ng-message="required">Це поле обов'язкове</div>
 							<div ng-message="md-maxlength">Назва документу не може бути довшою за 30 символів</div>
@@ -47,7 +47,7 @@
 					<md-input-container class="md-block">
 						<label>Категорія</label>
 
-						<md-select ng-model="category" ng-required="true">
+						<md-select ng-model="cid" ng-required="true">
 							<md-option ng-repeat="category in documentsCategories" value="{{category.id}}">
 								{{category.title}}
 							</md-option>
@@ -62,13 +62,13 @@
 
 						<div class="lock-size" layout="row" layout-align="left center" style="position: fixed">
 
-							<div style="float: left; width: 70px;" ng-repeat="file in documents" ng-if="$index < 5">
+							<div style="float: left; width: 70px;" ng-repeat="file in files" ng-if="$index < 5">
 
 								<md-fab-speed-dial
-									ng-mouseenter="documents[file.hash].isOpen = true"
-									ng-mouseleave="documents[file.hash].isOpen = false"
+									ng-mouseenter="files[file.hash].isOpen = true"
+									ng-mouseleave="files[file.hash].isOpen = false"
 
-									md-open="documents[file.hash].isOpen"
+									md-open="files[file.hash].isOpen"
 									md-direction="down"
 
 									class="md-scale"
@@ -100,7 +100,7 @@
 
 					<div data-uiBox="uploader" class="mt5" layout-align="center">
 
-						<md-button class="md-fab md-primary" aria-label="Profile" ng-click="openFileBrowser()">
+						<md-button class="md-fab md-primary" aria-label="Завантаження" ng-click="openFileBrowser()">
 							<md-icon class="material-icons" aria-label="Edit">get_app</md-icon>
 						</md-button>
 
@@ -126,30 +126,28 @@
 
 <div ng-controller="documentsListController">
 
+	<md-list class="md-dense" flex ng-repeat="category in documentsCategories">
+		<md-subheader class="md-no-sticky">{{ category.title }}</md-subheader>
 
+		<md-list-item class="md-2-line" ng-repeat="document in documentsList" ng-if="document.cid == category.id">
+
+			<md-icon class="md-avatar-icon" style="font-size: 21px;" aria-label="Переглянути">description</md-icon>
+
+			<div class="md-list-item-text" class="md-offset">
+				<h3>{{ document.title }}</h3>
+				<p>{{ document.description }}</p>
+				<h4><ng-pluralize count="document.files.length" when="filesForms"></ng-pluralize></h4>
+			</div>
+
+			<md-button class="md-secondary md-icon-button md-accent" ng-click="">
+				<md-icon class="material-icons" aria-label="Переглянути">visibility</md-icon>
+			</md-button>
+			<md-button class="md-secondary md-icon-button md-warn" ng-click="viewDocument(document.id)">
+				<md-icon class="material-icons" aria-label="Видалити" ng-click="deleteDocument(document.id)">delete_forever</md-icon>
+			</md-button>
+
+		</md-list-item>
+
+	</md-list>
 
 </div>
-
-<?// $categories = $structure["documents"]["categories"]; unset($structure["documents"]["categories"]) ?>
-<!---->
-<?// foreach ($categories as $category) { ?>
-<!---->
-<!--	--><?// if(count($structure["documents"]) > 0){ ?>
-<!--		<div class="categoty_title">-->
-<!--			<h3>--><?//=$category["title"]?><!--</h3>-->
-<!--		</div>-->
-<!---->
-<!--		--><?// foreach ($structure["documents"] as $document) { ?>
-<!---->
-<!--			<div data-ui="document" data-type="galery" data-src="/s/storage/--><?//=$document["hash"]?><!--">-->
-<!--				<i class="icon icon-document"></i>-->
-<!--				--><?//=$document["title"]?>
-<!--			</div>-->
-<!---->
-<!--		--><?// } ?>
-<!--	--><?// } else{ ?>
-<!--		<h3>--><?//=t("Ще немає жодного рішення")?><!--</h3>-->
-<!--	--><?// } ?>
-<?// } ?>
-<!---->
-<!--<div class="cboth"></div>-->

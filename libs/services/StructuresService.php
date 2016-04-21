@@ -198,6 +198,8 @@ class StructuresService extends \Keeper
 			]);
 
 		DocumentsModel::i()->insert(["sid" => $sid, "did" => $__did]);
+
+		return $__did;
 	}
 
 	private function __getDocuments($sid, $whithoutCategories = false)
@@ -206,11 +208,19 @@ class StructuresService extends \Keeper
 
 		if( ! $whithoutCategories )
 			foreach(\Model::getRows("SELECT `register_documents`.`cid` FROM `structures_documents` LEFT JOIN  `register_documents` ON  `structures_documents`.`did` =  `register_documents`.`id` GROUP BY `register_documents`.`cid`") as $__cid)
-				$__documents["categories"][] = CategoriesModel::i()->getItem($__cid["cid"]);
+				if($__cid["cid"])
+					$__documents["categories"][] = CategoriesModel::i()->getItem($__cid["cid"]);
 
-		foreach (\Model::getRows("SELECT `structures_documents`.`did`, `register_documents`.`title`, `register_documents`.`cid` FROM `structures_documents` LEFT JOIN  `register_documents` ON  `structures_documents`.`did` =  `register_documents`.`id` WHERE `sid` = :sid", ["sid" => $sid]) as $__document)
+		foreach (\Model::getRows("SELECT `structures_documents`.`did`, `register_documents`.`title`, `register_documents`.`description`, `register_documents`.`cid` FROM `structures_documents` LEFT JOIN  `register_documents` ON  `structures_documents`.`did` =  `register_documents`.`id` WHERE `sid` = :sid", ["sid" => $sid]) as $__document) {
+			$__imgs = [];
+			
 			foreach(ImagesModel::i()->getCompiledList(["did = :did"], ["did" => $__document["did"]], ["id DESC"]) as $__documentImg)
-				$__documents[] = array_merge($__documentImg, $__document);
+				$__imgs[] = $__documentImg;
+
+			$__documents[] = array_merge($__document, [
+				"files" => $__imgs
+			]);
+		}
 
 		return $__documents;
 	}
@@ -592,7 +602,7 @@ class StructuresService extends \Keeper
 
 	public function addDocument($sid, $documents, $title = "", $description = "", $cid = self::DOCUMENT_CATEGORY)
 	{
-		$this->__addDocuments($sid, $documents, $title, $description, $cid);
+		return $this->__addDocuments($sid, $documents, $title, $description, $cid);
 	}
 
 	public function getDocumentsCategories()

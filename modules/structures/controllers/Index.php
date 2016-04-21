@@ -63,8 +63,11 @@ class IndexStructuresController extends StructuresController
 		HeadClass::addJs([
 			"/js/form.js",
 
-			"/angular/js/app/modules/structures/item/membersController.js",
-			"/angular/js/app/modules/structures/item/documentsUploaderController.js",
+			"/angular/js/app/modules/structures/item/services/documentsService.js",
+
+			"/angular/js/app/modules/structures/item/controllers/membersController.js",
+			"/angular/js/app/modules/structures/item/controllers/documentsUploaderController.js",
+			"/angular/js/app/modules/structures/item/controllers/documentsListController.js",
 
 			"/js/frontend/structures/index.js"
 		]);
@@ -187,7 +190,7 @@ class IndexStructuresController extends StructuresController
 		parent::execute();
 		parent::setViewer("json");
 
-		$this->json["members"] = $this->__getStructure(Request::get("geo"))["members"];
+		$this->json["members"] = $this->__getStructure(Request::get("sid"))["members"];
 	}
 
 	public function getStructureDocuments()
@@ -195,7 +198,7 @@ class IndexStructuresController extends StructuresController
 		parent::execute();
 		parent::setViewer("json");
 
-		$this->json["documents"] = StructuresService::i()->getDocuments(Request::get("sid"), true);
+		$this->json["documents"] = StructuresService::i()->getDocuments(Request::getInt("sid"), true);
 	}
 
 	public function showFileUploader()
@@ -221,7 +224,7 @@ class IndexStructuresController extends StructuresController
 
 		$data = Request::getAll();
 
-		StructuresService::i()->addDocument($data["sid"], $data["files"], $data["title"], $data["description"], $data["category"]);
+		$this->json["did"] = StructuresService::i()->addDocument($data["sid"], $data["files"], $data["title"], $data["description"], $data["cid"]);
 
 		return true;
 	}
