@@ -200,14 +200,6 @@ class IndexStructuresController extends StructuresController
 
 		$this->json["documents"] = StructuresService::i()->getDocuments(Request::getInt("sid"), true);
 	}
-
-	public function showFileUploader()
-	{
-		parent::execute();
-		parent::setLayout(false);
-
-		parent::setView("windows/fileUpload");
-	}
 	
 	public function getDocumentsCategories()
 	{
