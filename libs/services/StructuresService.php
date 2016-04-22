@@ -202,6 +202,13 @@ class StructuresService extends \Keeper
 		return $__did;
 	}
 
+	private function __deleteDocument($did)
+	{
+		\libs\models\register\documents\DocumentsModel::i()->deleteItem($did);
+		\Model::exec("DELETE FROM `register_documents_images` WHERE `did` = '$did'");
+		\Model::exec("DELETE FROM `structures_documents` WHERE `did` = '$did'");
+	}
+
 	private function __getDocuments($sid, $whithoutCategories = false)
 	{
 		$__documents = [];
@@ -613,5 +620,10 @@ class StructuresService extends \Keeper
 	public function getDocuments($sid, $withoutCategories)
 	{
 		return $this->__getDocuments($sid, $withoutCategories);
+	}
+
+	public function deleteDocument($did)
+	{
+		$this->__deleteDocument($did);
 	}
 }

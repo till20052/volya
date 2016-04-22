@@ -8,10 +8,6 @@ app
 		$http.post("get_structure_documents", {sid: $scope.sid}).success(function(data){
 			$scope.documentsList = documentsService.setDocuments(data.documents);
 
-			$scope.$on("addDocument", function(event, data) {
-				$scope.documentsList[data.did] = data;
-			});
-
 			$scope.filesForms = {
 				0: 'Файлів немає',
 				1: '{} файл',
@@ -33,6 +29,10 @@ app
 				17: '{} файлів',
 				other: '{} файли'
 			};
+		});
+
+		$scope.$on("changeDocuments", function(event, data) {
+			$scope.documentsList = data;
 		});
 
 		$scope.viewDocument = function(id) {
@@ -64,7 +64,9 @@ app
 				.cancel('Відміна');
 			$mdDialog.show(confirm).then(function() {
 
-				$scope.status = id;
+				$http.post("/structures/delete_document", { did: id}).success(function(){
+					documentsService.removeDocument(id);
+				});
 
 			});
 		};

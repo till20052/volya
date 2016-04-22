@@ -225,5 +225,9 @@ class IndexStructuresController extends StructuresController
 	{
 		parent::execute();
 		parent::setViewer("json");
+		
+		StructuresService::i()->deleteDocument(Request::getInt("did"));
+
+		return true;
 	}
 }

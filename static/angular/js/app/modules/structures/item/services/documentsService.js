@@ -3,10 +3,20 @@ app.factory('documentsService', ['$rootScope', function($rootScope) {
 	var files = {};
 	var categories = {};
 
+	function setDocuments (data) {
+		$(data).each(function(i, val){
+			addDocument(val);
+		});
+
+		$rootScope.$broadcast('changeDocuments', documents);
+
+		return documents;
+	}
+
 	function addDocument (data) {
 		documents[data.did] = data;
 
-		$rootScope.$broadcast('addDocument', data);
+		$rootScope.$broadcast('changeDocuments', documents);
 	}
 
 	function getDocuments () {
@@ -17,10 +27,12 @@ app.factory('documentsService', ['$rootScope', function($rootScope) {
 		return documents[id];
 	}
 
-	function removeDocument (hash) {
-		delete documents[hash];
+	function removeDocument (id) {
+		delete documents[id];
 
-		if( ! documents[hash])
+		$rootScope.$broadcast('changeDocuments', documents);
+
+		if( ! documents[id])
 			return true;
 		else
 			return false;
@@ -28,7 +40,10 @@ app.factory('documentsService', ['$rootScope', function($rootScope) {
 
 	function clearDocuments() {
 		documents = {};
+
+		$rootScope.$broadcast('changeDocuments', documents);
 	}
+
 
 	function clearFiles () {
 		files = {};
@@ -50,20 +65,22 @@ app.factory('documentsService', ['$rootScope', function($rootScope) {
 		return files;
 	}
 
+	function removeFile (hash) {
+		delete files[hash];
+
+		if( ! files[hash])
+			return true;
+		else
+			return false;
+	}
+
+
 	function setCategories (data) {
 		$(data).each(function(i, val){
 			categories[val.id] = val;
 		});
 
 		return categories;
-	}
-
-	function setDocuments (data) {
-		$(data).each(function(i, val){
-			addDocument(val);
-		});
-
-		return documents;
 	}
 
 	function addCategory (data) {
@@ -86,6 +103,7 @@ app.factory('documentsService', ['$rootScope', function($rootScope) {
 		addFile: addFile,
 		getFile: getFile,
 		getFiles: getFiles,
+		removeFile: removeFile,
 		
 		setCategories: setCategories,
 		addCategory: addCategory,
