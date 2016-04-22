@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('VolyaApp', ['ngAnimate', 'ngMaterial', 'ngAria', 'ngMessages'])
+var app = angular.module('VolyaApp', ['ngAnimate', 'ngMaterial', 'ngMessages'])
 	.config(function ($mdThemingProvider) {
 		$mdThemingProvider.definePalette('volyaThema', {
 			'50': '007EC9',

@@ -229,5 +229,9 @@ class IndexStructuresController extends StructuresController
 		return true;
 	}
 
-	public fun
+	public function deleteDocument()
+	{
+		parent::execute();
+		parent::setViewer("json");
+	}
 }

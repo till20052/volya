@@ -143,12 +143,6 @@
 				</h4>
 			</div>
 
-			<div ng-if="status" id="status">
-				<b layout="row" layout-align="center center" class="md-padding">
-					{{status}}
-				</b>
-			</div>
-
 			<md-button class="md-secondary md-icon-button md-accent" ng-click="viewDocument(document.did)">
 				<md-icon class="material-icons" aria-label="Переглянути">visibility</md-icon>
 			</md-button>

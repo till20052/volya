@@ -46,10 +46,7 @@
 			<script src="/angular/js/angular-animate.min.js"></script>
 			<script src="/angular/js/angular-messages.min.js"></script>
 			<script src="/angular/js/angular-aria.min.js"></script>
-			<script src="/angular/js/angular-message-format.min.js"></script>
 			<script src="/angular/js/angular-material.min.js"></script>
-			<script src="/angular/js/angular-loader.min.js"></script>
-			<script src="/angular/js/angular-cookies.min.js"></script>
 
 			<script src="/angular/js/app/app.js"></script>
 
