@@ -77,7 +77,7 @@ class StorageSController extends SController
 		
 		foreach($__files as $__file)
 			$this->json["files"][] = $this->__saveFile($__file, $__filter);
-
+		
 		return true;
 	}
 }
