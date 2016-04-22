@@ -189,7 +189,7 @@ class StructuresRegisterController extends RegisterController
 
 		HeadClass::addJs(array(
 			"/js/form.js",
-			"/js/frontend/register/structures.js"
+			"/js/frontend/register/index.js"
 		));
 
 		$this->filter = array();

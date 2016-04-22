@@ -1,34 +1,21 @@
-<div data-ui-block="members">
+<div ng-cloak data-ui-block="members" ng-controller="ListMembers">
 
-	<? if(count($structure["members"]) > 0){ ?>
+	<div ng-repeat="item in todos">
 
-		<? foreach ($structure["members"] as $member) { ?>
+		<div data-ui-block="member" ng-click="go(item.id)">
 
-			<div data-ui-block="member" onclick="window.location.href = '/profile/<?=$member["id"]?>'">
-
-				<div class="avatar avatar-2x" <? if($member["avatar"]){?>style="background-image: url('http://volya.ua/s/img/thumb/ac/<?=$member["avatar"]?>');"<?}?>>
-					<? if( ! $member["avatar"]){ ?>
-						<i class="icon icon-user"></i>
-					<? } ?>
-				</div>
-
-				<div class="name" style="width: 210px">
-					<?=$member["first_name"]?><br />
-					<b><?=$member["last_name"]?></b>
-				</div>
-
-				<div class="fleft ml10 cgray">
-					<?=$member["is_coordinator"] ? t("Координатор") : ""?>
-				</div>
-				<div class="cboth"></div>
-
+			<div class="avatar avatar-2x" style="background-image: url('http://volya.ua/s/img/thumb/ai/{{ item.avatar }} ');">
+				<i ng-if="item.avatar == ''" class="icon icon-user"></i>
 			</div>
 
-		<? } ?>
+			<div class="name" style="">
+				<b>{{ item.last_name }}</b><br />
+				{{ item.first_name }} {{ item.middle_name }}
+			</div>
+			<div class="cboth"></div>
 
-	<? } else{ ?>
-		<h3><?=t("Ще немає жодного члена партії в даній організації")?></h3>
-	<? } ?>
+		</div>
 
-	<div class="cboth"></div>
+	</div>
+
 </div>

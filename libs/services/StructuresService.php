@@ -183,9 +183,13 @@ class StructuresService extends \Keeper
 			]);
 	}
 
-	private function __addDocuments($sid, $documents)
+	private function __addDocuments($sid, $documents, $title = "", $description = "", $cid = self::DOCUMENT_CATEGORY)
 	{
-		$__did = \libs\models\register\documents\DocumentsModel::i()->insert(["cid" => self::DOCUMENT_CATEGORY]);
+		$__did = \libs\models\register\documents\DocumentsModel::i()->insert([
+			"cid" => $cid,
+			"title" => $title,
+			"description" => $description
+		]);
 
 		foreach ($documents as $__hash)
 			ImagesModel::i()->insert([
@@ -194,18 +198,36 @@ class StructuresService extends \Keeper
 			]);
 
 		DocumentsModel::i()->insert(["sid" => $sid, "did" => $__did]);
+
+		return $__did;
 	}
 
-	private function __getDocuments($sid)
+	private function __deleteDocument($did)
+	{
+		\libs\models\register\documents\DocumentsModel::i()->deleteItem($did);
+		\Model::exec("DELETE FROM `register_documents_images` WHERE `did` = '$did'");
+		\Model::exec("DELETE FROM `structures_documents` WHERE `did` = '$did'");
+	}
+
+	private function __getDocuments($sid, $whithoutCategories = false)
 	{
 		$__documents = [];
 
-		foreach(\Model::getRows("SELECT `register_documents`.`cid` FROM `structures_documents` LEFT JOIN  `register_documents` ON  `structures_documents`.`did` =  `register_documents`.`id` GROUP BY `register_documents`.`cid`") as $__cid)
-			$__documents["categories"][] = CategoriesModel::i()->getItem($__cid["cid"]);
+		if( ! $whithoutCategories )
+			foreach(\Model::getRows("SELECT `register_documents`.`cid` FROM `structures_documents` LEFT JOIN  `register_documents` ON  `structures_documents`.`did` =  `register_documents`.`id` GROUP BY `register_documents`.`cid`") as $__cid)
+				if($__cid["cid"])
+					$__documents["categories"][] = CategoriesModel::i()->getItem($__cid["cid"]);
 
-		foreach (\Model::getRows("SELECT `structures_documents`.`did`, `register_documents`.`title`, `register_documents`.`cid` FROM `structures_documents` LEFT JOIN  `register_documents` ON  `structures_documents`.`did` =  `register_documents`.`id` WHERE `sid` = :sid", ["sid" => $sid]) as $__document)
+		foreach (\Model::getRows("SELECT `structures_documents`.`did`, `register_documents`.`title`, `register_documents`.`description`, `register_documents`.`cid` FROM `structures_documents` LEFT JOIN  `register_documents` ON  `structures_documents`.`did` =  `register_documents`.`id` WHERE `sid` = :sid", ["sid" => $sid]) as $__document) {
+			$__imgs = [];
+			
 			foreach(ImagesModel::i()->getCompiledList(["did = :did"], ["did" => $__document["did"]], ["id DESC"]) as $__documentImg)
-				$__documents[] = array_merge($__documentImg, $__document);
+				$__imgs[] = $__documentImg;
+
+			$__documents[] = array_merge($__document, [
+				"files" => $__imgs
+			]);
+		}
 
 		return $__documents;
 	}
@@ -583,5 +605,25 @@ class StructuresService extends \Keeper
 	public function addMember($sid, $uid, $isHead = false, $isCoordinator = false)
 	{
 		$this->__addMembers($sid, $uid, $isHead, $isCoordinator);
+	}
+
+	public function addDocument($sid, $documents, $title = "", $description = "", $cid = self::DOCUMENT_CATEGORY)
+	{
+		return $this->__addDocuments($sid, $documents, $title, $description, $cid);
+	}
+
+	public function getDocumentsCategories()
+	{
+		return CategoriesModel::i()->getCompiledList();
+	}
+
+	public function getDocuments($sid, $withoutCategories)
+	{
+		return $this->__getDocuments($sid, $withoutCategories);
+	}
+
+	public function deleteDocument($did)
+	{
+		$this->__deleteDocument($did);
 	}
 }

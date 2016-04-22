@@ -8,13 +8,13 @@ use \libs\services\StructuresService;
 class IndexStructuresController extends StructuresController
 {
 
-	private function __getStructure($fild)
+	private function __getStructure($field)
 	{
 		if(
-			strlen($fild) != 10
-			|| ! ($__structure = StructuresService::i()->getStructureByGeo($fild))
+			strlen($field) != 10
+			|| ! ($__structure = StructuresService::i()->getStructureByGeo($field))
 		)
-			$__structure = StructuresService::i()->getStructure($fild, true);
+			$__structure = StructuresService::i()->getStructure($field, true);
 
 		$__structure["coordinator"] = StructuresService::i()->getStructureCoordinator($__structure["id"]);
 
@@ -50,6 +50,8 @@ class IndexStructuresController extends StructuresController
 		parent::loadKendo(true);
 		parent::loadFileupload(true);
 		parent::loadGallery(true);
+		parent::loadAngular(true);
+		parent::loadFileupload(true);
 
 //		$credentials = new stdClass();
 //
@@ -58,7 +60,19 @@ class IndexStructuresController extends StructuresController
 //
 //		$this->cred = $credentials;
 
-		HeadClass::addJs("/js/form.js");
+		HeadClass::addJs([
+			"/js/form.js",
+
+			"/angular/js/app/modules/structures/item/services/documentsService.js",
+
+			"/angular/js/app/modules/structures/item/controllers/membersController.js",
+			"/angular/js/app/modules/structures/item/controllers/documentsUploaderController.js",
+			"/angular/js/app/modules/structures/item/controllers/documentsListController.js",
+
+			"/js/frontend/structures/index.js"
+		]);
+
+		HeadClass::addCss("/angular/css/app/modules/structures/index.css");
 
 		$this->page = "";
 
@@ -110,10 +124,6 @@ class IndexStructuresController extends StructuresController
 
 		parent::loadWindow([
 			"register/structures/form",
-		]);
-
-		HeadClass::addJs([
-			//"/js/frontend/structures/index.js"
 		]);
 
 		HeadClass::addLess([
@@ -171,6 +181,52 @@ class IndexStructuresController extends StructuresController
 			return false;
 
 		StructuresService::i()->addMember(Request::getInt("sid"), UserClass::i()->getId());
+
+		return true;
+	}
+
+	public function getStructureMembers()
+	{
+		parent::execute();
+		parent::setViewer("json");
+
+		$this->json["members"] = $this->__getStructure(Request::get("sid"))["members"];
+	}
+
+	public function getStructureDocuments()
+	{
+		parent::execute();
+		parent::setViewer("json");
+
+		$this->json["documents"] = StructuresService::i()->getDocuments(Request::getInt("sid"), true);
+	}
+	
+	public function getDocumentsCategories()
+	{
+		parent::execute();
+		parent::setViewer("json");
+
+		$this->json["categories"] = StructuresService::i()->getDocumentsCategories();
+	}
+
+	public function saveDocument()
+	{
+		parent::execute();
+		parent::setViewer("json");
+
+		$data = Request::getAll();
+
+		$this->json["did"] = StructuresService::i()->addDocument($data["sid"], $data["files"], $data["title"], $data["description"], $data["cid"]);
+
+		return true;
+	}
+
+	public function deleteDocument()
+	{
+		parent::execute();
+		parent::setViewer("json");
+		
+		StructuresService::i()->deleteDocument(Request::getInt("did"));
 
 		return true;
 	}
