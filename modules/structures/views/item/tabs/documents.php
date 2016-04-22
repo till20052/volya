@@ -27,7 +27,7 @@
 				<form name="documentInfo">
 
 					<md-input-container class="md-block">
-						<label><?=t("Назва документу")?></label>
+						<label><?= t("Назва документу") ?></label>
 						<input required="" md-maxlength="50" name="title" id="docTitle" ng-model="title">
 						<div ng-messages="documentInfo.title.$error">
 							<div ng-message="required">Це поле обов'язкове</div>
@@ -36,7 +36,7 @@
 					</md-input-container>
 
 					<md-input-container class="md-block">
-						<label><?=t("Опис")?></label>
+						<label><?= t("Опис") ?></label>
 						<input md-maxlength="150" md-no-asterisk name="description" ng-model="description">
 
 						<div ng-messages="documentInfo.description.$error">
@@ -77,7 +77,8 @@
 								>
 
 									<md-fab-trigger>
-										<md-button aria-label="menu" class="md-fab md-warn" style="background: url('/s/img/thumb/ai/{{file.hash}}')">
+										<md-button aria-label="menu" class="md-fab md-warn"
+										           style="background: url('/s/img/thumb/ai/{{file.hash}}')">
 										</md-button>
 									</md-fab-trigger>
 
@@ -89,7 +90,8 @@
 
 										<md-button aria-label="delete" class="md-fab md-raised md-mini">
 											<md-tooltip md-direction="left">Видалити</md-tooltip>
-											<md-icon class="material-icons" aria-label="Insert Link">delete_forever</md-icon>
+											<md-icon class="material-icons" aria-label="Insert Link">delete_forever
+											</md-icon>
 										</md-button>
 									</md-fab-actions>
 								</md-fab-speed-dial>
@@ -104,7 +106,7 @@
 							<md-icon class="material-icons" aria-label="Edit">get_app</md-icon>
 						</md-button>
 
-						<input id="fileInput" type="file" name="file" multiple="true" style="display: none" />
+						<input id="fileInput" type="file" name="file" multiple="true" style="display: none"/>
 					</div>
 				</div>
 
@@ -121,7 +123,7 @@
 
 		</md-dialog>
 	</script>
-	
+
 </div>
 
 <div ng-controller="documentsListController">
@@ -136,18 +138,97 @@
 			<div class="md-list-item-text" class="md-offset">
 				<h3>{{ document.title }}</h3>
 				<p>{{ document.description }}</p>
-				<h4><ng-pluralize count="document.files.length" when="filesForms"></ng-pluralize></h4>
+				<h4>
+					<ng-pluralize count="document.files.length" when="filesForms"></ng-pluralize>
+				</h4>
 			</div>
 
-			<md-button class="md-secondary md-icon-button md-accent" ng-click="">
+			<div ng-if="status" id="status">
+				<b layout="row" layout-align="center center" class="md-padding">
+					{{status}}
+				</b>
+			</div>
+
+			<md-button class="md-secondary md-icon-button md-accent" ng-click="viewDocument(document.did)">
 				<md-icon class="material-icons" aria-label="Переглянути">visibility</md-icon>
 			</md-button>
-			<md-button class="md-secondary md-icon-button md-warn" ng-click="viewDocument(document.id)">
-				<md-icon class="material-icons" aria-label="Видалити" ng-click="deleteDocument(document.id)">delete_forever</md-icon>
+
+			<md-button class="md-secondary md-icon-button md-warn" ng-click="deleteDocument(document.did)">
+				<md-icon class="material-icons" aria-label="Видалити">delete_forever</md-icon>
 			</md-button>
 
 		</md-list-item>
 
 	</md-list>
+
+	<script type="text/ng-template" id="documentsViewerTmpl">
+		<md-dialog>
+
+			<md-toolbar>
+				<div class="md-toolbar-tools">
+					<h2>Перегляд документу</h2>
+					<span flex></span>
+
+					<md-button class="md-icon-button" ng-click="cancel()">
+						<md-icon aria-label="Закрити">close</md-icon>
+					</md-button>
+				</div>
+			</md-toolbar>
+
+			<md-dialog-content class="p20" style="width: 425px; min-height: 300px">
+
+				<h3>{{ document.title }}</h3>
+				<h4>{{ document.description }}</h4>
+
+				<div ng-cloak="" class="virtualRepeatdemoHorizontalUsage">
+					<md-content layout="column">
+
+						<md-virtual-repeat-container id="horizontal-container" md-orient-horizontal="">
+							<div md-virtual-repeat="file in document.files" class="repeated-item" flex="">
+
+								<img ng-src="/s/img/thumb/ab/{{file.hash}}" img-onload="preloader[file.hash].active = false" style="height: 260px"/>
+								<div layout="row" layout-sm="column" layout-align="space-around">
+									<md-progress-circular ng-disabled=" ! preloader[file.hash].active" md-diameter="96"></md-progress-circular>
+								</div>
+							</div>
+						</md-virtual-repeat-container>
+
+					</md-content>
+				</div>
+
+			</md-dialog-content>
+
+			<md-dialog-actions layout="row">
+				<md-button ng-click="cancel()">
+					Закрити
+				</md-button>
+			</md-dialog-actions>
+
+		</md-dialog>
+	</script>
+
+	<style type="text/css">
+		.virtualRepeatdemoHorizontalUsage #horizontal-container {
+			height: 262px;
+			width: 100%;
+		}
+
+		.virtualRepeatdemoHorizontalUsage .repeated-item {
+			border-right: 1px solid #ddd;
+			box-sizing: border-box;
+			display: inline-block;
+			height: 260px;
+			text-align: center;
+			width: 200px;
+		}
+
+		.virtualRepeatdemoHorizontalUsage md-content {
+			margin-top: 15px;
+		}
+
+		.virtualRepeatdemoHorizontalUsage md-virtual-repeat-container {
+			border: solid 1px grey;
+		}
+	</style>
 
 </div>

@@ -9,9 +9,6 @@ app.controller('documentsUploaderController', function($scope, $http, $mdDialog,
 			targetEvent: event,
 			preserveScope: true,
 			templateUrl: 'documentsUploaderTmpl',
-			local: {
-				files: $scope.files
-			},
 			controller: function DialogController($scope, $http, $mdDialog) {
 
 				$scope.hide = function () {

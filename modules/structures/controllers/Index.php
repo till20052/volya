@@ -228,4 +228,6 @@ class IndexStructuresController extends StructuresController
 
 		return true;
 	}
+
+	public fun
 }

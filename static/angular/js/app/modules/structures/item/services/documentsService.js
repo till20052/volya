@@ -13,6 +13,10 @@ app.factory('documentsService', ['$rootScope', function($rootScope) {
 		return documents;
 	}
 
+	function getDocument (id) {
+		return documents[id];
+	}
+
 	function removeDocument (hash) {
 		delete documents[hash];
 
@@ -74,12 +78,15 @@ app.factory('documentsService', ['$rootScope', function($rootScope) {
 		setDocuments: setDocuments,
 		addDocument: addDocument,
 		getDocuments: getDocuments,
+		getDocument: getDocument,
 		removeDocument: removeDocument,
 		clearDocuments: clearDocuments,
+
 		clearFiles: clearFiles,
 		addFile: addFile,
 		getFile: getFile,
 		getFiles: getFiles,
+		
 		setCategories: setCategories,
 		addCategory: addCategory,
 		getCategories: getCategories
