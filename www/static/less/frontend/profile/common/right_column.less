@@ -1,0 +1,48 @@
+body>section {
+	
+	div[data-uibox='right_column'] {
+		
+		>div[data-uibox] {
+			box-sizing: border-box;
+			
+			>header {
+				display: block;
+				box-sizing: border-box;
+				padding: 15px 0;
+				text-transform: uppercase;
+				font-weight: bold;
+				font-size: 14px;
+			}
+			
+			>section {
+				background-color: #DBD8D1;
+				display: block;
+				box-sizing: border-box;
+				padding: 15px;
+				
+				
+				>table>tbody>tr {
+					&:first-child>td {
+						padding-top: 0;
+						border-top-width: 0;
+					}
+					
+					&:last-child>td {
+						padding-bottom: 0;
+					}
+					
+					>td {
+						padding: 15px 0;
+						border-top: 1px solid #BFC0BB;
+						
+						&:last-child {
+							padding-left: 15px;
+						}
+					}
+				}
+			}
+		}
+		
+	}
+	
+}

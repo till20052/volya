@@ -1,0 +1,68 @@
+body>header {
+	>div:last-child {
+		border-bottom: 1px solid #CCC;
+		box-shadow: none;
+	}
+}
+
+body>section {
+	padding-top: 70px;
+	background: #f2f2f2;
+
+	>div>div {
+		>header {
+			margin-bottom: 15px;
+			text-transform: uppercase;
+
+			>* {
+				font-weight: normal;
+			}
+		}
+
+		>section {
+
+			article {
+				margin-top: 15px;
+				background: white;
+
+				&:first-child {
+					margin-top: 0;
+				}
+
+				>* {
+					padding: 10px 15px;
+				}
+
+				>header {
+					color: #404040;
+					background: #FFE534;
+				}
+
+				>section {
+					div[data-ui='messages'] {
+						margin-top: 15px;
+
+						>div {
+							padding: 15px;
+							text-align: center;
+							border: 1px solid white;
+
+							&[id='success'] {
+								color: green;
+								background: rgba(0,200,0,.1);
+								border-color: rgba(0,200,0,1);
+							}
+
+							&[id='error'] {
+								color: red;
+								background: rgba(200,0,0,.1);
+								border-color: rgba(200,0,0,1);
+							}
+						}
+					}
+				}
+			}
+
+		}
+	}
+}

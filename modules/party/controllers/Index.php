@@ -25,9 +25,12 @@ class IndexPartyController extends PartyController
 	public function finances()
 	{
 		parent::execute();
+		parent::loadAngular(true);
 		
 		HeadClass::addJs([
-			"/js/frontend/party/index/finances.js"
+			"/js/frontend/party/index/finances.js",
+			
+			"/volya/js/frontend/party/index/finances.js"
 		]);
 		
 		$this->menuClickable = true;

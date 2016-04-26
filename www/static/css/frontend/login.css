@@ -1,0 +1,6 @@
+body>header div[ui-popup="login"]
+{width:248px;margin-left:-30px;margin-top:10px}
+body>header div[ui-popup="login"]>span.bubble
+{margin-left:64px}
+body>header div[ui-popup="login"]>div
+{text-align:left}
