@@ -1,7 +1,0 @@
-body>section div.avatar-cover
-{position:absolute;width:100px;padding:22px 0;background:rgba(255,255,255,.75);border-radius:50px;
-color:#C22550;text-align:center;z-index:999;cursor:pointer;display:none}
-body>section div.avatar-cover>i:before
-{float:none;margin:0}
-body>section div.avatar-cover>i
-{display:block;font-size:33px}
