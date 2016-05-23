@@ -41,6 +41,21 @@ class ReportsAdminController extends AdminController
 		$this->json["categories"] = ReportsService::i()->getCategories();
 	}
 
+	public function addCategory()
+	{
+		parent::execute();
+		parent::setViewer("json");
+
+		$__category = ReportsService::i()->addCategory(Request::getString("title"));
+
+		if($__category)
+			$this->json["category"] = $__category;
+		else
+			return false;
+
+		return true;
+	}
+
 	public function saveCategory()
 	{
 		parent::execute();
@@ -49,17 +64,6 @@ class ReportsAdminController extends AdminController
 		ReportsService::i()->saveCategory(Request::getArray("data"));
 
 		return true;
-	}
-
-	public function addCategory()
-	{
-		parent::execute();
-		parent::setViewer("json");
-
-		if(($__category = ReportsService::i()->addCategory(Request::getString("title"))))
-			$this->json["category"] = $__category;
-		else
-			return false;
 	}
 
 	public function removeCategory()
