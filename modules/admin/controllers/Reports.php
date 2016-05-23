@@ -88,6 +88,7 @@ class ReportsAdminController extends AdminController
 		$data = Request::getAll();
 
 		$this->json["id"] = ReportsService::i()->addDocument($data["files"], $data["title"], $data["cid"]);
+		$this->json["files"] = $data["files"];
 
 		return true;
 	}

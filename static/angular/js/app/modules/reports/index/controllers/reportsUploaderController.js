@@ -115,7 +115,9 @@ app.controller('reportsUploaderController', function($scope, $http, $mdDialog, r
 					$http.post("/admin/reports/save_document", data)
 						.then(
 							function(res){
+
 								data.id = res.data.id;
+								data.files = res.data.files;
 								reportsService.addDocument(data);
 
 								clearForm();

@@ -51,19 +51,19 @@
 					</div>
 				</td>
 				
-				<td valign="top" width="300px">
+				<td valign="top" width="350px">
 
 					<div>
 						<h3 class="fwbold fs20 cblack">Звіти</h3>
 					</div>
 					
-					<div class="mt15" ng-controller="reportsViewController">
+					<div class="mt15" ng-controller="reportsViewController" ng-cloak="">
 						<md-virtual-repeat-container id="reportsContainer">
 
 							<md-list class="md-dense" flex ng-repeat="category in documentsCategories">
 								<md-subheader class="md-no-sticky">{{ category.title }}</md-subheader>
 
-								<md-list-item ng-click="viewDocument(document.id)" class="md-2-line" ng-repeat="document in documentsList" ng-if="document.cid == category.id" style="padding: 0">
+								<md-list-item ng-click="viewDocument(document.files[0].hash)" class="md-2-line" ng-repeat="document in documentsList" ng-if="document.cid == category.id" style="padding: 0">
 
 									<md-icon class="md-avatar-icon" style="font-size: 21px; margin-right: 5px;" aria-label="Переглянути">description</md-icon>
 
@@ -75,39 +75,6 @@
 							</md-list>
 
 						</md-virtual-repeat-container>
-
-						<script type="text/ng-template" id="reportViewerTmpl">
-							<md-dialog style="width: 70%">
-
-								<md-toolbar>
-									<div class="md-toolbar-tools">
-										<h2>Перегляд документу</h2>
-										<span flex></span>
-
-										<md-button class="md-icon-button" ng-click="cancel()">
-											<md-icon aria-label="Закрити">close</md-icon>
-										</md-button>
-									</div>
-								</md-toolbar>
-
-								<md-dialog-content class="p20" style="min-height: 365px;">
-
-									<h3>{{ document.title }}</h3>
-
-									<div ng-repeat="file in document.files">
-										<iframe ng-src="{{ '/s/storage/' + file.hash }}" style="width: 100%; height: 335px;"></iframe>
-									</div>
-
-								</md-dialog-content>
-
-								<md-dialog-actions layout="row">
-									<md-button ng-click="cancel()">
-										Закрити
-									</md-button>
-								</md-dialog-actions>
-
-							</md-dialog>
-						</script>
 					</div>
 					
 				</td>
