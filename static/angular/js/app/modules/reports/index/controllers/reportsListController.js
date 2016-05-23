@@ -9,25 +9,8 @@ app
 			$scope.documentsList = reportsService.setDocuments(data.documents);
 		});
 
-		$scope.viewDocument = function(id) {
-			$mdDialog.show({
-				clickOutsideToClose: true,
-				templateUrl: 'reportViewerTmpl',
-				locals: {
-					document: reportsService.getDocument(id)
-				},
-				controller: function DialogController($scope, $http, $mdDialog, document) {
-					$scope.document = document;
-
-					$scope.hide = function () {
-						$mdDialog.hide();
-					};
-
-					$scope.cancel = function () {
-						$mdDialog.cancel();
-					};
-				}
-			});
+		$scope.viewDocument = function(hash) {
+			window.open('/s/storage/' + hash, '_blank');
 		};
 
 		$scope.deleteDocument = function(id) {
@@ -38,7 +21,7 @@ app
 				.cancel('Відміна');
 			$mdDialog.show(confirm).then(function() {
 
-				$http.post("/party/delete_document", { id: id}).success(function(){
+				$http.post("/admin/reports/delete_document", { id: id}).success(function(){
 					reportsService.removeDocument(id);
 				});
 			});

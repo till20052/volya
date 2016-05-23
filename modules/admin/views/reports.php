@@ -180,7 +180,7 @@
 				<md-list class="md-dense" flex ng-repeat="category in documentsCategories">
 					<md-subheader class="md-no-sticky">{{ category.title }}</md-subheader>
 
-					<md-list-item ng-click="viewDocument(document.id)" class="md-2-line" ng-repeat="document in documentsList" ng-if="document.cid == category.id" style="padding: 0">
+					<md-list-item ng-click="viewDocument(document.files[0].hash)" class="md-2-line" ng-repeat="document in documentsList" ng-if="document.cid == category.id" style="padding: 0">
 
 						<md-icon class="md-avatar-icon" style="font-size: 21px; margin-right: 5px;" aria-label="Переглянути">description</md-icon>
 
@@ -188,11 +188,9 @@
 							<h3>{{ document.title }}</h3>
 						</div>
 
-						<? if( UserClass::i()->isAuthorized() && UserClass::i()->getId() == 18 ) { ?>
-							<md-button class="md-secondary md-icon-button md-warn" style="margin-left: 0; padding-left: 0; padding-right: 0; width: 20px;" ng-click="deleteDocument(document.id)">
-								<md-icon class="material-icons" aria-label="Видалити">delete_forever</md-icon>
-							</md-button>
-						<? } ?>
+						<md-button class="md-secondary md-icon-button md-warn" style="margin-left: 0; padding-left: 0; padding-right: 0; width: 20px;" ng-click="deleteDocument(document.id)">
+							<md-icon class="material-icons" aria-label="Видалити">delete_forever</md-icon>
+						</md-button>
 
 					</md-list-item>
 
