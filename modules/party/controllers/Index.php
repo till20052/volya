@@ -5,10 +5,6 @@ Loader::loadModule("Party");
 Loader::loadModel("TeamModel");
 Loader::loadModel("materials.PagesMaterialsModel");
 
-Loader::loadService("ReportsService");
-
-use libs\services\ReportsService;
-
 class IndexPartyController extends PartyController
 {
 	public function execute()
@@ -29,17 +25,9 @@ class IndexPartyController extends PartyController
 	public function finances()
 	{
 		parent::execute();
-		parent::loadAngular(true);
 		parent::loadFileupload(true);
-		
-		HeadClass::addJs([
-			"/js/frontend/party/index/finances.js",
-			
-			"/angular/js/app/modules/party/index/controllers/reportsListController.js",
-			"/angular/js/app/modules/party/index/controllers/reportsUploaderController.js",
 
-			"/angular/js/app/modules/party/index/services/reportsService.js"
-		]);
+		HeadClass::addJs("/js/frontend/party/index/finances.js");
 		
 		$this->menuClickable = true;
 		
@@ -57,43 +45,5 @@ class IndexPartyController extends PartyController
 		
 		$this->selected = "documents";
 		$this->page = PagesMaterialsModel::i()->getItemBySymlink("rules");
-	}
-
-	public function getReportsCategories()
-	{
-		parent::execute();
-		parent::setViewer("json");
-
-		$this->json["categories"] = ReportsService::i()->getCategories();
-	}
-
-	public function getReportsDocuments()
-	{
-		parent::execute();
-		parent::setViewer("json");
-
-		$this->json["documents"] = ReportsService::i()->getDocuments();
-	}
-	
-	public function saveDocument()
-	{
-		parent::execute();
-		parent::setViewer("json");
-
-		$data = Request::getAll();
-
-		$this->json["id"] = ReportsService::i()->addDocument($data["files"], $data["title"], $data["cid"]);
-
-		return true;
-	}
-
-	public function deleteDocument()
-	{
-		parent::execute();
-		parent::setViewer("json");
-
-		ReportsService::i()->deleteDocument(Request::getInt("id"));
-
-		return true;
 	}
 }

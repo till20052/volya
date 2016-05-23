@@ -2,6 +2,7 @@
 
 namespace libs\services;
 
+use libs\models\reports\ReportCategoriesModel;
 use libs\models\reports\ReportsModel;
 use libs\services\reports\ReportCategoriesService;
 use libs\services\reports\ReportFilesService;
@@ -59,5 +60,26 @@ class ReportsService extends \Keeper
 	{
 		ReportsModel::i()->deleteItem($id);
 		ReportFilesService::i()->delete($id);
+	}
+	
+	public function saveCategory($data)
+	{
+		if( ! ReportCategoriesModel::i()->update($data))
+			ReportCategoriesModel::i()->insert($data);
+	}
+
+	public function addCategory($title)
+	{
+		$__cid = ReportCategoriesModel::i()->insert(["title" => $title]);
+
+		return [
+			"id" => $__cid,
+			"title" => $title
+		];
+	}
+
+	public function removeCategory($cid)
+	{
+		ReportCategoriesModel::i()->deleteItem($cid);
 	}
 }

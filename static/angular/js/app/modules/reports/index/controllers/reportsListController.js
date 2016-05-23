@@ -1,11 +1,11 @@
 app
-	.controller('reportsListController', function($scope, $sce, $http, $mdDialog, reportsService) {
+	.controller('reportsListController', function($scope, $http, $mdDialog, reportsService) {
 
-		$http.get("get_reports_categories").success(function(data){
+		$http.get("/admin/reports/get_reports_categories").success(function(data){
 			$scope.documentsCategories = reportsService.setCategories(data.categories);
 		});
 
-		$http.post("get_reports_documents", {sid: $scope.sid}).success(function(data){
+		$http.post("/admin/reports/get_reports_documents", {sid: $scope.sid}).success(function(data){
 			$scope.documentsList = reportsService.setDocuments(data.documents);
 		});
 
