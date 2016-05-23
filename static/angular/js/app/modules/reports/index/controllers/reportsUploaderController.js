@@ -57,20 +57,16 @@ app.controller('reportsUploaderController', function($scope, $http, $mdDialog, r
 					$http.post("/admin/reports/add_category", {
 						title: $scope.newCategoryTitle
 					}).success(function(data){
-						reportsService.addCategory(data.category);
+						if(data.success)
+							reportsService.addCategory(data.category);
+						
+						$scope.newCategoryTitle = "";
 					});
 				};
 				
 				$scope.deleteCategory = function(cid) {
-					var confirm = $mdDialog.confirm()
-						.title('Ви дійсно бажаєте видалити цю категорію ?')
-						.ok('Видалити')
-						.cancel('Відміна');
-					$mdDialog.show(confirm).then(function() {
-
-						$http.post("/admin/reports/remove_category", {cid: cid}).success(function(){
-							reportsService.removeCategory(cid);
-						});
+					$http.post("/admin/reports/remove_category", {cid: cid}).success(function(){
+						reportsService.removeCategory(cid);
 					});
 				}
 			}

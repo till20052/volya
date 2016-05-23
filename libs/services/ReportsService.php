@@ -70,6 +70,9 @@ class ReportsService extends \Keeper
 
 	public function addCategory($title)
 	{
+		if(count(ReportCategoriesModel::i()->getItemByField("title", $title)) > 0)
+			return false;
+
 		$__cid = ReportCategoriesModel::i()->insert(["title" => $title]);
 
 		return [

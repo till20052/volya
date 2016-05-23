@@ -5,6 +5,10 @@ Loader::loadModule("Party");
 Loader::loadModel("TeamModel");
 Loader::loadModel("materials.PagesMaterialsModel");
 
+Loader::loadService("ReportsService");
+
+use libs\services\ReportsService;
+
 class IndexPartyController extends PartyController
 {
 	public function execute()
@@ -26,8 +30,16 @@ class IndexPartyController extends PartyController
 	{
 		parent::execute();
 		parent::loadFileupload(true);
+		parent::loadAngular(true);
 
-		HeadClass::addJs("/js/frontend/party/index/finances.js");
+		HeadClass::addJs([
+			"/angular/js/app/modules/reports/index/services/reportsService.js",
+
+			"/js/frontend/party/index/finances.js",
+			"/angular/js/app/modules/reports/index/controllers/reportsViewController.js"
+		]);
+
+		HeadClass::addLess("/less/frontend/party/reports.less");
 		
 		$this->menuClickable = true;
 		
@@ -45,5 +57,21 @@ class IndexPartyController extends PartyController
 		
 		$this->selected = "documents";
 		$this->page = PagesMaterialsModel::i()->getItemBySymlink("rules");
+	}
+
+	public function getReportsCategories()
+	{
+		parent::execute();
+		parent::setViewer("json");
+
+		$this->json["categories"] = ReportsService::i()->getCategories();
+	}
+
+	public function getReportsDocuments()
+	{
+		parent::execute();
+		parent::setViewer("json");
+
+		$this->json["documents"] = ReportsService::i()->getDocuments();
 	}
 }

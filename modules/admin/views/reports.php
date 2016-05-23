@@ -13,14 +13,12 @@
 	<div ng-controller="reportsUploaderController as ctrl" ng-cloak>
 
 		<div layout="row" layout-align="end">
-			<md-content>
-				<md-button class="md-primary md-raised" ng-click="openReportsCategoriesDialog($event)">
-					Категорії
-				</md-button>
-				<md-button class="md-primary md-raised" ng-click="openReportsDialog($event)">
-					Завантажити документ
-				</md-button>
-			</md-content>
+			<md-button class="md-primary md-raised" ng-click="openReportsCategoriesDialog($event)">
+				Категорії
+			</md-button>
+			<md-button class="md-primary md-raised" ng-click="openReportsDialog($event)">
+				Завантажити документ
+			</md-button>
 		</div>
 
 		<script type="text/ng-template" id="reportsDialogTmpl">
@@ -176,30 +174,32 @@
 
 	<div ng-controller="reportsListController" ng-cloak>
 
-		<md-virtual-repeat-container id="reportsContainer">
+		<div layout="row" style="background-color: #fff">
+			<md-virtual-repeat-container id="reportsContainer">
 
-			<md-list class="md-dense" flex ng-repeat="category in documentsCategories">
-				<md-subheader class="md-no-sticky">{{ category.title }}</md-subheader>
+				<md-list class="md-dense" flex ng-repeat="category in documentsCategories">
+					<md-subheader class="md-no-sticky">{{ category.title }}</md-subheader>
 
-				<md-list-item ng-click="viewDocument(document.id)" class="md-2-line" ng-repeat="document in documentsList" ng-if="document.cid == category.id" style="padding: 0">
+					<md-list-item ng-click="viewDocument(document.id)" class="md-2-line" ng-repeat="document in documentsList" ng-if="document.cid == category.id" style="padding: 0">
 
-					<md-icon class="md-avatar-icon" style="font-size: 21px; margin-right: 5px;" aria-label="Переглянути">description</md-icon>
+						<md-icon class="md-avatar-icon" style="font-size: 21px; margin-right: 5px;" aria-label="Переглянути">description</md-icon>
 
-					<div class="md-list-item-text" class="md-offset">
-						<h3>{{ document.title }}</h3>
-					</div>
+						<div class="md-list-item-text" class="md-offset">
+							<h3>{{ document.title }}</h3>
+						</div>
 
-					<? if( UserClass::i()->isAuthorized() && UserClass::i()->getId() == 18 ) { ?>
-						<md-button class="md-secondary md-icon-button md-warn" style="margin-left: 0; padding-left: 0; padding-right: 0; width: 20px;" ng-click="deleteDocument(document.id)">
-							<md-icon class="material-icons" aria-label="Видалити">delete_forever</md-icon>
-						</md-button>
-					<? } ?>
+						<? if( UserClass::i()->isAuthorized() && UserClass::i()->getId() == 18 ) { ?>
+							<md-button class="md-secondary md-icon-button md-warn" style="margin-left: 0; padding-left: 0; padding-right: 0; width: 20px;" ng-click="deleteDocument(document.id)">
+								<md-icon class="material-icons" aria-label="Видалити">delete_forever</md-icon>
+							</md-button>
+						<? } ?>
 
-				</md-list-item>
+					</md-list-item>
 
-			</md-list>
+				</md-list>
 
-		</md-virtual-repeat-container>
+			</md-virtual-repeat-container>
+		</div>
 
 		<script type="text/ng-template" id="reportViewerTmpl">
 			<md-dialog style="width: 70%">

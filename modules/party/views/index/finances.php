@@ -54,28 +54,60 @@
 				<td valign="top" width="300px">
 
 					<div>
-						<h3 class="fwbold fs20 cblack">Фінансові звіти партії</h3>
+						<h3 class="fwbold fs20 cblack">Звіти</h3>
 					</div>
 					
-					<div class="mt15">
-						<div>
-							<a href="/pdf/party/index/finances/CF_10_2015.pdf" target="_blank" class="icon">
-								<i class="icon-document fs30"></i>
-								<span style="text-align: left">Звіт про рух грошових коштів (поточний місяць)</span>
-							</a>
-						</div>
-						<div class="mt15">
-							<a href="/pdf/party/index/finances/charitable_support_report_24_07_2014.pdf" target="_blank" class="icon">
-								<i class="icon-document fs30"></i>
-								<span style="text-align: left">Звіт про благодійну підтримку</span>
-							</a>
-						</div>
-						<div class="mt15">
-							<a href="/pdf/party/index/finances/CF_2014.pdf" target="_blank" class="icon">
-								<i class="icon-document fs30"></i>
-								<span style="text-align: left">Звіт про рух грошових коштів за 2014 рік</span>
-							</a>
-						</div>
+					<div class="mt15" ng-controller="reportsViewController">
+						<md-virtual-repeat-container id="reportsContainer">
+
+							<md-list class="md-dense" flex ng-repeat="category in documentsCategories">
+								<md-subheader class="md-no-sticky">{{ category.title }}</md-subheader>
+
+								<md-list-item ng-click="viewDocument(document.id)" class="md-2-line" ng-repeat="document in documentsList" ng-if="document.cid == category.id" style="padding: 0">
+
+									<md-icon class="md-avatar-icon" style="font-size: 21px; margin-right: 5px;" aria-label="Переглянути">description</md-icon>
+
+									<div class="md-list-item-text" class="md-offset">
+										<h3>{{ document.title }}</h3>
+									</div>
+								</md-list-item>
+
+							</md-list>
+
+						</md-virtual-repeat-container>
+
+						<script type="text/ng-template" id="reportViewerTmpl">
+							<md-dialog style="width: 70%">
+
+								<md-toolbar>
+									<div class="md-toolbar-tools">
+										<h2>Перегляд документу</h2>
+										<span flex></span>
+
+										<md-button class="md-icon-button" ng-click="cancel()">
+											<md-icon aria-label="Закрити">close</md-icon>
+										</md-button>
+									</div>
+								</md-toolbar>
+
+								<md-dialog-content class="p20" style="min-height: 365px;">
+
+									<h3>{{ document.title }}</h3>
+
+									<div ng-repeat="file in document.files">
+										<iframe ng-src="{{ '/s/storage/' + file.hash }}" style="width: 100%; height: 335px;"></iframe>
+									</div>
+
+								</md-dialog-content>
+
+								<md-dialog-actions layout="row">
+									<md-button ng-click="cancel()">
+										Закрити
+									</md-button>
+								</md-dialog-actions>
+
+							</md-dialog>
+						</script>
 					</div>
 					
 				</td>

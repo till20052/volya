@@ -56,9 +56,10 @@ class ReportsAdminController extends AdminController
 		parent::execute();
 		parent::setViewer("json");
 
-		$this->json["category"] = ReportsService::i()->addCategory(Request::getString("title"));
-
-		return true;
+		if(($__category = ReportsService::i()->addCategory(Request::getString("title"))))
+			$this->json["category"] = $__category;
+		else
+			return false;
 	}
 
 	public function removeCategory()
