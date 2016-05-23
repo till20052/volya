@@ -216,9 +216,9 @@ class PartyTicketsAdminController extends AdminController
 
 
 			// DATE
-			$__uvItem = UsersVerificationsModel::i()->getItemByField("user_id", $__user["id"], ["created_at DESC"]);
+			$__uvItem = UsersVerificationsModel::i()->getItemByField("user_id", $__uid, ["created_at DESC"]);
 
-			$__phpExcelSheet->setCellValue("E".($__i + 2), date("d.m.Y", strtotime($__uvItem["created_at"])));
+			$__phpExcelSheet->setCellValue("E".($__i + 2), $__uvItem["created_at"]);
 
 
 			// PHOTO
