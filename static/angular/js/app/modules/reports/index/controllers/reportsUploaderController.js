@@ -2,6 +2,77 @@ app.controller('reportsUploaderController', function($scope, $http, $mdDialog, r
 	$scope.files = {};
 	$scope.reportsCategories = reportsService.getCategories();
 
+	$scope.$on("changeCategories", function(event, data) {
+		$scope.reportsCategories = data;
+	});
+
+	$scope.openReportsCategoriesDialog = function(event) {
+		$mdDialog.show({
+			clickOutsideToClose: true,
+			scope: $scope,
+			targetEvent: event,
+			preserveScope: true,
+			templateUrl: 'reportCategoriesTmpl',
+			controller: function ($scope, $mdDialog) {
+
+				$scope.hide = function () {
+					$mdDialog.hide();
+				};
+
+				$scope.cancel = function () {
+					$mdDialog.cancel();
+				};
+
+				$scope.editFlag = {};
+				$scope.edit = function(cid) {
+
+					if(typeof $scope.editFlag[cid] == "undefined")
+						$scope.editFlag[cid] = false;
+
+					$scope.editFlag[cid] = ! $scope.editFlag[cid];
+
+					if( ! $scope.editFlag[cid]) {
+
+						if(
+							($scope.reportsCategories[cid]["title"] == $scope.reportsCategories[cid]["newTitle"])
+							|| (typeof $scope.reportsCategories[cid]["newTitle"] == "undefined")
+							|| ($scope.reportsCategories[cid]["newTitle"].length == 0)
+						)
+							return;
+
+						$scope.reportsCategories[cid]["title"] = $scope.reportsCategories[cid]["newTitle"];
+						delete $scope.reportsCategories[cid]["newTitle"];
+
+						reportsService.saveCategory($scope.reportsCategories[cid]);
+						
+						$http.post("/admin/reports/save_category", {data: $scope.reportsCategories[cid]}).success(function(){
+							console.log("Ok");
+						});
+					}
+					else
+						$scope.edit[cid]
+				};
+
+				$scope.add = function() {
+					$http.post("/admin/reports/add_category", {
+						title: $scope.newCategoryTitle
+					}).success(function(data){
+						if(data.success)
+							reportsService.addCategory(data.category);
+						
+						$scope.newCategoryTitle = "";
+					});
+				};
+				
+				$scope.deleteCategory = function(cid) {
+					$http.post("/admin/reports/remove_category", {cid: cid}).success(function(){
+						reportsService.removeCategory(cid);
+					});
+				}
+			}
+		});
+	};
+
 	$scope.openReportsDialog = function(event) {
 		$mdDialog.show({
 			clickOutsideToClose: true,
@@ -41,7 +112,7 @@ app.controller('reportsUploaderController', function($scope, $http, $mdDialog, r
 						})()
 					};
 
-					$http.post("/party/save_document", data)
+					$http.post("/admin/reports/save_document", data)
 						.then(
 							function(res){
 								data.id = res.data.id;

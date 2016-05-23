@@ -29,17 +29,17 @@ class IndexPartyController extends PartyController
 	public function finances()
 	{
 		parent::execute();
-		parent::loadAngular(true);
 		parent::loadFileupload(true);
-		
-		HeadClass::addJs([
-			"/js/frontend/party/index/finances.js",
-			
-			"/angular/js/app/modules/party/index/controllers/reportsListController.js",
-			"/angular/js/app/modules/party/index/controllers/reportsUploaderController.js",
+		parent::loadAngular(true);
 
-			"/angular/js/app/modules/party/index/services/reportsService.js"
+		HeadClass::addJs([
+			"/angular/js/app/modules/reports/index/services/reportsService.js",
+
+			"/js/frontend/party/index/finances.js",
+			"/angular/js/app/modules/reports/index/controllers/reportsViewController.js"
 		]);
+
+		HeadClass::addLess("/less/frontend/party/reports.less");
 		
 		$this->menuClickable = true;
 		
@@ -73,27 +73,5 @@ class IndexPartyController extends PartyController
 		parent::setViewer("json");
 
 		$this->json["documents"] = ReportsService::i()->getDocuments();
-	}
-	
-	public function saveDocument()
-	{
-		parent::execute();
-		parent::setViewer("json");
-
-		$data = Request::getAll();
-
-		$this->json["id"] = ReportsService::i()->addDocument($data["files"], $data["title"], $data["cid"]);
-
-		return true;
-	}
-
-	public function deleteDocument()
-	{
-		parent::execute();
-		parent::setViewer("json");
-
-		ReportsService::i()->deleteDocument(Request::getInt("id"));
-
-		return true;
 	}
 }

@@ -1,0 +1,58 @@
+body {
+
+	> section > div.section {
+
+		#reportsContainer {
+			position: absolute;
+			width: 960px;
+			height: ~"calc(100% - 270px - 143px - 70px - 51px)";
+			border: 1px solid #CCCCCC;
+			background-color: #fff;
+		}
+	}
+
+	#reportCategories {
+		width: 500px;
+
+		md-dialog-content {
+			height: 350px;
+
+			.newCategoryTitle {
+
+				>input {
+					width: 400px;
+				}
+
+				md-button {
+					padding-top: 0;
+				}
+			}
+
+			md-virtual-repeat-container {
+				height: 300px;
+
+				md-list-item {
+					border-bottom: 1px solid rgb(234, 234, 234);
+					padding: 0px 10px 0px 0px;
+
+					input[name='catTitle'] {
+						width: 365px;
+					}
+
+					h4 {
+						width: 365px;
+					}
+
+					button {
+						margin: 0;
+						width: 40px;
+					}
+				}
+
+				div.md-errors-spacer {
+					display: none;
+				}
+			}
+		}
+	}
+}

@@ -44,7 +44,6 @@ app.factory('reportsService', ['$rootScope', function($rootScope) {
 		$rootScope.$broadcast('changeDocuments', documents);
 	}
 
-
 	function clearFiles () {
 		files = {};
 	}
@@ -74,7 +73,6 @@ app.factory('reportsService', ['$rootScope', function($rootScope) {
 			return false;
 	}
 
-
 	function setCategories (data) {
 		$(data).each(function(i, val){
 			categories[val.id] = val;
@@ -89,6 +87,18 @@ app.factory('reportsService', ['$rootScope', function($rootScope) {
 
 	function getCategories () {
 		return categories;
+	}
+
+	function saveCategory(data) {
+		categories[data.id] = data;
+
+		$rootScope.$broadcast('changeCategories', categories);
+	}
+
+	function removeCategory(cid) {
+		delete categories[cid];
+
+		$rootScope.$broadcast('changeCategories', categories);
 	}
 
 	return {
@@ -107,6 +117,8 @@ app.factory('reportsService', ['$rootScope', function($rootScope) {
 		
 		setCategories: setCategories,
 		addCategory: addCategory,
-		getCategories: getCategories
+		getCategories: getCategories,
+		saveCategory: saveCategory,
+		removeCategory: removeCategory
 	}
 }]);

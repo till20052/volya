@@ -47,6 +47,8 @@
 			<script src="/angular/js/angular-messages.min.js"></script>
 			<script src="/angular/js/angular-aria.min.js"></script>
 			<script src="/angular/js/angular-material.min.js"></script>
+			<script src="/angular/js/angular-checklist.min.js"></script>
+			<script src="/angular/js/directives/paginationDirective.js"></script>
 
 			<script src="/angular/js/app/app.js"></script>
 
