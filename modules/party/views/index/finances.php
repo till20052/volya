@@ -67,8 +67,8 @@
 
 									<md-icon class="md-avatar-icon" style="font-size: 21px; margin-right: 5px;" aria-label="Переглянути">description</md-icon>
 
-									<div class="md-list-item-text" class="md-offset">
-										<h3>{{ document.title }}</h3>
+									<div class="md-list-item-text md-offset" style="margin-left: 5px">
+										<p>{{ document.title }}</p>
 									</div>
 								</md-list-item>
 
