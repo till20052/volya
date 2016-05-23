@@ -214,7 +214,7 @@
 						</div>
 					</md-dialog-content>
 					<md-dialog-actions layout="row">
-						<md-button ng-disabled=" ! progress.generationZip" ng-click="downloadPackage()" class="md-warn" style="margin-right:20px;">
+						<md-button ng-disabled=" ! progress.generationZip" ng-click="downloadPackage()" class="md-primary" style="margin-right:20px;">
 							Завантажити
 						</md-button>
 					</md-dialog-actions>
